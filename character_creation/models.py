@@ -16,8 +16,44 @@ class sizes():
         "H": "Huge",
         "G": "Gargantuan"
     }
-    def get_size_choices():
-        return SIZE_CHOICES
+    def get_size_choices(self):
+        return self.SIZE_CHOICES
+
+class dice():
+    DICE = {
+        "D004": "d4",
+        "D006": "d6",
+        "D008": "d8",
+        "D010": "d10",
+        "D012": "d12",
+        "D020": "d20",
+        "D100": "d100"
+    }
+
+    def get_dice(self):
+        return self.DICE
+
+class damage_types():
+    DAMAGE_TYPES = {
+        "FI": "fire",
+        "BL": "bludgeoning",
+        "RA": "radiant",
+        "NE": "necrotic",
+        "PS": "psychic",
+        "CO": "cold",
+        "FO": "force",
+        "EL": "elemental",
+        "LI": "lightning",
+        "PI": "piercing",
+        "TH": "thunder",
+        "AC": "acid",
+        "PO": "poison",
+        "SL": "slashing",
+        "PH": "physical"
+    }
+
+    def get_types(self):
+        return self.DAMAGE_TYPES
 
 class Character(models.Model):
     """Model that describes how player character information is stored. Many-to-one relationship with User. A character
@@ -107,11 +143,16 @@ class Race(models.Model):
     desc_long = models.CharField()
     age_desc = models.CharField()
 
-class ItemProficiencyChoice(models.Model):
-    """Model that descibes a choice which a player may have to make between item proficiencies. For example, players
-    choosing to make a Dwarf character must choose between proficiency in smith's tools, brewer's supplies, or masons's
-    tools."""
-    items = models.ManyToManyField(ItemProficiency)
+class Choice(models.Model):
+    """Model that descibes a choice which a player may have to make. For example, players choosing to make a Dwarf char-
+    acter must choose between proficiency in smith's tools, brewer's supplies, or masons's tools."""
+    desc    = models.TextField(help_text="description of the choice to be made")
+    options = models.ManyToManyField(Option)
+
+class Option(models.Model):
+    """Model that describes one option from a choice that a player may make. Can contain references to items, profic-
+    iencies, languages, ability score increases, and more."""
+    items = models.ManyToManyField(models.Model, help_text="description of the contents of this option")
 
 class ItemProficiency(models.Model):
     proficiency_name = models.CharField()
@@ -125,7 +166,106 @@ class Item(models.Model):
      - tools
     """
     name = models.CharField()
-    description = models.CharField()
+    value_gold = models.PositiveIntegerField()
+    value_silver = models.PositiveIntegerField()
+    value_bronze = models.PositiveIntegerField()
+    weight = models.CharField(max_length=5, default="", help_text="weight of the item, measured in pounds (lbs).")
 
     class Meta:
         abstract=True
+
+class Armour(Item):
+    LIGHT = "L"
+    MEDIUM = "M"
+    HEAVY = "H"
+    SHIELD = "S"
+    ARMOR_TYPE_CHOICES = {
+        LIGHT: "Light",
+        MEDIUM: "Medium",
+        HEAVY: "Heavy",
+        SHIELD: "Shield"
+    }
+
+    armor_type = models.CharField(max_length=1, choices=ARMOR_TYPE_CHOICES)
+    description = models.TextField(default="")
+    strength_requirement = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(1), MaxValueValidator(30)]
+    )
+    ac = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(30)]
+    )
+    ac_dex_bonus = models.BooleanField()
+    ac_dex_bonus_max = models.SmallIntegerField(default=0)
+    stealth_disadvantage = models.BooleanField()
+
+class Weapon(Item):
+    dice_choices = dice.get_dice()
+    damage_type_choices = damage_types.get_types()
+
+    damage_dice = models.CharField(max_length=4, choices=dice_choices, blank=True, null=True, default="")
+    num_dice    = models.PositiveSmallIntegerField(default=1, blank=True, null=True)
+    damage_type = models.CharField(max_length=2, choices=damage_type_choices, blank=True, null=True, default="")
+    martial     = models.BooleanField(default=False)
+    two_handed  = models.BooleanField(default=False)
+    is_heavy    = models.BooleanField(default=False)
+    is_light    = models.BooleanField(default=False)
+    has_reach   = models.BooleanField(default=False)
+    thrown      = models.BooleanField(default=False)
+    effective_range = models.PositiveSmallIntegerField(blank=True, null=True)
+    max_range       = models.PositiveSmallIntegerField(blank=True, null=True)
+    is_special   = models.BooleanField(default=False)
+    special_desc = models.TextField()
+
+class MeleeWeapon(Weapon):
+    versatile               = models.BooleanField(default=False)
+    versatile_damage_dice   = models.CharField(max_length=4, choices=dice_choices)
+    is_finesse = models.BooleanField(default=False)
+
+
+class RangedWeapon(Weapon):
+    requires_ammunition = models.BooleanField(default=False)
+    requires_loading    = models.BooleanField(default=False)
+
+class AdventuringGear(Item):
+    description = models.TextField(default="")
+
+class Tool(Item):
+    description = models.TextField(default="")
+    is_artisan_tool = models.BooleanField()
+    is_gaming_set = models.BooleanField()
+    is_instrument = models.BooleanField()
+
+class Container(Item):
+    capacity = models.CharField(max_length=200) # arbitrary limit
+
+class EquipmentPack(models.Model):
+    name = models.CharField(max_length=32)
+    cost = models.PositiveSmallIntegerField(help_text="cost in gold (gp)")
+    description = models.TextField()
+    items = models.ManyToManyField(Item)
+
+class MagicItem(Item):
+    COMMON = "C"
+    UNCOMMON = "U"
+    RARE = "R"
+    VERY_RARE = "V"
+    LEGENDARY = "L"
+    RARITY_CHOICES = {
+        COMMON: "Common",
+        UNCOMMON: "Uncommon",
+        RARE: "Rare",
+        VERY_RARE: "Very rare",
+        LEGENDARY: "Legendary"
+    }
+    description = models.TextField(default="")
+    requires_attunement = models.BooleanField(default=True)
+    rarity = models.CharField(max_length=1, choices=RARITY_CHOICES)
+
+class MagicWeapon(MagicItem, Weapon):
+    pass
+class WondrousItem(MagicItem):
+    pass
+class MagicArmour(MagicItem, Armour):
+    pass
