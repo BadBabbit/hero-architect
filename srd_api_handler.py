@@ -1,5 +1,5 @@
 import requests
-
+from character_creation.models import *
 def extract_indexes(response):
     response = response.json()
     indexes = []
@@ -30,7 +30,7 @@ def get_unique_instances_of_field(base_url, indexes, field):
 
     return field_instances
 
-url = "https://www.dnd5eapi.co/api/languages"
+url = "https://www.dnd5eapi.co/api/equipment-categories"
 
 payload = {}
 headers = {
@@ -42,8 +42,9 @@ response = requests.request("GET", url, headers=headers, data=payload)
 # print(response.text)
 
 indexes = extract_indexes(response)
+for i in indexes:
+    print(i)
 
-# print(indexes)
-types = get_unique_instances_of_field(url, indexes, "type")
-
-print(types)
+# types = get_unique_instances_of_field(url, indexes, "type")
+#
+# print(types)
