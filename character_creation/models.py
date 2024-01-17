@@ -2,12 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
+from polymorphic.models import PolymorphicModel
 
 def validate_mod_five(value):
     if value % 5 != 0:
         raise ValidationError(str(value)+" is not valid; input must be a multiple of 5.")
 
-class sizes():
+class Sizes():
     SIZE_CHOICES = {
         "T": "Tiny",
         "S": "Small",
@@ -16,10 +17,12 @@ class sizes():
         "H": "Huge",
         "G": "Gargantuan"
     }
-    def get_size_choices(self):
-        return self.SIZE_CHOICES
 
-class dice():
+    @staticmethod
+    def get_size_choices():
+        return Sizes.SIZE_CHOICES
+
+class Dice():
     DICE = {
         "D004": "d4",
         "D006": "d6",
@@ -30,10 +33,11 @@ class dice():
         "D100": "d100"
     }
 
-    def get_dice(self):
-        return self.DICE
+    @staticmethod
+    def get_dice():
+        return Dice.DICE
 
-class damage_types():
+class DamageTypes():
     DAMAGE_TYPES = {
         "FI": "fire",
         "BL": "bludgeoning",
@@ -52,13 +56,83 @@ class damage_types():
         "PH": "physical"
     }
 
-    def get_types(self):
-        return self.DAMAGE_TYPES
+    @staticmethod
+    def get_types():
+        return DamageTypes.DAMAGE_TYPES
+
+class EquipmentTypes():
+
+    EQUIPMENT_TYPES = {
+        "ADG": "Adventuring Gear",
+        "AMM": "Ammunition",
+        "AFO": "Arcane Foci",
+        "ARM": "Armour",
+        "ART": "Artisan's Tools",
+        "DFO": "Druidic Foci",
+        "EQP": "Equipment Packs",
+        "GSE": "Gaming Sets",
+        "HAR": "Heavy Armour",
+        "HSY": "Holy Symbols",
+        "KIT": "Kits",
+        "LVH": "Land Vehicles",
+        "LAR": "Light Armour",
+        "MMW": "Martial Melee Weapons",
+        "MRW": "Martial Ranged Weapons",
+        "MWE": "Martial Weapons",
+        "MAR": "Medium Armour",
+        "MEW": "Melee Weapons",
+        "MOA": "Mounts and other Animals",
+        "MAV": "Mounts and Vehicles",
+        "MIS": "Musical Instruments",
+        "OTL": "Other Tools",
+        "POT": "Potion",
+        "RWE": "Ranged Weapons",
+        "RNG": "Ring",
+        "ROD": "Rod",
+        "SCR": "Scroll",
+        "SHI": "Shields",
+        "SMW": "Simple Melee Weapons",
+        "SRW": "Simple Ranged Weapons",
+        "SWE": "Simple Weapons",
+        "STA": "Staff",
+        "STG": "Standard Gear",
+        "THD": "Tack, Harness, and Drawn Vehichles",
+        "TOO": "Tools",
+        "WND": "Wand",
+        "WBV": "Waterborne Vehicles",
+        "WPN": "Weapon",
+        "WDI": "Wondrous Items"
+    }
+
+    @staticmethod
+    def get_equipment_types():
+        return EquipmentTypes.EQUIPMENT_TYPES
+
+class Statistic(models.Model):
+    name = models.CharField(unique=True)
+    abbreviation = models.CharField(max_length=3)
+    description = models.CharField()
+class Skill(models.Model):
+    name = models.CharField()
+    statistic = models.ForeignKey(Statistic, on_delete=models.RESTRICT)
+
+class SavingThrow(models.Model):
+    name = models.CharField(unique=True)
+    statistic = models.ForeignKey(Statistic, on_delete=models.RESTRICT)
+
+class SkillProficiency(models.Model):
+    name = models.CharField()
+    skill = models.ForeignKey(Skill, on_delete=models.RESTRICT)
+
+class SavingThrowProficiency(models.Model):
+    name = models.CharField()
+    saving_throw = models.ForeignKey(SavingThrow, on_delete=models.RESTRICT)
+
 
 class Race(models.Model):
     """Model that describes how races are stored in the database."""
     name = models.CharField(unique=True)
-    size = models.CharField(max_length=1, choices=sizes.SIZE_CHOICES)
+    size = models.CharField(max_length=1, choices=Sizes.get_size_choices())
     size_desc = models.TextField()
     speed_walking = models.PositiveSmallIntegerField(validators=[validate_mod_five])
     speed_flying = models.PositiveSmallIntegerField(validators=[validate_mod_five])
@@ -155,7 +229,7 @@ class CharacterClass(models.Model):
 class CharacterSubclass(models.Model):
     """Model for representing subclass options."""
     name = models.CharField(unique=True)
-    superclass = models.ForeignKey(CharacterClass)
+    superclass = models.ForeignKey(CharacterClass, on_delete=models.RESTRICT)
     # TODO: the rest of the subclass teehee
 
 class ClassInstance(models.Model):
@@ -166,41 +240,39 @@ class ClassInstance(models.Model):
     subclass_type = models.ForeignKey(CharacterSubclass, on_delete=models.CASCADE)
     class_level = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
 
-
-
-
-class Choice(models.Model):
-    """Model that descibes a choice which a player may have to make. For example, players choosing to make a Dwarf char-
-    acter must choose between proficiency in smith's tools, brewer's supplies, or masons's tools."""
-    desc    = models.TextField(help_text="description of the choice to be made")
-    options = models.ManyToManyField(Option)
-
-class Option(models.Model):
-    """Model that describes one option from a choice that a player may make. Can contain references to items, profic-
-    iencies, languages, ability score increases, and more."""
-    items = models.ManyToManyField(models.Model, help_text="description of the contents of this option")
-
 class Proficiency(models.Model):
     proficiency_name = models.CharField()
+    description = models.TextField()
 
-class ItemProficiency(Proficiency):
-    item = models.ForeignKey(Item, on_delete=CASCADE)
+class ProficiencyOption(models.Model):
+    """Model that describes one option from a choice that a player may make. Can contain references to items, profic-
+    iencies, languages, ability score increases, and more."""
+    proficiency = models.ManyToManyField(Proficiency, help_text="description of the contents of this option")
 
-class Item(models.Model):
+class ProficiencyChoice(models.Model):
+    """Model that descibes a choice between proficiencies which a player may have to make. For example, players choosing
+     to make a Dwarf character must choose between proficiency in smith's tools, brewer's supplies, or masons's tools."""
+    desc    = models.TextField(help_text="description of the choice to be made")
+    options = models.ManyToManyField(ProficiencyOption)
+
+class EquipmentCategory(models.Model):
+    category_name = models.CharField(unique=True)
+
+class Item(PolymorphicModel):
     """Abstract database model for items. There are multiple different types of items that inherit from this class, such
     as:
-     - weapons
-     - magic items
-     - tools
+     - magic items;
+     - tools;
+     - and armour.
+    Weapons are implemented in their own base class separate from Items due to the multiple inheritance required for the
+    various weapon classes
     """
     name = models.CharField()
     value_gold = models.PositiveIntegerField()
     value_silver = models.PositiveIntegerField()
-    value_bronze = models.PositiveIntegerField()
+    value_copper = models.PositiveIntegerField()
     weight = models.CharField(max_length=5, default="", help_text="weight of the item, measured in pounds (lbs).")
-
-    class Meta:
-        abstract=True
+    equipment_category = models.ManyToManyField(EquipmentCategory)
 
 class Armour(Item):
     LIGHT = "L"
@@ -228,33 +300,33 @@ class Armour(Item):
     ac_dex_bonus_max = models.SmallIntegerField(default=0)
     stealth_disadvantage = models.BooleanField()
 
+class ArmourProficiency(Proficiency):
+    armour = models.ForeignKey(Armour, on_delete=models.CASCADE)
+
 class Weapon(Item):
-    dice_choices = dice.get_dice()
-    damage_type_choices = damage_types.get_types()
+    dice_choices = Dice.get_dice()
+    damage_type_choices = DamageTypes.get_types()
 
     damage_dice = models.CharField(max_length=4, choices=dice_choices, blank=True, null=True, default="")
-    num_dice    = models.PositiveSmallIntegerField(default=1, blank=True, null=True)
+    num_dice = models.PositiveSmallIntegerField(default=1, blank=True, null=True)
     damage_type = models.CharField(max_length=2, choices=damage_type_choices, blank=True, null=True, default="")
-    martial     = models.BooleanField(default=False)
-    two_handed  = models.BooleanField(default=False)
-    is_heavy    = models.BooleanField(default=False)
-    is_light    = models.BooleanField(default=False)
-    has_reach   = models.BooleanField(default=False)
-    thrown      = models.BooleanField(default=False)
-    effective_range = models.PositiveSmallIntegerField(blank=True, null=True)
-    max_range       = models.PositiveSmallIntegerField(blank=True, null=True)
-    is_special   = models.BooleanField(default=False)
-    special_desc = models.TextField()
-
-class MeleeWeapon(Weapon):
-    versatile               = models.BooleanField(default=False)
-    versatile_damage_dice   = models.CharField(max_length=4, choices=dice_choices)
+    martial = models.BooleanField(default=False)
+    two_handed = models.BooleanField(default=False)
+    is_heavy = models.BooleanField(default=False)
+    is_light = models.BooleanField(default=False)
+    has_reach = models.BooleanField(default=False)
+    is_special = models.BooleanField(default=False)
+    special_desc = models.TextField(default="")
+    versatile = models.BooleanField(default=False)
+    versatile_damage_dice = models.CharField(null=True, default=None, max_length=4, choices=dice_choices)
     is_finesse = models.BooleanField(default=False)
-
-
-class RangedWeapon(Weapon):
+    thrown = models.BooleanField(default=False)
+    effective_range = models.PositiveSmallIntegerField(blank=True, null=True)
+    max_range = models.PositiveSmallIntegerField(blank=True, null=True)
     requires_ammunition = models.BooleanField(default=False)
-    requires_loading    = models.BooleanField(default=False)
+    requires_loading = models.BooleanField(default=False)
+class WeaponProficiency(Proficiency):
+    weapon = models.ForeignKey(Weapon, on_delete=models.CASCADE)
 
 class AdventuringGear(Item):
     description = models.TextField(default="")
@@ -265,14 +337,18 @@ class Tool(Item):
     is_gaming_set = models.BooleanField()
     is_instrument = models.BooleanField()
 
-class Container(Item):
-    capacity = models.CharField(max_length=200) # arbitrary limit
+class ToolProficiency(Proficiency):
+    tool = models.ForeignKey(Tool, on_delete=models.CASCADE)
 
 class EquipmentPack(models.Model):
     name = models.CharField(max_length=32)
     cost = models.PositiveSmallIntegerField(help_text="cost in gold (gp)")
     description = models.TextField()
-    items = models.ManyToManyField(Item)
+    items = models.ManyToManyField(
+        Item,
+        related_name="%(app_label)s_%(class)s_related",
+        related_query_name="%(app_label)s_%(class)ss",
+    )
 
 class MagicItem(Item):
     COMMON = "C"
@@ -287,22 +363,13 @@ class MagicItem(Item):
         VERY_RARE: "Very rare",
         LEGENDARY: "Legendary"
     }
-    description = models.TextField(default="")
-    requires_attunement = models.BooleanField(default=True)
+
+    description_header = models.TextField(default="")
+    description_body = models.TextField(default="")
+    requires_attunement = models.BooleanField(default=False)
     rarity = models.CharField(max_length=1, choices=RARITY_CHOICES)
 
-class MagicWeapon(MagicItem, Weapon):
-    pass
-class WondrousItem(MagicItem):
-    pass
-
-class Wand(MagicItem):
-    pass
-
-class MagicArmour(MagicItem, Armour):
-    pass
-
-class Language(model.Models):
+class Language(models.Model):
     STANDARD = "S"
     EXOTIC = "E"
     type_choices = {
@@ -314,3 +381,7 @@ class Language(model.Models):
     desc = models.TextField()
     type = models.CharField(choices=type_choices)
     typical_speakers = models.CharField()
+
+class LanguageChoice(models.Model):
+    description = models.CharField()
+    language_option = models.ManyToManyField(Language)
