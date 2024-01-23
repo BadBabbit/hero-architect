@@ -108,17 +108,18 @@ class EquipmentTypes():
     def get_equipment_types():
         return EquipmentTypes.EQUIPMENT_TYPES
 
-class Statistic(models.Model):
+class Ability(models.Model):
     name = models.CharField(unique=True)
     abbreviation = models.CharField(max_length=3)
     description = models.CharField()
+
 class Skill(models.Model):
     name = models.CharField()
-    statistic = models.ForeignKey(Statistic, on_delete=models.RESTRICT)
+    ability = models.ForeignKey(Ability, on_delete=models.RESTRICT)
 
 class SavingThrow(models.Model):
     name = models.CharField(unique=True)
-    statistic = models.ForeignKey(Statistic, on_delete=models.RESTRICT)
+    ability = models.ForeignKey(Ability, on_delete=models.RESTRICT)
 
 class SkillProficiency(models.Model):
     name = models.CharField()
@@ -128,12 +129,48 @@ class SavingThrowProficiency(models.Model):
     name = models.CharField()
     saving_throw = models.ForeignKey(SavingThrow, on_delete=models.RESTRICT)
 
+class AbilityScoreBonus(models.Model):
+    ability = models.ForeignKey(Ability, on_delete=models.RESTRICT)
+    bonus = models.PositiveSmallIntegerField(default=1, blank=False, null=False)
+
+class Proficiency(PolymorphicModel):
+    proficiency_name = models.CharField()
+    description = models.TextField()
+
+class ProficiencyOption(models.Model):
+    """Model that describes one option from a choice that a player may make. Can contain references to items, profic-
+    iencies, languages, ability score increases, and more."""
+    proficiency = models.ManyToManyField(Proficiency, help_text="description of the contents of this option")
+
+class ProficiencyChoice(models.Model):
+    """Model that descibes a choice between proficiencies which a player may have to make. For example, players choosing
+     to make a Dwarf character must choose between proficiency in smith's tools, brewer's supplies, or masons's tools."""
+    desc    = models.TextField(help_text="description of the choice to be made")
+    options = models.ManyToManyField(ProficiencyOption)
+
+class Language(models.Model):
+    STANDARD = "S"
+    EXOTIC = "E"
+    type_choices = {
+        STANDARD : "Standard",
+        EXOTIC : "Exotic"
+    }
+
+    name = models.CharField()
+    desc = models.TextField()
+    type = models.CharField(choices=type_choices)
+    typical_speakers = models.CharField()
+
+class LanguageChoice(models.Model):
+    description = models.CharField()
+    language_option = models.ManyToManyField(Language)
 
 class Race(models.Model):
     """Model that describes how races are stored in the database."""
     name = models.CharField(unique=True)
     size = models.CharField(max_length=1, choices=Sizes.get_size_choices())
-    size_desc = models.TextField()
+    size_desc = models.TextField(default="")
+    alignment_desc = models.TextField(default="")
     speed_walking = models.PositiveSmallIntegerField(validators=[validate_mod_five])
     speed_flying = models.PositiveSmallIntegerField(validators=[validate_mod_five])
     speed_burrowing = models.PositiveSmallIntegerField(validators=[validate_mod_five])
@@ -142,19 +179,29 @@ class Race(models.Model):
     desc_short = models.CharField(max_length=500) # Arbitrary limit, may need revising later
     desc_long = models.CharField()
     age_desc = models.CharField()
+    languages = models.ManyToManyField(Language)
+    language_desc = models.TextField(default="")
+
 
 class Subrace(models.Model):
     name = models.CharField(unique=True)
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
+    starting_proficiencies = models.ManyToManyField(Proficiency, blank=True)
+    languages = models.ManyToManyField(Language, blank=True)
 
 
 class Trait(models.Model):
-    name = models.CharField(unique=True)
-    races = models.ManyToManyField(Race)
-    desc = models.TextField()
+    """
+    Traits pertain exclusively to races and subraces; they do not apply to classes or backgrounds.
 
-class Feature():
+    Traits have a m2m relationship with races and subraces; one such example of this is Darkvision, which is a trait
+    held by most races.
+    """
     name = models.CharField(unique=True)
+    desc = models.TextField()
+    races = models.ManyToManyField(Race)
+    subraces = models.ManyToManyField(Subrace)
+
 
 class RawStats(models.Model):
     """Model for holding the raw statistical modifiers for a character's abilities."""
@@ -178,49 +225,6 @@ class Character(models.Model):
     subrace = models.ForeignKey(Subrace, on_delete=models.RESTRICT)
 
 
-class CharacterProficiencies(models.Model):
-    """Extends the Character model, for the purpose of not overpopulating the table with too many columns."""
-    acrobatics_prof = models.BooleanField(default=False)
-    animal_handling_prof = models.BooleanField(default=False)
-    arcana_prof = models.BooleanField(default=False)
-    athletics_prof = models.BooleanField(default=False)
-    deception_prof = models.BooleanField(default=False)
-    history_prof = models.BooleanField(default=False)
-    insight_prof = models.BooleanField(default=False)
-    intimidation_prof = models.BooleanField(default=False)
-    investigation_prof = models.BooleanField(default=False)
-    medicine_prof = models.BooleanField(default=False)
-    nature_prof = models.BooleanField(default=False)
-    perception_prof = models.BooleanField(default=False)
-    performance_prof = models.BooleanField(default=False)
-    persuasion_prof = models.BooleanField(default=False)
-    religion_prof = models.BooleanField(default=False)
-    sleight_of_hand_prof = models.BooleanField(default=False)
-    stealth_prof = models.BooleanField(default=False)
-    survival_prof = models.BooleanField(default=False)
-
-class CharacterProficiencyCustomValues(models.Model):
-    """Model for representing custom values for proficiencies, should the player wish to override the values for reasons
-     such as magical items, features, or for fun."""
-    acrobatics_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    animal_handling_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    arcana_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    athletics_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    deception_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    history_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    insight_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    intimidation_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    investigation_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    medicine_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    nature_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    perception_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    performance_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    persuasion_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    religion_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    sleight_of_hand_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    stealth_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-    survival_val = models.SmallIntegerField(null=True, default=None, validators=[MinValueValidator(-100), MaxValueValidator(100)])
-
 class CharacterClass(models.Model):
     """Model for representing the different class options available for player characters."""
     name = models.CharField(unique=True)
@@ -240,20 +244,15 @@ class ClassInstance(models.Model):
     subclass_type = models.ForeignKey(CharacterSubclass, on_delete=models.CASCADE)
     class_level = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
 
-class Proficiency(models.Model):
-    proficiency_name = models.CharField()
-    description = models.TextField()
-
-class ProficiencyOption(models.Model):
-    """Model that describes one option from a choice that a player may make. Can contain references to items, profic-
-    iencies, languages, ability score increases, and more."""
-    proficiency = models.ManyToManyField(Proficiency, help_text="description of the contents of this option")
-
-class ProficiencyChoice(models.Model):
-    """Model that descibes a choice between proficiencies which a player may have to make. For example, players choosing
-     to make a Dwarf character must choose between proficiency in smith's tools, brewer's supplies, or masons's tools."""
-    desc    = models.TextField(help_text="description of the choice to be made")
-    options = models.ManyToManyField(ProficiencyOption)
+class Feature():
+    """
+    Features pertain exclusively to classes and subclasses; they do not apply to races or backgrounds.
+    """
+    name = models.CharField(unique=True)
+    desc = models.TextField()
+    level = models.PositiveSmallIntegerField()
+    feature_class = models.ForeignKey(CharacterClass, on_delete=models.SET_NULL, null=True)
+    feature_subclass = models.ForeignKey(CharacterSubclass, on_delete=models.SET_NULL, null=True)
 
 class EquipmentCategory(models.Model):
     category_name = models.CharField(unique=True)
@@ -325,6 +324,7 @@ class Weapon(Item):
     max_range = models.PositiveSmallIntegerField(blank=True, null=True)
     requires_ammunition = models.BooleanField(default=False)
     requires_loading = models.BooleanField(default=False)
+
 class WeaponProficiency(Proficiency):
     weapon = models.ForeignKey(Weapon, on_delete=models.CASCADE)
 
@@ -368,20 +368,3 @@ class MagicItem(Item):
     description_body = models.TextField(default="")
     requires_attunement = models.BooleanField(default=False)
     rarity = models.CharField(max_length=1, choices=RARITY_CHOICES)
-
-class Language(models.Model):
-    STANDARD = "S"
-    EXOTIC = "E"
-    type_choices = {
-        STANDARD : "Standard",
-        EXOTIC : "Exotic"
-    }
-
-    name = models.CharField()
-    desc = models.TextField()
-    type = models.CharField(choices=type_choices)
-    typical_speakers = models.CharField()
-
-class LanguageChoice(models.Model):
-    description = models.CharField()
-    language_option = models.ManyToManyField(Language)
