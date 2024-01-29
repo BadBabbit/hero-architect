@@ -113,25 +113,46 @@ class Ability(models.Model):
     abbreviation = models.CharField(max_length=3)
     description = models.CharField()
 
+    def __str__(self):
+        return self.name
+
 class Skill(models.Model):
     name = models.CharField()
+    desc = models.TextField(default="")
     ability = models.ForeignKey(Ability, on_delete=models.RESTRICT)
+
+    def __str__(self):
+        return self.name
+
 
 class SavingThrow(models.Model):
     name = models.CharField(unique=True)
     ability = models.ForeignKey(Ability, on_delete=models.RESTRICT)
 
+    def __str__(self):
+        return self.name
+
 class SkillProficiency(models.Model):
     name = models.CharField()
     skill = models.ForeignKey(Skill, on_delete=models.RESTRICT)
+
+    def __str__(self):
+        return self.name
 
 class SavingThrowProficiency(models.Model):
     name = models.CharField()
     saving_throw = models.ForeignKey(SavingThrow, on_delete=models.RESTRICT)
 
+    def __str__(self):
+        return self.name
+
+
 class AbilityScoreBonus(models.Model):
     ability = models.ForeignKey(Ability, on_delete=models.RESTRICT)
     bonus = models.PositiveSmallIntegerField(default=1, blank=False, null=False)
+
+    def __str__(self):
+        return self.ability.name + " " + str(self.bonus)
 
 class Proficiency(PolymorphicModel):
     proficiency_name = models.CharField()
@@ -156,39 +177,17 @@ class Language(models.Model):
         EXOTIC : "Exotic"
     }
 
-    name = models.CharField()
-    desc = models.TextField()
+    name = models.CharField(null=False, default="ERR_NO_NAME", unique=True)
     type = models.CharField(choices=type_choices)
-    typical_speakers = models.CharField()
+    typical_speakers = models.CharField(default="")
+    script = models.CharField(default="")
+
+    def __str__(self):
+        return self.name
 
 class LanguageChoice(models.Model):
     description = models.CharField()
     language_option = models.ManyToManyField(Language)
-
-class Race(models.Model):
-    """Model that describes how races are stored in the database."""
-    name = models.CharField(unique=True)
-    size = models.CharField(max_length=1, choices=Sizes.get_size_choices())
-    size_desc = models.TextField(default="")
-    alignment_desc = models.TextField(default="")
-    speed_walking = models.PositiveSmallIntegerField(validators=[validate_mod_five])
-    speed_flying = models.PositiveSmallIntegerField(validators=[validate_mod_five])
-    speed_burrowing = models.PositiveSmallIntegerField(validators=[validate_mod_five])
-    speed_swimming = models.PositiveSmallIntegerField(validators=[validate_mod_five])
-    speed_climbing = models.PositiveSmallIntegerField(validators=[validate_mod_five])
-    desc_short = models.CharField(max_length=500) # Arbitrary limit, may need revising later
-    desc_long = models.CharField()
-    age_desc = models.CharField()
-    languages = models.ManyToManyField(Language)
-    language_desc = models.TextField(default="")
-
-
-class Subrace(models.Model):
-    name = models.CharField(unique=True)
-    race = models.ForeignKey(Race, on_delete=models.CASCADE)
-    starting_proficiencies = models.ManyToManyField(Proficiency, blank=True)
-    languages = models.ManyToManyField(Language, blank=True)
-
 
 class Trait(models.Model):
     """
@@ -199,26 +198,52 @@ class Trait(models.Model):
     """
     name = models.CharField(unique=True)
     desc = models.TextField()
-    races = models.ManyToManyField(Race)
-    subraces = models.ManyToManyField(Subrace)
+
+    def __str__(self):
+        return self.name
 
 
-class RawStats(models.Model):
-    """Model for holding the raw statistical modifiers for a character's abilities."""
-    strength     = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
-    constitution = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
-    dexterity    = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
-    wisdom       = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
-    intelligence = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
-    charisma     = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
 
+class Race(models.Model):
+    """Model that describes how races are stored in the database."""
+    name = models.CharField(unique=True)
+    size = models.CharField(max_length=1, choices=Sizes.get_size_choices())
+    size_desc = models.TextField(default="")
+    ability_score_bonuses = models.ManyToManyField(AbilityScoreBonus)
+    alignment_desc = models.TextField(default="")
+    speed_walking = models.PositiveSmallIntegerField(validators=[validate_mod_five], default=30)
+    speed_flying = models.PositiveSmallIntegerField(validators=[validate_mod_five], default=0)
+    speed_burrowing = models.PositiveSmallIntegerField(validators=[validate_mod_five], default=0)
+    speed_swimming = models.PositiveSmallIntegerField(validators=[validate_mod_five], default=0)
+    speed_climbing = models.PositiveSmallIntegerField(validators=[validate_mod_five], default=0)
+    age_desc = models.CharField()
+    traits = models.ManyToManyField(Trait, blank=True)
+    starting_proficiencies = models.ManyToManyField(Proficiency, blank=True)
+    languages = models.ManyToManyField(Language)
+    language_desc = models.TextField(default="")
+
+    def __str__(self):
+        return self.name
+
+
+
+class Subrace(models.Model):
+    name = models.CharField(unique=True)
+    race = models.ForeignKey(Race, on_delete=models.CASCADE)
+    desc = models.TextField(blank=True, default="")
+    ability_score_bonuses = models.ManyToManyField(AbilityScoreBonus)
+    traits = models.ManyToManyField(Trait, blank=True)
+    starting_proficiencies = models.ManyToManyField(Proficiency, blank=True, null=True)
+    languages = models.ManyToManyField(Language, blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Character(models.Model):
     """Model that describes how player character information is stored. Many-to-one relationship with User. A character
     can belong to many classes (through multi-classing)."""
     name = models.CharField(max_length=32)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    raw_stats = models.ForeignKey(RawStats, on_delete=models.CASCADE)
     character_level = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
     inventory = models.TextField()
     race = models.ForeignKey(Race, on_delete=models.RESTRICT)
@@ -271,7 +296,7 @@ class Item(PolymorphicModel):
     value_silver = models.PositiveIntegerField()
     value_copper = models.PositiveIntegerField()
     weight = models.CharField(max_length=5, default="", help_text="weight of the item, measured in pounds (lbs).")
-    equipment_category = models.ManyToManyField(EquipmentCategory)
+    equipment_category = models.ForeignKey(EquipmentCategory, on_delete=models.RESTRICT, null=True)
 
 class Armour(Item):
     LIGHT = "L"
@@ -349,22 +374,3 @@ class EquipmentPack(models.Model):
         related_name="%(app_label)s_%(class)s_related",
         related_query_name="%(app_label)s_%(class)ss",
     )
-
-class MagicItem(Item):
-    COMMON = "C"
-    UNCOMMON = "U"
-    RARE = "R"
-    VERY_RARE = "V"
-    LEGENDARY = "L"
-    RARITY_CHOICES = {
-        COMMON: "Common",
-        UNCOMMON: "Uncommon",
-        RARE: "Rare",
-        VERY_RARE: "Very rare",
-        LEGENDARY: "Legendary"
-    }
-
-    description_header = models.TextField(default="")
-    description_body = models.TextField(default="")
-    requires_attunement = models.BooleanField(default=False)
-    rarity = models.CharField(max_length=1, choices=RARITY_CHOICES)

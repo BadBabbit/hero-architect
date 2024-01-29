@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'character_creation'
+    'character_creation',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +70,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'diss_development.wsgi.application'
+
+LOGGING = {
+    "version": 1,  # the dictConfig format version
+    "disable_existing_loggers": False,  # retain the default loggers
+    "handlers": {
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "general.log",
+        },
+    }
+}
 
 
 # Database
