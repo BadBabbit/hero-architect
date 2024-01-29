@@ -7,6 +7,13 @@ import django
 
 logger = logging.getLogger(__name__)
 
+def extract_equipment_indexes(response):
+    print(response)
+    indexes = []
+    for r in response["equipment"]:
+        indexes.append(r["index"])
+    return indexes
+
 def extract_indexes(response):
     indexes = []
     for r in response["results"]:
@@ -285,8 +292,70 @@ def create_skills():
         s.ability=a
         s.save()
 
+def is_magic_item(item):
+    return True if "magic-item" in item["url"] else False
+
+def create_armour():
+    # TODO: Make armour entries in the db conform with CP/SP/GP cost unit constraints and L/M/H/S type constraints
+
+    base_url = "https://www.dnd5eapi.co/api/equipment-categories/armor"
+
+    payload = {}
+    headers = {
+        'Accept': 'application/json'
+    }
+
+    url = base_url
+
+    armours = extract_equipment_indexes(requests.request("GET", url, headers=headers, data=payload).json())
+
+    for armour in armours:
+        print(f"adding {armour}...")
+        url = "https://www.dnd5eapi.co/api/equipment/" + armour
+        response = requests.request("GET", url, headers=headers, data=payload).json()
+
+        if is_magic_item(response):
+            continue
+
+        a = Armour()
+
+        name = response["name"]
+        armour_type = response["armor_category"]
+        ac = response["armor_class"]["base"]
+        dex_bonus = response["armor_class"]["dex_bonus"]
+        try:
+            max_bonus = response["armor_class"]["max_bonus"]
+        except KeyError:
+            pass
+        stren_min = response["str_minimum"]
+        stealth_dis = response["stealth_disadvantage"]
+        weight = response["weight"]
+        cost_quantity = response["cost"]["quantity"]
+        cost_unit = response["cost"]["unit"]
+
+        a.name = name
+        a.armor_type = armour_type
+        a.ac = ac
+        a.ac_dex_bonus = dex_bonus
+        try:
+            a.ac_dex_bonus_max = max_bonus
+        except UnboundLocalError:
+            if dex_bonus:
+                a.ac_dex_bonus_max = 99
+            else:
+                a.ac_dex_bonus_max = 0
+        a.strength_requirement = stren_min
+        a.stealth_disadvantage = stealth_dis
+        a.weight = weight
+        a.cost_value = cost_quantity
+        a.cost_unit = cost_unit
+        a.equipment_category = EquipmentCategory.objects.get(category_name="Armour")
+
+        a.save()
+
+
 def main():
-    create_skills()
+    create_armour()
 
 if __name__ == "__main__":
 

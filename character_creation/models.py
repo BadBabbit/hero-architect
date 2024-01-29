@@ -117,7 +117,7 @@ class Ability(models.Model):
         return self.name
 
 class Skill(models.Model):
-    name = models.CharField()
+    name = models.CharField(unique=True)
     desc = models.TextField(default="")
     ability = models.ForeignKey(Ability, on_delete=models.RESTRICT)
 
@@ -133,14 +133,14 @@ class SavingThrow(models.Model):
         return self.name
 
 class SkillProficiency(models.Model):
-    name = models.CharField()
+    name = models.CharField(unique=True)
     skill = models.ForeignKey(Skill, on_delete=models.RESTRICT)
 
     def __str__(self):
         return self.name
 
 class SavingThrowProficiency(models.Model):
-    name = models.CharField()
+    name = models.CharField(unique=True)
     saving_throw = models.ForeignKey(SavingThrow, on_delete=models.RESTRICT)
 
     def __str__(self):
@@ -233,7 +233,7 @@ class Subrace(models.Model):
     desc = models.TextField(blank=True, default="")
     ability_score_bonuses = models.ManyToManyField(AbilityScoreBonus)
     traits = models.ManyToManyField(Trait, blank=True)
-    starting_proficiencies = models.ManyToManyField(Proficiency, blank=True, null=True)
+    starting_proficiencies = models.ManyToManyField(Proficiency, blank=True)
     languages = models.ManyToManyField(Language, blank=True)
 
     def __str__(self):
@@ -282,6 +282,9 @@ class Feature():
 class EquipmentCategory(models.Model):
     category_name = models.CharField(unique=True)
 
+    def __str__(self):
+        return self.category_name
+
 class Item(PolymorphicModel):
     """Abstract database model for items. There are multiple different types of items that inherit from this class, such
     as:
@@ -291,38 +294,48 @@ class Item(PolymorphicModel):
     Weapons are implemented in their own base class separate from Items due to the multiple inheritance required for the
     various weapon classes
     """
-    name = models.CharField()
-    value_gold = models.PositiveIntegerField()
-    value_silver = models.PositiveIntegerField()
-    value_copper = models.PositiveIntegerField()
-    weight = models.CharField(max_length=5, default="", help_text="weight of the item, measured in pounds (lbs).")
+
+    COPPER = "CP"
+    SILVER = "SP"
+    GOLD = "GP"
+    COST_UNIT_CHOICES = {
+        COPPER: "Copper",
+        SILVER: "Silver",
+        GOLD: "Gold"
+    }
+    name = models.CharField(unique=True)
+    cost_value = models.PositiveSmallIntegerField(default=1)
+    cost_unit = models.CharField(default="CP", choices=COST_UNIT_CHOICES)
     equipment_category = models.ForeignKey(EquipmentCategory, on_delete=models.RESTRICT, null=True)
+
+    def __str__(self):
+        return self.name
 
 class Armour(Item):
     LIGHT = "L"
     MEDIUM = "M"
     HEAVY = "H"
     SHIELD = "S"
-    ARMOR_TYPE_CHOICES = {
+    ARMOUR_TYPE_CHOICES = {
         LIGHT: "Light",
         MEDIUM: "Medium",
         HEAVY: "Heavy",
         SHIELD: "Shield"
     }
 
-    armor_type = models.CharField(max_length=1, choices=ARMOR_TYPE_CHOICES)
-    description = models.TextField(default="")
-    strength_requirement = models.PositiveSmallIntegerField(
+    armour_type = models.CharField(max_length=1, choices=ARMOUR_TYPE_CHOICES)
+    strength_requirement = models.SmallIntegerField(
         null=True,
         blank=True,
-        validators=[MinValueValidator(1), MaxValueValidator(30)]
+        validators=[MinValueValidator(0), MaxValueValidator(30)]
     )
     ac = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(30)]
     )
-    ac_dex_bonus = models.BooleanField()
+    ac_dex_bonus = models.BooleanField(default=False)
     ac_dex_bonus_max = models.SmallIntegerField(default=0)
-    stealth_disadvantage = models.BooleanField()
+    stealth_disadvantage = models.BooleanField(default=False)
+    weight = models.CharField(max_length=5, default="", help_text="weight of the armour, measured in pounds (lbs).")
 
 class ArmourProficiency(Proficiency):
     armour = models.ForeignKey(Armour, on_delete=models.CASCADE)
