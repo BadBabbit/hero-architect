@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 def extract_equipment_indexes(response):
     print(response)
     indexes = []
-    for r in response["equipment"]:
+    for r in response:
         indexes.append(r["index"])
     return indexes
 
@@ -19,6 +19,16 @@ def extract_indexes(response):
     for r in response["results"]:
         indexes.append(r["index"])
     return indexes
+
+def is_magic_item(item):
+    return True if "magic-item" in item["url"] else False
+
+def remove_magic_items(response):
+    non_magic_items = []
+    for r in response["equipment"]:
+        if not is_magic_item(r):
+            non_magic_items.append(r)
+    return non_magic_items
 
 def extract_names(response):
     names = []
@@ -292,8 +302,6 @@ def create_skills():
         s.ability=a
         s.save()
 
-def is_magic_item(item):
-    return True if "magic-item" in item["url"] else False
 
 def create_armour():
     # TODO: Make armour entries in the db conform with CP/SP/GP cost unit constraints and L/M/H/S type constraints
@@ -307,7 +315,7 @@ def create_armour():
 
     url = base_url
 
-    armours = extract_equipment_indexes(requests.request("GET", url, headers=headers, data=payload).json())
+    armours = extract_equipment_indexes(requests.request("GET", url, headers=headers, data=payload).json()["equipment"])
 
     for armour in armours:
         print(f"adding {armour}...")
@@ -353,9 +361,62 @@ def create_armour():
 
         a.save()
 
+def create_weapons():
+
+    url = "https://www.dnd5eapi.co/api/equipment-categories/weapon"
+
+    payload = {}
+    headers = {
+        'Accept': 'application/json'
+    }
+
+
+    # weapons = extract_equipment_indexes(
+    #     remove_magic_items(
+    #         requests.request(
+    #             "GET", url, headers=headers, data=payload
+    #         ).json()
+    #     )
+    # )
+
+    weapons = ["dagger"]
+    weapon_category = EquipmentCategory.objects.get(category_name="Weapon")
+
+    for weapon in weapons:
+        print(f"adding {weapon}...")
+        url = "https://www.dnd5eapi.co/api/equipment/" + weapon
+        response = requests.request("GET", url, headers=headers, data=payload).json()
+        print(response)
+
+        w = Weapon()
+
+        w.name = response["name"]
+        w.desc = response["desc"]
+        w.special_desc = response["special"]
+
+        if response["weapon_category"] == "Martial":
+            w.martial = True
+
+        w.cost_value = response["cost"]["quantity"]
+        w.cost_unit = response["cost"]["unit"].upper()
+        w.equipment_category = weapon_category
+
+        # TODO: handle damage + damage type
+
+        try:
+            w.effective_range = weapon["range"]["normal"]
+            w.max_range = weapon["range"]["long"]
+        except KeyError:
+            try:
+                w.effective_range = weapon["thrown_range"]["normal"]
+                w.max_range = weapon["thrown_range"]["long"]
+            except KeyError:
+                pass
+                # TODO: extract property indexes from weapon["properties"]
 
 def main():
-    create_armour()
+    create_weapons()
+
 
 if __name__ == "__main__":
 
