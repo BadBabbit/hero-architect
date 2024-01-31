@@ -358,8 +358,8 @@ class Weapon(Item):
     versatile_damage_dice = models.CharField(null=True, default=None, max_length=4, choices=dice_choices)
     is_finesse = models.BooleanField(default=False)
     thrown = models.BooleanField(default=False)
-    effective_range = models.PositiveSmallIntegerField(blank=True, null=True)
-    max_range = models.PositiveSmallIntegerField(blank=True, null=True)
+    effective_range = models.SmallIntegerField(blank=True, null=True)
+    max_range = models.SmallIntegerField(blank=True, null=True)
     requires_ammunition = models.BooleanField(default=False)
     requires_loading = models.BooleanField(default=False)
 

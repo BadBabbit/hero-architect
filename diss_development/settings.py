@@ -82,7 +82,6 @@ LOGGING = {
     }
 }
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -94,7 +93,6 @@ DATABASES = {
         'PASSWORD': 'M[Fj2Sh4UO]Q5)gg'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

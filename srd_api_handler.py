@@ -361,6 +361,16 @@ def create_armour():
 
         a.save()
 
+def parse_dice_notation(dice_notation):
+    num_dice, sides = dice_notation.split('d')
+    return num_dice, f'D{int(sides):03d}'  # formats sides as an int, and then forces a width of three by padding with 0s
+
+def get_key_by_value(dictionary, value):
+    for key, val in dictionary.items():
+        if val == value:
+            return key
+    return None
+
 def create_weapons():
 
     url = "https://www.dnd5eapi.co/api/equipment-categories/weapon"
@@ -403,16 +413,51 @@ def create_weapons():
 
         # TODO: handle damage + damage type
 
-        try:
+        num_dice, num_sides = parse_dice_notation(weapon["damage"]["damage_dice"])
+        w.num_dice = num_dice
+        w.damage_dice = num_sides
+
+        damage_types = DamageTypes.get_types()
+        damage_type = get_key_by_value(damage_types, weapon["damage"]["damage_type"])
+        w.damage_type = damage_type
+
+        if "long" in weapon["range"]:
             w.effective_range = weapon["range"]["normal"]
             w.max_range = weapon["range"]["long"]
-        except KeyError:
-            try:
-                w.effective_range = weapon["thrown_range"]["normal"]
-                w.max_range = weapon["thrown_range"]["long"]
-            except KeyError:
-                pass
-                # TODO: extract property indexes from weapon["properties"]
+        elif "thrown_range" in weapon:
+            w.effective_range = weapon["thrown_range"]["normal"]
+            w.max_range = weapon["thrown_range"]["long"]
+        else:
+            w.effective_range = 5
+            w.max_range = 5
+
+
+        for p in weapon["properties"]:
+            p_name = p["index"]
+            if p_name == "ammunition":
+                w.requires_ammunition = True
+            elif p_name == "finesse":
+                w.is_finesse = True
+            elif p_name == "heavy":
+                w.is_heavy = True
+            elif p_name == "light":
+                w.is_light = True
+            elif p_name == "loading":
+                w.requires_loading = True
+            elif p_name == "reach":
+                w.has_reach = True
+            elif p_name == "special":
+                w.is_special = True
+            elif p_name == "thrown":
+                w.thrown = True
+            elif p_name == "two-handed":
+                w.two_handed = True
+            elif p_name == "versatile":
+                w.versatile = True
+                _, damage_dice = parse_dice_notation(weapon["two_handed_damage"]["damage_dice"])
+                w.versatile_damage_dice = damage_dice
+
+        # TODO: extract property indexes from weapon["properties"]
 
 def main():
     create_weapons()
