@@ -362,8 +362,11 @@ def create_armour():
         a.save()
 
 def parse_dice_notation(dice_notation):
-    num_dice, sides = dice_notation.split('d')
-    return num_dice, f'D{int(sides):03d}'  # formats sides as an int, and then forces a width of three by padding with 0s
+    d_list = dice_notation.split('d')
+    if len(d_list) == 1:
+        return [d_list[0]]
+    else:
+        return [d_list[0], f'D{int(d_list[1]):03d}']  # formats sides as an int, and then forces a width of three by padding with 0s
 
 def get_key_by_value(dictionary, value):
     for key, val in dictionary.items():
@@ -380,7 +383,6 @@ def create_weapons():
         'Accept': 'application/json'
     }
 
-
     # weapons = extract_equipment_indexes(
     #     remove_magic_items(
     #         requests.request(
@@ -389,7 +391,7 @@ def create_weapons():
     #     )
     # )
 
-    weapons = ["dagger"]
+    weapons = ["blowgun"]
     weapon_category = EquipmentCategory.objects.get(category_name="Weapon")
 
     for weapon in weapons:
@@ -413,26 +415,28 @@ def create_weapons():
 
         # TODO: handle damage + damage type
 
-        num_dice, num_sides = parse_dice_notation(weapon["damage"]["damage_dice"])
-        w.num_dice = num_dice
-        w.damage_dice = num_sides
+        dice = parse_dice_notation(response["damage"]["damage_dice"])
+        w.num_dice = dice[0]
+        if len(dice) == 2:
+            w.damage_dice = dice[1]
+        else:
+            w.damage_dice = None
 
         damage_types = DamageTypes.get_types()
-        damage_type = get_key_by_value(damage_types, weapon["damage"]["damage_type"])
+        damage_type = get_key_by_value(damage_types, response["damage"]["damage_type"])
         w.damage_type = damage_type
 
-        if "long" in weapon["range"]:
-            w.effective_range = weapon["range"]["normal"]
-            w.max_range = weapon["range"]["long"]
-        elif "thrown_range" in weapon:
-            w.effective_range = weapon["thrown_range"]["normal"]
-            w.max_range = weapon["thrown_range"]["long"]
+        if "long" in response["range"]:
+            w.effective_range = response["range"]["normal"]
+            w.max_range = response["range"]["long"]
+        elif "thrown_range" in response:
+            w.effective_range = response["thrown_range"]["normal"]
+            w.max_range = response["thrown_range"]["long"]
         else:
             w.effective_range = 5
             w.max_range = 5
 
-
-        for p in weapon["properties"]:
+        for p in response["properties"]:
             p_name = p["index"]
             if p_name == "ammunition":
                 w.requires_ammunition = True
@@ -454,13 +458,19 @@ def create_weapons():
                 w.two_handed = True
             elif p_name == "versatile":
                 w.versatile = True
-                _, damage_dice = parse_dice_notation(weapon["two_handed_damage"]["damage_dice"])
+                _, damage_dice = parse_dice_notation(response["two_handed_damage"]["damage_dice"])
                 w.versatile_damage_dice = damage_dice
 
-        # TODO: extract property indexes from weapon["properties"]
+        # TODO: resolve issues with:
+        # - thrown ranges
+        # - damage types
+        # - versatile damage dice defaulting to d4 instead of none
+
+        w.save()
 
 def main():
-    create_weapons()
+    damage_types = DamageTypes.get_types()
+    print(get_key_by_value(damage_types, "piercing"))
 
 
 if __name__ == "__main__":

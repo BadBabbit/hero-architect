@@ -203,7 +203,6 @@ class Trait(models.Model):
         return self.name
 
 
-
 class Race(models.Model):
     """Model that describes how races are stored in the database."""
     name = models.CharField(unique=True)
@@ -224,7 +223,6 @@ class Race(models.Model):
 
     def __str__(self):
         return self.name
-
 
 
 class Subrace(models.Model):
@@ -344,7 +342,7 @@ class Weapon(Item):
     dice_choices = Dice.get_dice()
     damage_type_choices = DamageTypes.get_types()
 
-    damage_dice = models.CharField(max_length=4, choices=dice_choices, blank=True, null=True, default="")
+    damage_dice = models.CharField(max_length=4, choices=dice_choices, blank=True, null=True, default=None)
     num_dice = models.PositiveSmallIntegerField(default=1, blank=True, null=True)
     damage_type = models.CharField(max_length=2, choices=damage_type_choices, blank=True, null=True, default="")
     martial = models.BooleanField(default=False)
