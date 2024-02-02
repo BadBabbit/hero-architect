@@ -383,15 +383,16 @@ def create_weapons():
         'Accept': 'application/json'
     }
 
-    # weapons = extract_equipment_indexes(
-    #     remove_magic_items(
-    #         requests.request(
-    #             "GET", url, headers=headers, data=payload
-    #         ).json()
-    #     )
-    # )
+    weapons = extract_equipment_indexes(
+        remove_magic_items(
+            requests.request(
+                "GET", url, headers=headers, data=payload
+            ).json()
+        )
+    )
 
-    weapons = ["blowgun"]
+    # weapons = ["quarterstaff"]
+
     weapon_category = EquipmentCategory.objects.get(category_name="Weapon")
 
     for weapon in weapons:
@@ -413,8 +414,6 @@ def create_weapons():
         w.cost_unit = response["cost"]["unit"].upper()
         w.equipment_category = weapon_category
 
-        # TODO: handle damage + damage type
-
         dice = parse_dice_notation(response["damage"]["damage_dice"])
         w.num_dice = dice[0]
         if len(dice) == 2:
@@ -423,13 +422,14 @@ def create_weapons():
             w.damage_dice = None
 
         damage_types = DamageTypes.get_types()
-        damage_type = get_key_by_value(damage_types, response["damage"]["damage_type"])
+        damage_type = get_key_by_value(damage_types, response["damage"]["damage_type"]["index"])
         w.damage_type = damage_type
 
         if "long" in response["range"]:
             w.effective_range = response["range"]["normal"]
             w.max_range = response["range"]["long"]
         elif "thrown_range" in response:
+            print("thrown_range is in response")
             w.effective_range = response["thrown_range"]["normal"]
             w.max_range = response["thrown_range"]["long"]
         else:
@@ -458,19 +458,18 @@ def create_weapons():
                 w.two_handed = True
             elif p_name == "versatile":
                 w.versatile = True
-                _, damage_dice = parse_dice_notation(response["two_handed_damage"]["damage_dice"])
-                w.versatile_damage_dice = damage_dice
+                v_dice = parse_dice_notation(response["two_handed_damage"]["damage_dice"])
+                w.versatile_damage_dice = v_dice[1]
 
         # TODO: resolve issues with:
         # - thrown ranges
-        # - damage types
+        # - damage types - probably resolved? i think it was because of the two-character limitation
         # - versatile damage dice defaulting to d4 instead of none
 
         w.save()
 
 def main():
-    damage_types = DamageTypes.get_types()
-    print(get_key_by_value(damage_types, "piercing"))
+    create_weapons()
 
 
 if __name__ == "__main__":
