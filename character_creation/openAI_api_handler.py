@@ -1,7 +1,14 @@
 from openai import OpenAI
 from dotenv import load_dotenv
+import logging
 import time
 import os
+
+logging.basicConfig(level=logging.NOTSET)
+if __name__ == "__main__":
+    LOGGER = logging.getLogger("general")
+else:
+    LOGGER = logging.getLogger(__name__)
 
 class OpenAIClient:
     load_dotenv()
@@ -63,28 +70,30 @@ def openAI_API_call(client, messages):
     )
     return completion.choices[0].message
 
-def main():
+def main(LOGGER):
 
-    print("Initialising thread...")
+    LOGGER.debug("Initialising thread...")
     t = initialise_thread()
-    print(f"Thread ID: {t.id}")
+    LOGGER.debug(f"Thread ID: {t.id}")
 
-    print("Adding message to thread...")
-    content = "I want to create an intellectual academic. How can I do that?"
+    LOGGER.debug("Adding message to thread...")
+    content = "I want to create a level 2 barbarian. How do I start?"
     _ = add_message_to_thread(content, t)
 
-    print("Getting assistant ID...")
+    LOGGER.debug("Getting assistant ID...")
     a = Assistant.get_id()
-    print("Running assistant...")
+    LOGGER.debug("Running assistant...")
     r = run_assistant(t, a)
 
+    c = 0
     while r.status != "completed":
-        print("Polling...")
+        LOGGER.debug(f"Polling. {c * 0.5} seconds elapsed...")
+        c+=1
         time.sleep(0.5)
         r = retrieve_run(t, r)
-        print(f"r_status: {r.status}")
-    print("Run complete!")
-    print("Retrieving messages...")
+        LOGGER.debug(f"r_status: {r.status}")
+    LOGGER.info("Run complete!")
+    LOGGER.debug("Retrieving messages...")
     ms = retrieve_messages(t)
     print(ms.data[0].content)
 

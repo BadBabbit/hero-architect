@@ -4,11 +4,13 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from polymorphic.models import PolymorphicModel
 
+
 def validate_mod_five(value):
     if value % 5 != 0:
-        raise ValidationError(str(value)+" is not valid; input must be a multiple of 5.")
+        raise ValidationError(str(value) + " is not valid; input must be a multiple of 5.")
 
-class Sizes():
+
+class Sizes:
     SIZE_CHOICES = {
         "T": "Tiny",
         "S": "Small",
@@ -21,6 +23,7 @@ class Sizes():
     @staticmethod
     def get_size_choices():
         return Sizes.SIZE_CHOICES
+
 
 class Dice():
     DICE = {
@@ -37,7 +40,8 @@ class Dice():
     def get_dice():
         return Dice.DICE
 
-class DamageTypes():
+
+class DamageTypes:
     DAMAGE_TYPES = {
         "FI": "fire",
         "BL": "bludgeoning",
@@ -60,8 +64,8 @@ class DamageTypes():
     def get_types():
         return DamageTypes.DAMAGE_TYPES
 
-class EquipmentTypes():
 
+class EquipmentTypes:
     EQUIPMENT_TYPES = {
         "ADG": "Adventuring Gear",
         "AMM": "Ammunition",
@@ -108,6 +112,7 @@ class EquipmentTypes():
     def get_equipment_types():
         return EquipmentTypes.EQUIPMENT_TYPES
 
+
 class Ability(models.Model):
     name = models.CharField(unique=True)
     abbreviation = models.CharField(max_length=3)
@@ -115,6 +120,7 @@ class Ability(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Skill(models.Model):
     name = models.CharField(unique=True)
@@ -132,12 +138,14 @@ class SavingThrow(models.Model):
     def __str__(self):
         return self.name
 
+
 class SkillProficiency(models.Model):
     name = models.CharField(unique=True)
     skill = models.ForeignKey(Skill, on_delete=models.RESTRICT)
 
     def __str__(self):
         return self.name
+
 
 class SavingThrowProficiency(models.Model):
     name = models.CharField(unique=True)
@@ -154,27 +162,31 @@ class AbilityScoreBonus(models.Model):
     def __str__(self):
         return self.ability.name + " " + str(self.bonus)
 
+
 class Proficiency(PolymorphicModel):
     proficiency_name = models.CharField()
     description = models.TextField()
+
 
 class ProficiencyOption(models.Model):
     """Model that describes one option from a choice that a player may make. Can contain references to items, profic-
     iencies, languages, ability score increases, and more."""
     proficiency = models.ManyToManyField(Proficiency, help_text="description of the contents of this option")
 
+
 class ProficiencyChoice(models.Model):
     """Model that descibes a choice between proficiencies which a player may have to make. For example, players choosing
      to make a Dwarf character must choose between proficiency in smith's tools, brewer's supplies, or masons's tools."""
-    desc    = models.TextField(help_text="description of the choice to be made")
+    desc = models.TextField(help_text="description of the choice to be made")
     options = models.ManyToManyField(ProficiencyOption)
+
 
 class Language(models.Model):
     STANDARD = "S"
     EXOTIC = "E"
     type_choices = {
-        STANDARD : "Standard",
-        EXOTIC : "Exotic"
+        STANDARD: "Standard",
+        EXOTIC: "Exotic"
     }
 
     name = models.CharField(null=False, default="ERR_NO_NAME", unique=True)
@@ -185,9 +197,11 @@ class Language(models.Model):
     def __str__(self):
         return self.name
 
+
 class LanguageChoice(models.Model):
     description = models.CharField()
     language_option = models.ManyToManyField(Language)
+
 
 class Trait(models.Model):
     """
@@ -237,6 +251,7 @@ class Subrace(models.Model):
     def __str__(self):
         return self.name
 
+
 class Character(models.Model):
     """Model that describes how player character information is stored. Many-to-one relationship with User. A character
     can belong to many classes (through multi-classing)."""
@@ -253,11 +268,13 @@ class CharacterClass(models.Model):
     name = models.CharField(unique=True)
     # TODO: the rest of the class lmao
 
+
 class CharacterSubclass(models.Model):
     """Model for representing subclass options."""
     name = models.CharField(unique=True)
     superclass = models.ForeignKey(CharacterClass, on_delete=models.RESTRICT)
     # TODO: the rest of the subclass teehee
+
 
 class ClassInstance(models.Model):
     """Model for representing a particular instance of a class. For instance, this model may be used to store
@@ -266,6 +283,7 @@ class ClassInstance(models.Model):
     class_type = models.ForeignKey(CharacterClass, on_delete=models.CASCADE, null=False, blank=False)
     subclass_type = models.ForeignKey(CharacterSubclass, on_delete=models.CASCADE)
     class_level = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
+
 
 class Feature():
     """
@@ -277,11 +295,13 @@ class Feature():
     feature_class = models.ForeignKey(CharacterClass, on_delete=models.SET_NULL, null=True)
     feature_subclass = models.ForeignKey(CharacterSubclass, on_delete=models.SET_NULL, null=True)
 
+
 class EquipmentCategory(models.Model):
     category_name = models.CharField(unique=True)
 
     def __str__(self):
         return self.category_name
+
 
 class Item(PolymorphicModel):
     """Abstract database model for items. There are multiple different types of items that inherit from this class, such
@@ -309,6 +329,7 @@ class Item(PolymorphicModel):
     def __str__(self):
         return self.name
 
+
 class Armour(Item):
     LIGHT = "L"
     MEDIUM = "M"
@@ -335,8 +356,10 @@ class Armour(Item):
     stealth_disadvantage = models.BooleanField(default=False)
     weight = models.CharField(max_length=5, default="", help_text="weight of the armour, measured in pounds (lbs).")
 
+
 class ArmourProficiency(Proficiency):
     armour = models.ForeignKey(Armour, on_delete=models.CASCADE)
+
 
 class Weapon(Item):
     dice_choices = Dice.get_dice()
@@ -361,11 +384,14 @@ class Weapon(Item):
     requires_ammunition = models.BooleanField(default=False)
     requires_loading = models.BooleanField(default=False)
 
+
 class WeaponProficiency(Proficiency):
     weapon = models.ForeignKey(Weapon, on_delete=models.CASCADE)
 
+
 class AdventuringGear(Item):
     description = models.TextField(default="")
+
 
 class Tool(Item):
     description = models.TextField(default="")
@@ -373,8 +399,10 @@ class Tool(Item):
     is_gaming_set = models.BooleanField()
     is_instrument = models.BooleanField()
 
+
 class ToolProficiency(Proficiency):
     tool = models.ForeignKey(Tool, on_delete=models.CASCADE)
+
 
 class EquipmentPack(models.Model):
     name = models.CharField(max_length=32)

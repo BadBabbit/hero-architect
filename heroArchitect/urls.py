@@ -1,5 +1,5 @@
 """
-URL configuration for diss_development project.
+URL configuration for heroArchitect project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -19,5 +19,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('character_creation/', include('character_creation.urls'))
+    path('home/', include('core.urls')),
+    path('character_creation/', include('character_creation.urls')),
+    path('login/', include('accounts.urls')),
+    path('register/', include('accounts.urls')),
+    path('create/', include('character_creation.urls')),
+    path('mycharacters/', include('characters_creation.urls'))
 ]
