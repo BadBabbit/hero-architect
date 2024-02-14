@@ -1,5 +1,7 @@
 from django.shortcuts import render
 
 def home(request):
-    # do stuff, idk man
-    pass
+    context = {}
+    if request.user.is_authenticated:
+        context["username"] = request.user.username
+    return render(request, 'home.html', context=context)

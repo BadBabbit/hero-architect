@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    {% block title %}
+        <title>Title</title>
+    {% endblock %}
+</head>
+<body>
+    {% block navbar %}
+    <div class="topnav">
+        <a class="active" href="#home">Home</a>
+        <a href="">Create</a>
+        {% if not user.is_authenticated %}
+            <a href="">Log in</a>
+            <a href="">Register</a>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <p>Hello, {{username}}</p>
+            <a href="">Log out</a>
+        {% endif %}
+        <a href=""></a>
+    </div>
+    {% endblock %}
+    {% block content %}
+        <!-- Deliberately empty; this is where the page body goes -->
+    {% endblock %}
+</body>
+</html>
