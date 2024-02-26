@@ -413,3 +413,11 @@ class EquipmentPack(models.Model):
         related_name="%(app_label)s_%(class)s_related",
         related_query_name="%(app_label)s_%(class)ss",
     )
+
+
+class Message(models.Model):
+    author = models.OneToOneField(User, on_delete=models.CASCADE)
+
+class Conversation(models.Model):
+    name = models.CharField(max_length=20)
+    messages = models.ManyToManyField(Message)

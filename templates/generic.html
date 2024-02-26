@@ -5,23 +5,38 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    {% block stylesheet %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+    {% endblock %}
     {% block title %}
         <title>Title</title>
+    {% endblock %}
+    {% block styletag %}
+        <style>
+
+        </style>
     {% endblock %}
 </head>
 <body>
     {% block navbar %}
     <div class="topnav">
-        <a class="active" href="#home">Home</a>
-        <a href="">Create</a>
+        <a {% if request.path == '/' %}
+                class="active"
+            {% endif %}
+            href="/">Home</a>
+        <a href="create/">Create</a>
         {% if not user.is_authenticated %}
-            <a href="">Log in</a>
-            <a href="">Register</a>
+            <a href="/auth/login" {% if request.path == '/auth/login/' %}
+                class="active"
+            {% endif %}>Log in</a>
+            <a href="/auth/register" {% if request.path == '/auth/register/' %}
+                class="active"
+            {% endif %}>Register</a>
         {% endif %}
         {% if user.is_authenticated %}
+            <a href="">My Characters</a>
             <p>Hello, {{username}}</p>
-            <a href="">Log out</a>
+            <a href="/auth/logout" style="float: right">Log out</a>
         {% endif %}
         <a href=""></a>
     </div>

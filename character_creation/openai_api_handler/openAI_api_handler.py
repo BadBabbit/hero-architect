@@ -70,7 +70,7 @@ def openAI_API_call(client, messages):
     )
     return completion.choices[0].message
 
-def main(LOGGER):
+def main():
 
     LOGGER.debug("Initialising thread...")
     t = initialise_thread()
@@ -94,8 +94,10 @@ def main(LOGGER):
         LOGGER.debug(f"r_status: {r.status}")
     LOGGER.info("Run complete!")
     LOGGER.debug("Retrieving messages...")
+
+    # Response object layout can be found at https://platform.openai.com/docs/api-reference/messages/listMessages
     ms = retrieve_messages(t)
-    print(ms.data[0].content)
+    print(ms.data[0].content[0].text.value)
 
 
 if __name__ == "__main__":

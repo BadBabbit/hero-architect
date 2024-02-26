@@ -1,7 +1,7 @@
 .topnav {
   background-color: #333;
   overflow: hidden;
-  font-family: "Comic Sans MS";
+  font-family: Helvetica;
 }
 
 /* Style the links inside the navigation bar */
@@ -37,11 +37,29 @@
 
 /* Add a color to the active/current link */
 .topnav a.active {
-  background-color: #04AA6D;
+  background-color: saddlebrown;
   color: white;
 }
 
 body {
-  background-color: lightblue;
+  background-color: sandybrown;
+  font-family: Helvetica;
 }
 
+div.form {
+  width: 500px;
+  padding: 20px;
+  margin: 200px auto;
+  border: 10px solid black;
+  background-color: saddlebrown;
+
+}
+
+.smalltextform {
+  width: 100;
+  border: 10px solid black;
+}
+
+h1 {
+  font-family: Helvetica;
+}

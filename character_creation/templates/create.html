@@ -1,0 +1,73 @@
+{% extends "generic.html" %}
+
+{% block title %}
+    <title>HeroArchitect | Create</title>
+{% endblock %}
+
+{% block styletag %}
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: saddlebrown;
+            align-content: center;
+        }
+        .message-thread {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .message-sent {
+            text-align: right;
+        }
+        .message-received {
+            text-align: left;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <form method="post">
+            {% crsftoken %}
+            <div id="initial-prompt">
+                <button onclick= "startConversation()" name="start" value="ai">Start me off</button>
+                <button onclick= "startConversation()" name="start" value="user">I have an idea!</button>
+            </div>
+        </form>
+        <div id="conversation" style="display: none;">
+            <div class="message-thread" id="message-thread">
+                {% for message in messages %}
+                <div class="message-{% if message.author == 'user' %}sent{% else %}received{% endif %}">
+                    {% if message.author == 'user' %}
+                        <strong>You:</strong> {{ message.content }}
+                    {% else %}
+                        <strong>HeroArchitect:</strong> {{ message.content }}
+                    {% endif %}
+                {% endfor %}
+                </div>
+            </div>
+            <form id="message-form" method="post" action="{% url 'create_character' %}">
+                {% csrf_token %}
+                <textarea name="user_input" id="user-input" placeholder="Type your message..."></textarea>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function startConversation() {
+            document.getElementById("initial-prompt").style.display = "none";
+            document.getElementById("conversation").style.display = "block";
+        }
+
+    </script>
+{% endblock %}
