@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+import logging, time
 from django.http import HttpResponse
-from openai_api_handler import openAI_api_handler as heroArchitect
+from character_creation.openai_api_handler import openAI_api_handler as heroArchitect
 
 logging.basicConfig(level=logging.NOTSET)
 if __name__ == "__main__":
@@ -8,10 +9,12 @@ if __name__ == "__main__":
 else:
     LOGGER = logging.getLogger(__name__)
 
+
 def create_message(author, content):
-    message = {}
-    message['author'] = author
-    message['content'] = content
+    message = {
+        'author': author,
+        'content': content
+    }
     return message
 
 
@@ -41,27 +44,39 @@ def initialise_conversation(initialiser):
             LOGGER.debug(f"Polling. {c * 0.5} seconds elapsed...")
             c += 1
             time.sleep(0.5)
-            r = retrieve_run(t, r)
+            r = heroArchitect.retrieve_run(t, r)
             LOGGER.debug(f"r_status: {r.status}")
 
     return t
 
 
-
 # view for create.html, at index /create/
 def create_character(request):
-    context = {}
-    context["messages"] = []
-    context["messages"]
+    context = {
+        "username": "",
+        "messages": [],
+        "show_prompt": True,
+        "show_messages": False
+    }
+
+    if request.user.is_authenticated:
+        context["username"] = request.user.username
+
+    else:
+        return redirect('/auth/login/')
+
     if request.method == 'POST':
         data = request.POST
 
+        context["show_prompt"] = False
+        context["show_messages"] = True
+
         # Handles initial prompt
-        action = data.get("start")
-        if action != None:
-            t = initialise_conversation(action)
+        start = data.get("start")
+        if start is not None:
+            t = initialise_conversation(start)
             response = heroArchitect.retrieve_messages(t)
-            messages = response[data]
+            messages = response.data
             for m in messages:
                 content = m.content[0].text.value
 
@@ -76,17 +91,22 @@ def create_character(request):
                 context["messages"].append(create_message(author, content))
 
         # Handles user message inputs
-        if
+        message = data.get("user_input")
+        if message is not None:
+            print(message)
 
     return render(request, 'create.html', context)
+
 
 def my_characters(request):
     context = {}
     return render(request, 'TODO.html', context)
 
+
 def character_detail(request):
     context = {}
     return render(request, 'TODO.html', context)
+
 
 def main():
     pass
@@ -94,4 +114,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

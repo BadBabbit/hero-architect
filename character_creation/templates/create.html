@@ -38,13 +38,16 @@
 {% block content %}
     <div class="container">
         <form method="post">
-            {% crsftoken %}
+            {% if show_prompt %}
+            {% csrf_token %}
             <div id="initial-prompt">
-                <button onclick= "startConversation()" name="start" value="ai">Start me off</button>
-                <button onclick= "startConversation()" name="start" value="user">I have an idea!</button>
+                <button name="start" value="ai">Start me off</button>
+                <button name="start" value="user">I have an idea!</button>
             </div>
+            {% endif %}
         </form>
         <div id="conversation" style="display: none;">
+            {% if show_messages %}
             <div class="message-thread" id="message-thread">
                 {% for message in messages %}
                 <div class="message-{% if message.author == 'user' %}sent{% else %}received{% endif %}">
@@ -61,13 +64,7 @@
                 <textarea name="user_input" id="user-input" placeholder="Type your message..."></textarea>
                 <button type="submit">Send</button>
             </form>
+            {% endif %}
         </div>
     </div>
-    <script>
-        function startConversation() {
-            document.getElementById("initial-prompt").style.display = "none";
-            document.getElementById("conversation").style.display = "block";
-        }
-
-    </script>
 {% endblock %}

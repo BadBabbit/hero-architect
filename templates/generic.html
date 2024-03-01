@@ -24,7 +24,7 @@
                 class="active"
             {% endif %}
             href="/">Home</a>
-        <a href="create/">Create</a>
+        <a href="/characters/create/">Create</a>
         {% if not user.is_authenticated %}
             <a href="/auth/login" {% if request.path == '/auth/login/' %}
                 class="active"
