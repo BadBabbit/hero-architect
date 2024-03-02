@@ -30,6 +30,10 @@ def initialise_thread():
     client = OpenAIClient.get_client()
     return client.beta.threads.create()
 
+def get_thread(thread_id):
+    client = OpenAIClient.get_client()
+    return client.beta.threads.retrieve(thread_id)
+
 def add_message_to_thread(content, thread):
     client = OpenAIClient.get_client()
     message = client.beta.threads.messages.create(
@@ -62,6 +66,16 @@ def retrieve_messages(thread):
         thread_id=thread.id
     )
     return messages
+
+def wait_on_run(run, thread):
+    c = 0
+    while run.status != "completed":
+        if c % 5 == 0:
+            LOGGER.debug(f"Polling. {c * 0.1} seconds elapsed...")
+        c += 1
+        time.sleep(0.1)
+        run = retrieve_run(thread, run)
+        LOGGER.debug(f"r_status: {run.status}")
 
 def openAI_API_call(client, messages):
     completion = client.chat.completions.create(

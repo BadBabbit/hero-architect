@@ -107,6 +107,9 @@ DATABASES = {
     }
 }
 
+# Required for overriding base User model
+AUTH_USER_MODEL = "accounts.HA_User"
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from accounts.models import HA_User
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from polymorphic.models import PolymorphicModel
@@ -255,8 +255,8 @@ class Subrace(models.Model):
 class Character(models.Model):
     """Model that describes how player character information is stored. Many-to-one relationship with User. A character
     can belong to many classes (through multi-classing)."""
+    user = models.ForeignKey(HA_User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=32)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     character_level = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
     inventory = models.TextField()
     race = models.ForeignKey(Race, on_delete=models.RESTRICT)
@@ -416,8 +416,15 @@ class EquipmentPack(models.Model):
 
 
 class Message(models.Model):
-    author = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(HA_User, on_delete=models.CASCADE, null=True)
+    content = models.TextField(default="")
+
 
 class Conversation(models.Model):
-    name = models.CharField(max_length=20)
-    messages = models.ManyToManyField(Message)
+    user = models.ForeignKey(HA_User, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=20, default="New Conversation")
+    messages = models.ForeignKey(Message, on_delete=models.CASCADE, null=True)
+
+    # Thread ID for OpenAI API
+    thread_id = models.CharField(blank=True, null=False)
+    active = models.BooleanField(default=False)
