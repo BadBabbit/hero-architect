@@ -52,12 +52,12 @@
                 {% for message in messages %}
                 <div class="message-{% if message.author == 'user' %}sent{% else %}received{% endif %}">
                     {% if message.author == 'user' %}
-                        <strong>You:</strong> {{ message.content }}
+                        <strong>You: </strong><p>{{ message.content }}</p>
                     {% else %}
-                        <strong>HeroArchitect:</strong> {{ message.content }}
+                        <strong>HeroArchitect: </strong><p>{{ message.content }}</p>
                     {% endif %}
-                {% endfor %}
                 </div>
+                {% endfor %}
             </div>
             <form id="message-form" method="post" action="{% url 'create_character' %}">
                 {% csrf_token %}

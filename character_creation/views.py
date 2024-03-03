@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db import transaction, DatabaseError, IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 import logging, time
 from django.http import HttpResponse
 from character_creation.openai_api_handler import openAI_api_handler as heroArchitect
@@ -56,16 +57,15 @@ def initialise_conversation(initialiser):
 def add_message_to_database(user, conversation, content):
     try:
         with transaction.atomic():
-            message_object = Message(content=content)
-            conversation.messages.add(message_object)
-            message_object.user = user
+            message = Message(
+                content=content,
+                conversation=conversation,
+                user=user
+            )
+            message.save()
 
-            conversation.save()
-            message_object.save()
-
-    # Marks conversation as inactive if an error occurs.
     except Exception as e:
-        conversation.active = False
+        LOGGER.error(f"ERROR: TRANSACTION COULD NOT BE COMPLETED: {e.__str__()}")
 
 
 # view for create.html, at index /create/
@@ -92,17 +92,29 @@ def create_character(request):
         start = data.get("start")
         message = data.get("user_input")
 
-        user_obj = HA_User.objects.get(username=request.user.username)
-        if user_obj is None:
+        # Retrieve user
+        try:
+            user = HA_User.objects.get(username=request.user.username)
+        except ObjectDoesNotExist:
             LOGGER.error(f" COULD NOT FIND USER WITH USERNAME '{request.user.username}'")
-            raise DatabaseError
+            raise ObjectDoesNotExist
 
         # Handles initial prompt
         if start is not None:
 
             t = initialise_conversation(start)
-            conversation = Conversation(thread_id=t.id, active=True)
-            conversation.user = user_obj
+
+            # Check for existing conversation, delete if exists
+            try:
+                conversation = Conversation.objects.get(user=user)
+                conversation.delete()
+                # TODO: Should probably also close OpenAI thread, but idk how to do that
+            except ObjectDoesNotExist:
+                pass
+
+            # Create new conversation
+            conversation = Conversation(thread_id=t.id)
+            conversation.user = user
             conversation.save()
 
             # Prompts the AI to generate a response
@@ -134,19 +146,22 @@ def create_character(request):
 
         # Handles user message inputs
         elif message is not None:
-            conversation = Conversation.objects.filter(active=True).get()
-            # Do stuff with the user's message
+            conversation = Conversation.objects.filter(user=user).get()
 
             # Add message to database
-            add_message_to_database(user_obj, conversation, message)
+            add_message_to_database(user, conversation, message)
 
+            # Add message to conversation thread
             t_id = conversation.thread_id
             thread = heroArchitect.get_thread(t_id)
             heroArchitect.add_message_to_thread(message, thread)
 
+            # Generate response
             a_id = heroArchitect.Assistant.get_id()  # Assistant ID
             LOGGER.info("Running assistant.")
             run = heroArchitect.run_assistant(t_id, a_id)
+
+            # Retrieve response
             heroArchitect.wait_on_run(run, thread)
             LOGGER.info("Run complete.")
             ms = heroArchitect.retrieve_messages(thread)
@@ -170,7 +185,8 @@ def create_character(request):
             ha = HA_User.objects.get(username="HeroArchitect")
             add_message_to_database(ha, conversation, new_message)
 
-    return render(request, 'create.html', context)
+    print(context)
+    return render(request, 'create.html', context=context)
 
 
 def my_characters(request):

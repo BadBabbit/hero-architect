@@ -43,11 +43,11 @@ def add_message_to_thread(content, thread):
     )
     return message
 
-def run_assistant(thread, assistant, instructions=""):
+def run_assistant(thread_id, assistant_id, instructions=""):
     client = OpenAIClient.get_client()
     run = client.beta.threads.runs.create(
-        thread_id=thread.id,
-        assistant_id=assistant,
+        thread_id=thread_id,
+        assistant_id=assistant_id,
         instructions=instructions
     )
     return run

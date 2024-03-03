@@ -414,17 +414,17 @@ class EquipmentPack(models.Model):
         related_query_name="%(app_label)s_%(class)ss",
     )
 
+class Conversation(models.Model):
+    user = models.OneToOneField(HA_User, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=20, default="New Conversation")
+
+    # Thread ID for OpenAI API
+    thread_id = models.CharField(blank=True, null=False)
 
 class Message(models.Model):
     user = models.ForeignKey(HA_User, on_delete=models.CASCADE, null=True)
     content = models.TextField(default="")
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, null=True)
 
 
-class Conversation(models.Model):
-    user = models.ForeignKey(HA_User, on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=20, default="New Conversation")
-    messages = models.ForeignKey(Message, on_delete=models.CASCADE, null=True)
 
-    # Thread ID for OpenAI API
-    thread_id = models.CharField(blank=True, null=False)
-    active = models.BooleanField(default=False)
