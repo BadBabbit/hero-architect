@@ -34,10 +34,10 @@ def get_thread(thread_id):
     client = OpenAIClient.get_client()
     return client.beta.threads.retrieve(thread_id)
 
-def add_message_to_thread(content, thread):
+def add_message_to_thread(content, thread_id):
     client = OpenAIClient.get_client()
     message = client.beta.threads.messages.create(
-        thread_id=thread.id,
+        thread_id=thread_id,
         role="user",
         content=content
     )

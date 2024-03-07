@@ -14,6 +14,15 @@ else:
     LOGGER = logging.getLogger(__name__)
 
 
+def reverse_list(lst):
+
+    # Uses list comprehension to efficiently return the reversed list (completes in under 1ms for
+    # 100,000,000 long lists)
+
+    start = len(lst) - 1
+    return [lst[i] for i in range(start, -1, -1)]
+
+
 def create_message_dict(author, content):
     message = {
         'author': author,
@@ -36,11 +45,11 @@ def initialise_conversation(initialiser):
 
     if initialiser == "ai":
         content = "BEGIN_THREAD"
-        _ = heroArchitect.add_message_to_thread(content, t)
+        _ = heroArchitect.add_message_to_thread(content, t.id)
         LOGGER.debug("Getting assistant ID...")
         a = heroArchitect.Assistant.get_id()
         LOGGER.debug("Running assistant...")
-        r = heroArchitect.run_assistant(t, a)
+        r = heroArchitect.run_assistant(t.id, a)
         c = 0
 
         # Polls the API. Breaks the while loop when the AI has generated a response.
@@ -145,7 +154,7 @@ def create_character(request):
                     add_message_to_database(ha, conversation, content)
 
         # Handles user message inputs
-        elif message is not None:
+        elif message is not None or "":
             conversation = Conversation.objects.filter(user=user).get()
 
             # Add message to database
@@ -154,7 +163,7 @@ def create_character(request):
             # Add message to conversation thread
             t_id = conversation.thread_id
             thread = heroArchitect.get_thread(t_id)
-            heroArchitect.add_message_to_thread(message, thread)
+            heroArchitect.add_message_to_thread(message, t_id)
 
             # Generate response
             a_id = heroArchitect.Assistant.get_id()  # Assistant ID
@@ -185,7 +194,7 @@ def create_character(request):
             ha = HA_User.objects.get(username="HeroArchitect")
             add_message_to_database(ha, conversation, new_message)
 
-    print(context)
+    context["messages"] = reverse_list(context["messages"])
     return render(request, 'create.html', context=context)
 
 

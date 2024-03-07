@@ -6,8 +6,29 @@
 
 {% block styletag %}
     <style>
+        .vertical-centre{
+            position: relative;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+        .centre {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+        .fill {
+            width: 100%;
+            height: 100%;
+        }
         .container {
-            max-width: 600px;
+            width: 40%;
+            height: auto;
+            min-height: 10%;
+            max-height: 80%;
             margin: 20px auto;
             padding: 20px;
             border: 1px solid #ccc;
@@ -15,6 +36,10 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: saddlebrown;
             align-content: center;
+            align-self: center;
+        }
+        form.start {
+            height: 100px; /* Set the height of the form explicitly */
         }
         .message-thread {
             max-height: 400px;
@@ -32,22 +57,48 @@
         .message-received {
             text-align: left;
         }
+        .textarea-container {
+            width: 90%;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-start;
+        }
+        textarea {
+            width: 100%;
+            resize: none;
+            overflow: hidden;
+            min-height: 2em;
+            max-height: 10em;
+            flex: 1
+        }
+        button.start {
+            width: 45%;
+            height: 60%;
+            margin-inline: 5px;
+
+        }
+        button.send {
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+        }
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <form method="post">
-            {% if show_prompt %}
+    <div class="container centre">
+        {% if show_prompt %}
+        <form method="post" class="fill start">
             {% csrf_token %}
-            <div id="initial-prompt">
-                <button name="start" value="ai">Start me off</button>
-                <button name="start" value="user">I have an idea!</button>
+            <div id="initial-prompt" class="fill" style="text-align: center;">
+                <button name="start" class="start vertical-centre" value="ai">Start me off</button>
+                <button name="start" class="start vertical-centre" value="user">I have an idea!</button>
             </div>
-            {% endif %}
         </form>
-        <div id="conversation" style="display: none;">
+        {% endif %}
+        <div id="conversation" style="width: 100%">
             {% if show_messages %}
+            {% if messages %}
             <div class="message-thread" id="message-thread">
                 {% for message in messages %}
                 <div class="message-{% if message.author == 'user' %}sent{% else %}received{% endif %}">
@@ -59,12 +110,22 @@
                 </div>
                 {% endfor %}
             </div>
-            <form id="message-form" method="post" action="{% url 'create_character' %}">
-                {% csrf_token %}
-                <textarea name="user_input" id="user-input" placeholder="Type your message..."></textarea>
-                <button type="submit">Send</button>
-            </form>
+            {% endif %}
+            <div class="textarea-container">
+                <form id="message-form" method="post" action="{% url 'create_character' %}" style="display: flex; align-items: flex-start; width: 100%">
+                    {% csrf_token %}
+                    <textarea name="user_input" oninput="auto_grow(this)" id="user-input" placeholder="Send a message to HeroArchitect..."></textarea>
+                    <button type="submit" class="send">Send</button>
+                </form>
+            </div>
             {% endif %}
         </div>
     </div>
+
+    <script>
+        function auto_grow(element) {
+            element.style.height = "5px";
+            element.style.height = (element.scrollHeight) + "px";
+        }
+    </script>
 {% endblock %}
