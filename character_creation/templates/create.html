@@ -103,9 +103,9 @@
                 {% for message in messages %}
                 <div class="message-{% if message.author == 'user' %}sent{% else %}received{% endif %}">
                     {% if message.author == 'user' %}
-                        <strong>You: </strong><p>{{ message.content }}</p>
+                        <strong>You: </strong><p>{{ message.content|linebreaks }}</p>
                     {% else %}
-                        <strong>HeroArchitect: </strong><p>{{ message.content }}</p>
+                        <strong>HeroArchitect: </strong><p>{{ message.content|linebreaks }}</p>
                     {% endif %}
                 </div>
                 {% endfor %}
