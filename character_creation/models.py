@@ -410,6 +410,31 @@ class Character(models.Model):
     lvl_1_slots_total = models.SmallIntegerField(default=0)
     lvl_1_slots_expended = models.SmallIntegerField(default=0)
 
+    lvl_2_slots_total = models.SmallIntegerField(default=0)
+    lvl_2_slots_expended = models.SmallIntegerField(default=0)
+
+    lvl_3_slots_total = models.SmallIntegerField(default=0)
+    lvl_3_slots_expended = models.SmallIntegerField(default=0)
+
+    lvl_4_slots_total = models.SmallIntegerField(default=0)
+    lvl_4_slots_expended = models.SmallIntegerField(default=0)
+
+    lvl_5_slots_total = models.SmallIntegerField(default=0)
+    lvl_5_slots_expended = models.SmallIntegerField(default=0)
+
+    lvl_6_slots_total = models.SmallIntegerField(default=0)
+    lvl_6_slots_expended = models.SmallIntegerField(default=0)
+
+    lvl_7_slots_total = models.SmallIntegerField(default=0)
+    lvl_7_slots_expended = models.SmallIntegerField(default=0)
+
+    lvl_8_slots_total = models.SmallIntegerField(default=0)
+    lvl_8_slots_expended = models.SmallIntegerField(default=0)
+
+    lvl_9_slots_total = models.SmallIntegerField(default=0)
+    lvl_9_slots_expended = models.SmallIntegerField(default=0)
+
+
 
 class Spell(models.Model):
     name = models.CharField(blank=True, default="")
