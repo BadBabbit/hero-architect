@@ -260,32 +260,32 @@ class Character(models.Model):
 
     # Core information
     user = models.ForeignKey(HA_User, on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=32)
-    character_class_and_level = models.CharField()
-    character_level = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)])
-    inventory = models.TextField()
+    name = models.CharField(max_length=32, blank=True, default="")
+    character_class_and_level = models.CharField(blank=True, default="")
+    character_level = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=1)
+    inventory = models.TextField(blank=True, default="")
     race = models.ForeignKey(Race, on_delete=models.RESTRICT)
-    subrace = models.ForeignKey(Subrace, on_delete=models.RESTRICT)
+    subrace = models.ForeignKey(Subrace, on_delete=models.RESTRICT, null=True)
 
     # Ability scores, modifiers, and saving throws
-    str_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
-    str_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(-10)])
-    str_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(-30)])
-    dex_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
-    dex_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(-10)])
-    dex_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(-30)])
-    con_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
-    con_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(-10)])
-    con_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(-30)])
-    int_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
-    int_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(-10)])
-    int_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(-30)])
-    wis_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
-    wis_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(-10)])
-    wis_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(-30)])
-    cha_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)])
-    cha_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(-10)])
-    cha_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(-30)])
+    str_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
+    str_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
+    str_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    dex_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
+    dex_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
+    dex_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    con_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
+    con_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
+    con_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    int_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
+    int_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
+    int_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    wis_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
+    wis_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
+    wis_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    cha_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
+    cha_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
+    cha_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
 
     # Skills
     acrobatics_prof = models.BooleanField(default=False)
@@ -348,12 +348,12 @@ class Character(models.Model):
     armour_class = models.PositiveSmallIntegerField(default=10)
     initiative_mod = models.SmallIntegerField(default=0)
     speed = models.PositiveSmallIntegerField(default=30)
-    max_hp = models.PositiveSmallIntegerField()
-    current_hp = models.PositiveSmallIntegerField()
-    temp_hp = models.PositiveSmallIntegerField()
+    max_hp = models.PositiveSmallIntegerField(default=1)
+    current_hp = models.SmallIntegerField(default=1)
+    temp_hp = models.SmallIntegerField(default=0)
     hit_dice = models.CharField(max_length=4, choices=dice_choices, blank=True, null=True, default="")
-    death_save_fails = models.SmallIntegerField(validators=[MaxValueValidator(3)])
-    death_save_passes = models.SmallIntegerField(validators=[MaxValueValidator(3)])
+    death_save_fails = models.SmallIntegerField(validators=[MaxValueValidator(3)], default=0)
+    death_save_passes = models.SmallIntegerField(validators=[MaxValueValidator(3)], default=0)
 
     # # Weapon attacks (yes, i know this is not normalised. no, i do not care.)
     ## Commented out for now, will experiment with one large text field first.
@@ -380,9 +380,9 @@ class Character(models.Model):
 
     # Equipment and currency
     equipment = models.TextField(blank=True, null=True, default="")
-    cp = models.SmallIntegerField()
-    sp = models.SmallIntegerField()
-    gp = models.SmallIntegerField()
+    cp = models.SmallIntegerField(default=0)
+    sp = models.SmallIntegerField(default=0)
+    gp = models.SmallIntegerField(default=0)
 
     # Features and traits
     features_and_traits = models.TextField(blank=True, null=True, default="")
@@ -402,6 +402,7 @@ class Character(models.Model):
     backstory = models.TextField(blank=True, null=True, default="")
 
     # Spellcasting
+    spellcaster = models.BooleanField(default=False)  # Flag to represent whether spellcasting elements should be rendered
     spellcasting_ability = models.CharField(blank=True, null=True, default="")
     spell_save_dc = models.PositiveSmallIntegerField(default=0)
     spell_attack_bonus = models.SmallIntegerField(default=0)
@@ -434,6 +435,8 @@ class Character(models.Model):
     lvl_9_slots_total = models.SmallIntegerField(default=0)
     lvl_9_slots_expended = models.SmallIntegerField(default=0)
 
+    def __str__(self):
+        return self.name
 
 
 class Spell(models.Model):

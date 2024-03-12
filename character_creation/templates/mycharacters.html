@@ -1,0 +1,62 @@
+{% extends "generic.html" %}
+
+{% block title %}
+    <title>HeroArchitect | My Characters</title>
+{% endblock %}
+
+{% block styletag %}
+    <style>
+        .vertical-centre{
+            position: relative;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+        .centre {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+        .fill {
+            width: 100%;
+            height: 100%;
+        }
+        .container {
+            width: 60%;
+            height: auto;
+            min-height: 10%;
+            max-height: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: saddlebrown;
+            align-content: center;
+            align-self: center;
+        }
+        .character {
+
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container centre">
+        {% for character in characters %}
+        <!-- need to make this clickable so that it redirects to character page -->
+        <div class="character">
+            <div class="character_name">
+                <strong>{ character.name }</strong>
+            </div>
+            <div class="character_class_and_level">
+                <p>{ character.class_and_level }
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

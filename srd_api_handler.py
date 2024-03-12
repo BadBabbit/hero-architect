@@ -1,7 +1,7 @@
 import requests
 import logging
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.utils import IntegrityError
 import django
 
 
@@ -77,52 +77,59 @@ def create_races():
         url = base_url + "/" + race
         response = requests.request("GET", url, headers=headers, data=payload).json()
 
-        r=Race()
+        r = Race()
+        try:
+            r.save()
 
-        name=response["name"]
-        walk_speed=response["speed"]
-        alignment=response["alignment"]
-        age_desc=response["age"]
+            name = response["name"]
+            walk_speed = response["speed"]
+            alignment = response["alignment"]
+            age_desc = response["age"]
 
-        if response["size"] == "Small":
-            size = 'S'
-        elif response["size"] == "Medium":
-            size = 'M'
-        size_desc = response["size_description"]
-        language_desc = response["language_desc"]
+            if response["size"] == "Small":
+                size = 'S'
+            elif response["size"] == "Medium":
+                size = 'M'
+            size_desc = response["size_description"]
+            language_desc = response["language_desc"]
 
-        r.name=name
-        r.speed_walking=walk_speed
-        r.size=size
-        r.size_desc=size_desc
-        r.alignment_desc=alignment
-        r.age_desc=age_desc
-        r.language_desc=language_desc
+            r.name = name
+            r.speed_walking = walk_speed
+            r.size = size
+            r.size_desc = size_desc
+            r.alignment_desc = alignment
+            r.age_desc = age_desc
+            r.language_desc = language_desc
 
-        r.save()
+            for bonus in response["ability_bonuses"]:
+                ability_str = bonus["ability_score"]["name"]
+                print(f"ability str = {ability_str}")
+                score_increase = bonus["bonus"]
+                print(f"bonus = {score_increase}")
+                try:
+                    abs = AbilityScoreBonus.objects.filter(ability__abbreviation=ability_str).filter(bonus=score_increase).get()
+                except ObjectDoesNotExist:
+                    ability = Ability.objects.get(abbreviation=ability_str)
+                    asb = AbilityScoreBonus(bonus=score_increase)
+                    asb.ability = ability
+                    print("creating ability score")
+                    asb.save()
+                print(f"adding ability score for {name}")
+                r.ability_score_bonuses.add(abs)
 
-        for bonus in response["ability_bonuses"]:
-            ability_str = bonus["ability_score"]["name"]
-            print(f"ability str = {ability_str}")
-            score_increase = bonus["bonus"]
-            print(f"bonus = {score_increase}")
+            languages = response["languages"]
+            for language in languages:
+                l = Language.objects.filter(name=language["name"]).get()
+                r.languages.add(l)
+
+            r.save()
+
+        except IntegrityError:
             try:
-                abs = AbilityScoreBonus.objects.filter(ability__abbreviation=ability_str).filter(bonus=score_increase).get()
-            except ObjectDoesNotExist:
-                ability = Ability.objects.get(abbreviation=ability_str)
-                asb = AbilityScoreBonus(bonus=score_increase)
-                asb.ability = ability
-                print("creating ability score")
-                asb.save()
-            print(f"adding ability score for {name}")
-            r.ability_score_bonuses.add(abs)
-
-        languages = response["languages"]
-        for language in languages:
-            l = Language.objects.filter(name=language["name"]).get()
-            r.languages.add(l)
-
-        r.save()
+                r.delete()
+            except ValueError:
+                pass
+            continue
 
 def create_subraces():
     """
@@ -137,6 +144,7 @@ def create_subraces():
     }
 
     subraces = extract_indexes(requests.request("GET", base_url, headers=headers, data=payload).json())
+    print(subraces)
 
     for subrace in subraces:
 
@@ -144,40 +152,50 @@ def create_subraces():
         response = requests.request("GET", url, headers=headers, data=payload).json()
 
         s = Subrace()
+        try:
 
-        name = response["name"]
-        desc = response["desc"]
-        race = response["race"]["name"]
-        r = Race.objects.get(name=race)
+            name = response["name"]
+            print(name)
+            desc = response["desc"]
+            race = response["race"]["name"]
+            r = Race.objects.get(name=race)
 
-        s.name=name
-        s.desc=desc
-        s.race=r
-        s.save()
+            s.name = name
+            s.desc = desc
+            s.race = r
 
-        for bonus in response["ability_bonuses"]:
-            ability_str = bonus["ability_score"]["name"]
-            print(f"ability str = {ability_str}")
-            score_increase = bonus["bonus"]
-            print(f"bonus = {score_increase}")
+            s.save()
+
+            for bonus in response["ability_bonuses"]:
+                ability_str = bonus["ability_score"]["name"]
+                print(f"ability str = {ability_str}")
+                score_increase = bonus["bonus"]
+                print(f"bonus = {score_increase}")
+                try:
+                    abs = AbilityScoreBonus.objects.filter(ability__abbreviation=ability_str).filter(bonus=score_increase).get()
+                except ObjectDoesNotExist:
+                    ability = Ability.objects.get(abbreviation=ability_str)
+                    asb = AbilityScoreBonus(bonus=score_increase)
+                    asb.ability = ability
+                    print("creating ability score")
+                    asb.save()
+                print(f"adding ability score for {name}")
+                s.ability_score_bonuses.add(abs)
+
+            languages = response["languages"]
+            for language in languages:
+                l = Language.objects.filter(name=language["name"]).get()
+                s.languages.add(l)
+
+            s.save()
+
+        except IntegrityError:
+            print("INTEGRITY ERROR")
             try:
-                abs = AbilityScoreBonus.objects.filter(ability__abbreviation=ability_str).filter(bonus=score_increase).get()
-            except ObjectDoesNotExist:
-                ability = Ability.objects.get(abbreviation=ability_str)
-                asb = AbilityScoreBonus(bonus=score_increase)
-                asb.ability = ability
-                print("creating ability score")
-                asb.save()
-            print(f"adding ability score for {name}")
-            s.ability_score_bonuses.add(abs)
-
-        languages = response["languages"]
-        for language in languages:
-            l = Language.objects.filter(name=language["name"]).get()
-            s.languages.add(l)
-
-        s.save()
-
+                s.delete()
+            except ValueError:
+                pass
+            continue
 
 def create_languages():
     base_url = "https://www.dnd5eapi.co/api/languages"
@@ -469,7 +487,7 @@ def create_weapons():
         w.save()
 
 def main():
-    create_weapons()
+    create_subraces()
 
 
 if __name__ == "__main__":
