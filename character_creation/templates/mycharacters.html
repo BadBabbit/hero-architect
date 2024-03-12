@@ -7,12 +7,9 @@
 {% block styletag %}
     <style>
         .vertical-centre{
-            position: relative;
             top: 50%;
-            -ms-transform: translateY(-50%);
-            transform: translateY(-50%);
         }
-        .centre {
+        .absolute-centre {
             margin: 0;
             position: absolute;
             top: 50%;
@@ -20,14 +17,29 @@
             -ms-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
         }
+        .text-centre {
+            display: inline-block;
+            margin: 0 auto;
+            text-align: left;
+
+        }
+        .text-centre p {
+            margin-bottom: 0;
+            font-size: 16px;
+        }
+        .text-centre strong {
+            margin: 0;
+            font-size: 32px;
+        }
+
         .fill {
             width: 100%;
             height: 100%;
         }
-        .container {
+        .list-container {
             width: 60%;
             height: auto;
-            min-height: 10%;
+            min-height: 20%;
             max-height: 80%;
             margin: 20px auto;
             padding: 20px;
@@ -38,25 +50,61 @@
             align-content: center;
             align-self: center;
         }
+        .text-container {
+            position: relative;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            height: auto;
+        }
         .character {
+            display: inline-block;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 95%;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
+        .character_name {
+            display: inline;
+            text-align: left;
+        }
+        .character_class_and_level {
+            display: inline;
+            text-align: right;
         }
     </style>
 {% endblock %}
 
-{% block body %}
-    <div class="container centre">
-        {% for character in characters %}
-        <!-- need to make this clickable so that it redirects to character page -->
-        <div class="character">
-            <div class="character_name">
-                <strong>{ character.name }</strong>
+{% block content %}
+    <div class="list-container absolute-centre vertical-centre">
+        {% if characters %}
+            {% for character in characters %}
+            <!-- need to make this clickable so that it redirects to character page -->
+            <div class="character">
+                <div class="character_name">
+                    <strong>{{ character.name }}</strong>
+                </div>
+                <div class="character_class_and_level">
+                    <p>{{ character.class_and_level }}
+                </div>
             </div>
-            <div class="character_class_and_level">
-                <p>{ character.class_and_level }
+            {% endfor %}
+        {% else %}
+            <div class="absolute-centre">
+                <div class="text-container">
+                    <div class="text-centre">
+                        <strong>No characters to display.</strong>
+                    </div>
+                    <br>
+                    <div class="text-centre">
+                        <p>Head over to the <a href="/characters/create/">create</a> page to make a character!</p>
+                    </div>
+                </div>
             </div>
-        </div>
-        {% endfor %}
+        {% endif %}
     </div>
 
 {% endblock %}

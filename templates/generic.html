@@ -34,7 +34,7 @@
             {% endif %}>Register</a>
         {% endif %}
         {% if user.is_authenticated %}
-            <a href="">My Characters</a>
+            <a href="/characters/mycharacters">My Characters</a>
             <p>Hello, {{username}}</p>
             <a href="/auth/logout" style="float: right">Log out</a>
         {% endif %}

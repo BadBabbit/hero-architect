@@ -77,7 +77,7 @@ def add_message_to_database(user, conversation, content):
         LOGGER.error(f"ERROR: TRANSACTION COULD NOT BE COMPLETED: {e.__str__()}")
 
 
-# view for create.html, at index /create/
+# view for create.html, at index /characters/create/
 def create_character(request):
     context = {
         "username": "",
@@ -199,8 +199,30 @@ def create_character(request):
 
 
 def my_characters(request):
-    context = {}
-    return render(request, 'TODO.html', context)
+    context = {
+        "username": "",
+        "characters": []
+    }
+
+    if request.user.is_authenticated:
+        context["username"] = request.user.username
+    else:
+        return redirect('/auth/login/')
+
+    user = HA_User.objects.get(username=request.user.username)
+    characters = list(Character.objects.filter(user=user))
+    for character in characters:
+        character_dict = {
+            "name": character.name,
+            "class_and_level": character.character_class_and_level
+        }
+        context["characters"].append(character_dict)
+
+    if request.method == 'POST':
+        pass
+        # TODO: handle clicked links (might not have to do that)
+
+    return render(request, 'mycharacters.html', context=context)
 
 
 def character_detail(request):
