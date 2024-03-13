@@ -232,14 +232,161 @@ def character_detail(request, character_id):
         "username": "",
         "character": None
     }
+    c = Character.objects.get(pk=character_id)
+    username = request.user.username
+    user = HA_User.objects.get(username=username)
 
-    if request.user.is_authenticated:
-        # Check if the character belongs to the user
-
-
-        context["username"] = request.user.username
-    else:
+    # Check if the user is logged in
+    if not request.user.is_authenticated:
+        # If not, redirect to login page
         return redirect('/auth/login/')
+
+    # Check if the character belongs to the user
+    if c.user != user:
+        # If not, redirect to home
+        return redirect('/')
+
+    context["username"] = username
+
+    c_race = c.subrace.name if c.subrace else c.race.name
+    character_dict = {
+        "name": c.name,
+        "size": c.size,
+        "class_and_level": c.character_class_and_level,
+        "inventory": c.inventory,
+        "race": c_race,
+
+        "str_score": c.str_score,
+        "str_mod": c.str_mod,
+        "str_save": c.str_save,
+
+        "dex_score": c.dex_score,
+        "dex_mod": c.dex_mod,
+        "dex_save": c.dex_save,
+
+        "con_score": c.con_score,
+        "con_mod": c.con_mod,
+        "con_save": c.con_save,
+
+        "int_score": c.int_score,
+        "int_mod": c.int_mod,
+        "int_save": c.int_save,
+
+        "wis_score": c.wis_score,
+        "wis_mod": c.wis_mod,
+        "wis_save": c.wis_save,
+
+        "cha_score": c.cha_score,
+        "cha_mod": c.cha_mod,
+        "cha_save": c.cha_save,
+
+        "acrobatics_prof": c.acrobatics_prof,
+        "acrobatics_val": c.acrobatics_val,
+        "animal_handling_prof": c.animial_handling_prof,
+        "animal_handling_val": c.animal_handling_val,
+        "arcana_prof": c.arcana_prof,
+        "arcana_val": c.arcana_val,
+        "athletics_prof": c.athletics_prof,
+        "athletics_val": c.athletics_val,
+        "deception_prof": c.deception_prof,
+        "deception_val": c.deception_val,
+        "history_prof": c.history_prof,
+        "history_val": c.history_val,
+        "insight_prof": c.insight_prof,
+        "insight_val": c.insight_val,
+        "intimidation_prof": c.imtidation_prof,
+        "intimidation_val": c.intimidation_val,
+        "investigation_prof": c.investivation_prof,
+        "investigation_val": c.investigation_val,
+        "medicine_prof": c.medicine_prof,
+        "medicine_val": c.medicine_val,
+        "nature_prof": c.nature_prof,
+        "nature_val": c.nature_val,
+        "perception_prof": c.perception_prof,
+        "perception_val": c.perception_val,
+        "performance_prof": c.performance_prof,
+        "persuasion_prof": c.persuasion_prof,
+        "persuasion_val": c.persuasion_val,
+        "religion_prof": c.religion_prof,
+        "religion_val": c.religion_val,
+        "sleight_of_hand_prof": c.sleight_of_hand_prof,
+        "sleight_of_hand_val": c.sleight_of_hand_val,
+        "stealth_prof": c.stealth_prof,
+        "stealth_val": c.stealth_val,
+        "survival_prof": c.survival_prof,
+        "survival_val": c.surival_val,
+        "passive_wis": c.passive_wis,
+
+        "armour_class": c.armour_class,
+        "initiative_mod": c.initiative_mod,
+        "speed": c.speed,
+        "max_hp": c.max_hp,
+        "current_hp": c.current_hp,
+        "temp_hp": c.temp_hp,
+        "hit_dice": c.hit_dice,
+        "death_save_fails": c.death_save_fails,
+        "death_save_passes": c.death_save_passes,
+
+        "attacks": c.attacks,
+
+        "equipment": c.equipment,
+        "cp": c.cp,
+        "sp": c.sp,
+        "gp": c.gp,
+
+        "features_and_traits": c.features_and_traits,
+
+        "personality_traits": c.personality_traits,
+        "ideals": c.ideals,
+        "bonds": c.bonds,
+        "flaws": c.flaws,
+        "alignment": c.alignment,
+        "age": c.age,
+        "height": c.height,
+        "weight": c.weight,
+        "eyes": c.eyes,
+        "skin": c.skin,
+        "hair": c.hair,
+        "backstory": c.backstory,
+
+        "is_spellcaster": c.spellcaster,
+        "spellcasting_ability": c.spellcasting_ability,
+        "spell_save_dc": c.spell_save_dc,
+        "spell_attack_bonus": c.spell_attack_bonus,
+
+        "cantrips": [],
+        "lvl_1_slots_total": c.lvl_1_slots_total,
+        "lvl_1_slots_expended": c.level_1_slots_expended,
+        "lvl_1_spells": [],
+        "lvl_2_slots_total": c.lvl_1_slots_total,
+        "lvl_2_slots_expended": c.level_1_slots_expended,
+        "lvl_2_spells": [],
+        "lvl_3_slots_total": c.lvl_1_slots_total,
+        "lvl_3_slots_expended": c.level_1_slots_expended,
+        "lvl_3_spells": [],
+        "lvl_4_slots_total": c.lvl_1_slots_total,
+        "lvl_4_slots_expended": c.level_1_slots_expended,
+        "lvl_4_spells": [],
+        "lvl_5_slots_total": c.lvl_1_slots_total,
+        "lvl_5_slots_expended": c.level_1_slots_expended,
+        "lvl_5_spells": [],
+        "lvl_6_slots_total": c.lvl_1_slots_total,
+        "lvl_6_slots_expended": c.level_1_slots_expended,
+        "lvl_6_spells": [],
+        "lvl_7_slots_total": c.lvl_1_slots_total,
+        "lvl_7_slots_expended": c.level_1_slots_expended,
+        "lvl_7_spells": [],
+        "lvl_8_slots_total": c.lvl_1_slots_total,
+        "lvl_8_slots_expended": c.level_1_slots_expended,
+        "lvl_8_spells": [],
+        "lvl_9_slots_total": c.lvl_1_slots_total,
+        "lvl_9_slots_expended": c.level_1_slots_expended,
+        "lvl_9_spells": [],
+    }
+
+    context["character"] = character_dict
+
+
     return render(request, 'character.html', context)
 
 
