@@ -213,6 +213,7 @@ def my_characters(request):
     characters = list(Character.objects.filter(user=user))
     for character in characters:
         character_dict = {
+            "id": character.pk,
             "name": character.name,
             "class_and_level": character.character_class_and_level
         }
@@ -220,14 +221,26 @@ def my_characters(request):
 
     if request.method == 'POST':
         pass
-        # TODO: handle clicked links (might not have to do that)
 
     return render(request, 'mycharacters.html', context=context)
 
 
-def character_detail(request):
-    context = {}
-    return render(request, 'TODO.html', context)
+def character_detail(request, character_id):
+    print(character_id)
+
+    context = {
+        "username": "",
+        "character": None
+    }
+
+    if request.user.is_authenticated:
+        # Check if the character belongs to the user
+
+
+        context["username"] = request.user.username
+    else:
+        return redirect('/auth/login/')
+    return render(request, 'character.html', context)
 
 
 def main():

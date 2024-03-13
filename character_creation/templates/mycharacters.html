@@ -39,8 +39,9 @@
         .list-container {
             width: 60%;
             height: auto;
-            min-height: 20%;
+            min-height: 10%;
             max-height: 80%;
+            overflow-y: auto;
             margin: 20px auto;
             padding: 20px;
             border: 1px solid #ccc;
@@ -58,22 +59,18 @@
             height: auto;
         }
         .character {
-            display: inline-block;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
             width: 95%;
-            text-align: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .character_name {
-            display: inline;
             text-align: left;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: x-large;
+            color: black;
         }
-        .character_class_and_level {
-            display: inline;
-            text-align: right;
+        .character:hover {
+            background-color: sandybrown;
+            cursor: pointer;
         }
     </style>
 {% endblock %}
@@ -83,14 +80,15 @@
         {% if characters %}
             {% for character in characters %}
             <!-- need to make this clickable so that it redirects to character page -->
-            <div class="character">
-                <div class="character_name">
+            <a href="{{ character.id }}" style="text-decoration: none">
+                <div class="character">
                     <strong>{{ character.name }}</strong>
+                    <span style="float: right">
+                        {{ character.class_and_level }}
+                    </span>
                 </div>
-                <div class="character_class_and_level">
-                    <p>{{ character.class_and_level }}
-                </div>
-            </div>
+            </a>
+            <br>
             {% endfor %}
         {% else %}
             <div class="absolute-centre">
@@ -106,5 +104,4 @@
             </div>
         {% endif %}
     </div>
-
 {% endblock %}

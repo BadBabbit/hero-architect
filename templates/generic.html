@@ -17,14 +17,17 @@
         </style>
     {% endblock %}
 </head>
-<body>
+<body {% if w3container %} class="w3-container w3-flat-clouds" {% endif %}>
     {% block navbar %}
     <div class="topnav">
         <a {% if request.path == '/' %}
                 class="active"
             {% endif %}
             href="/">Home</a>
-        <a href="/characters/create/">Create</a>
+        <a {% if request.path == '/characters/create/' %}
+                class="active"
+            {% endif %}
+            href="/characters/create/">Create</a>
         {% if not user.is_authenticated %}
             <a href="/auth/login" {% if request.path == '/auth/login/' %}
                 class="active"
@@ -34,11 +37,13 @@
             {% endif %}>Register</a>
         {% endif %}
         {% if user.is_authenticated %}
-            <a href="/characters/mycharacters">My Characters</a>
+            <a {% if request.path == '/characters/mycharacters/' %}
+                    class="active"
+                {% endif %}
+                href="/characters/mycharacters">My Characters</a>
             <p>Hello, {{username}}</p>
             <a href="/auth/logout" style="float: right">Log out</a>
         {% endif %}
-        <a href=""></a>
     </div>
     {% endblock %}
     {% block content %}

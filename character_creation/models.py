@@ -406,7 +406,6 @@ class Character(models.Model):
     spellcasting_ability = models.CharField(blank=True, null=True, default="")
     spell_save_dc = models.PositiveSmallIntegerField(default=0)
     spell_attack_bonus = models.SmallIntegerField(default=0)
-    cantrips = models.TextField(blank=True, default="")
 
     lvl_1_slots_total = models.SmallIntegerField(default=0)
     lvl_1_slots_expended = models.SmallIntegerField(default=0)
