@@ -230,6 +230,7 @@ def character_detail(request, character_id):
 
     context = {
         "username": "",
+        "character_id": character_id,
         "character": None
     }
     c = Character.objects.get(pk=character_id)
@@ -247,6 +248,10 @@ def character_detail(request, character_id):
         return redirect('/')
 
     context["username"] = username
+
+    if request.method == "POST":
+        print("hello")
+        print(request.POST)
 
     c_race = c.subrace.name if c.subrace else c.race.name
     character_dict = {
@@ -282,7 +287,7 @@ def character_detail(request, character_id):
 
         "acrobatics_prof": c.acrobatics_prof,
         "acrobatics_val": c.acrobatics_val,
-        "animal_handling_prof": c.animial_handling_prof,
+        "animal_handling_prof": c.animal_handling_prof,
         "animal_handling_val": c.animal_handling_val,
         "arcana_prof": c.arcana_prof,
         "arcana_val": c.arcana_val,
@@ -294,9 +299,9 @@ def character_detail(request, character_id):
         "history_val": c.history_val,
         "insight_prof": c.insight_prof,
         "insight_val": c.insight_val,
-        "intimidation_prof": c.imtidation_prof,
+        "intimidation_prof": c.intimidation_prof,
         "intimidation_val": c.intimidation_val,
-        "investigation_prof": c.investivation_prof,
+        "investigation_prof": c.investigation_prof,
         "investigation_val": c.investigation_val,
         "medicine_prof": c.medicine_prof,
         "medicine_val": c.medicine_val,
@@ -314,7 +319,7 @@ def character_detail(request, character_id):
         "stealth_prof": c.stealth_prof,
         "stealth_val": c.stealth_val,
         "survival_prof": c.survival_prof,
-        "survival_val": c.surival_val,
+        "survival_val": c.survival_val,
         "passive_wis": c.passive_wis,
 
         "armour_class": c.armour_class,
@@ -356,32 +361,32 @@ def character_detail(request, character_id):
 
         "cantrips": [],
         "lvl_1_slots_total": c.lvl_1_slots_total,
-        "lvl_1_slots_expended": c.level_1_slots_expended,
+        "lvl_1_slots_expended": c.lvl_1_slots_expended,
         "lvl_1_spells": [],
-        "lvl_2_slots_total": c.lvl_1_slots_total,
-        "lvl_2_slots_expended": c.level_1_slots_expended,
+        "lvl_2_slots_total": c.lvl_2_slots_total,
+        "lvl_2_slots_expended": c.lvl_2_slots_expended,
         "lvl_2_spells": [],
-        "lvl_3_slots_total": c.lvl_1_slots_total,
-        "lvl_3_slots_expended": c.level_1_slots_expended,
+        "lvl_3_slots_total": c.lvl_3_slots_total,
+        "lvl_3_slots_expended": c.lvl_3_slots_expended,
         "lvl_3_spells": [],
-        "lvl_4_slots_total": c.lvl_1_slots_total,
-        "lvl_4_slots_expended": c.level_1_slots_expended,
+        "lvl_4_slots_total": c.lvl_4_slots_total,
+        "lvl_4_slots_expended": c.lvl_4_slots_expended,
         "lvl_4_spells": [],
-        "lvl_5_slots_total": c.lvl_1_slots_total,
-        "lvl_5_slots_expended": c.level_1_slots_expended,
+        "lvl_5_slots_total": c.lvl_5_slots_total,
+        "lvl_5_slots_expended": c.lvl_5_slots_expended,
         "lvl_5_spells": [],
-        "lvl_6_slots_total": c.lvl_1_slots_total,
-        "lvl_6_slots_expended": c.level_1_slots_expended,
+        "lvl_6_slots_total": c.lvl_6_slots_total,
+        "lvl_6_slots_expended": c.lvl_6_slots_expended,
         "lvl_6_spells": [],
-        "lvl_7_slots_total": c.lvl_1_slots_total,
-        "lvl_7_slots_expended": c.level_1_slots_expended,
+        "lvl_7_slots_total": c.lvl_7_slots_total,
+        "lvl_7_slots_expended": c.lvl_7_slots_expended,
         "lvl_7_spells": [],
-        "lvl_8_slots_total": c.lvl_1_slots_total,
-        "lvl_8_slots_expended": c.level_1_slots_expended,
+        "lvl_8_slots_total": c.lvl_8_slots_total,
+        "lvl_8_slots_expended": c.lvl_8_slots_expended,
         "lvl_8_spells": [],
-        "lvl_9_slots_total": c.lvl_1_slots_total,
-        "lvl_9_slots_expended": c.level_1_slots_expended,
-        "lvl_9_spells": [],
+        "lvl_9_slots_total": c.lvl_9_slots_total,
+        "lvl_9_slots_expended": c.lvl_9_slots_expended,
+        "lvl_9_spells": []
     }
 
     context["character"] = character_dict

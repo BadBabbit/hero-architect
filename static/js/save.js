@@ -64,7 +64,7 @@ function getSpells(spellLevel) {
     return spells
 }
 
-function saveSheet(argument) {
+function saveSheet() {
 
     var sheet = {
         page1: {
@@ -285,7 +285,7 @@ function saveSheet(argument) {
         page2: {
             equipment: {
                 val: getEquipment(),
-                total_weight: $('#page-2 #equipment tr#total input[name="total-weight"').val(),
+                total_weight: $('#page-2 #equipment tr#total input[name="total-weight"]').val(),
                 currency: {
                     copper: $('#page-2 #currancy input[name="copper"]').val(),
                     silver: $('#page-2 #currancy input[name="silver"]').val(),
@@ -387,20 +387,36 @@ function saveSheet(argument) {
             notes_1: $('#page-5 #notes-1 textarea[name="notes-1"]').val(),
             notes_2: $('#page-5 #notes-2 textarea[name="notes-2"]').val()
         }
-    }
+    };
 
-    var saveString = "var loadJson = ";
-    var saveString = saveString + JSON.stringify(sheet);
-
-    var file = new Blob([saveString], { type: 'application/json' });
-    var a = document.createElement("a"),
-        url = URL.createObjectURL(file);
-    a.href = url;
-    a.download = 'savedSheet';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function() {
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-    }, 0);
+    fetch('/mycharacters/' + character_id + '/character_detail/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken') // Include CSRF token for Django
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    });
 }
+
+// Function to get CSRF token from cookie
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;

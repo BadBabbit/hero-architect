@@ -5,11 +5,11 @@ function loadNewSheet(argument) {
 $(document).ready(function(argument) {
 
     //Change the title to the character name
-    if (loadJson.page1.basic_info.char_name)
-        document.title = loadJson.page1.basic_info.char_name;
+    // if (loadJson.page1.basic_info.char_name)
+    //     document.title = loadJson.page1.basic_info.char_name;
 
     //Load Basic Info
-    $('#character-basic-info #basic-info input[name="char-name"]').val(loadJson.page1.basic_info.char_name);
+    // $('#character-basic-info #basic-info input[name="char-name"]').val(loadJson.page1.basic_info.char_name);
     $('#character-basic-info #basic-info input[name="level"]').val(loadJson.page1.basic_info.level);
     $('#character-basic-info #basic-info input[name="level-two"]').val(loadJson.page1.basic_info.level_two);
 

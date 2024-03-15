@@ -257,6 +257,7 @@ class Character(models.Model):
     can belong to many classes (through multi-classing)."""
     dice_choices = Dice.get_dice()
     damage_type_choices = DamageTypes.get_types()
+    size_choices = Sizes.get_size_choices()
 
     # Core information
     user = models.ForeignKey(HA_User, on_delete=models.CASCADE, null=True)
@@ -347,6 +348,7 @@ class Character(models.Model):
     # Other quantitative modifiers
     armour_class = models.PositiveSmallIntegerField(default=10)
     initiative_mod = models.SmallIntegerField(default=0)
+    size = models.CharField(max_length=1, choices=size_choices, default="M")
     speed = models.PositiveSmallIntegerField(default=30)
     max_hp = models.PositiveSmallIntegerField(default=1)
     current_hp = models.SmallIntegerField(default=1)

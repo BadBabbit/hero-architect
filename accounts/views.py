@@ -1,7 +1,7 @@
 from accounts.forms import LoginForm, RegistrationForm
+from accounts.models import HA_User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.db import IntegrityError
@@ -26,7 +26,7 @@ def login_view(request):
 
             form_has_errors = False
 
-            existing_user = User.objects.filter(username=username)
+            existing_user = HA_User.objects.filter(username=username)
             if not existing_user:
                 form.add_error('username', f"No user with username \"{username}\" found.")
                 form_has_errors = True
