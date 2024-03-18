@@ -35,6 +35,20 @@
     <!-- Generate global character_id var --->
     <script>
         var characterId = '{{ character_id|escapejs }}';
+        window.onload = function() {
+            updateMod( "str", {{ character.str_score }});
+            updateMod( "dex", {{ character.dex_score }});
+            updateMod( "con", {{ character.con_score }});
+            updateMod( "int", {{ character.int_score }});
+            updateMod( "wis", {{ character.wis_score }});
+            updateMod( "cha", {{ character.cha_score }});
+            updateSaves();
+            updateStrSkills();
+            updateDexSkills();
+            updateIntSkills();
+            updateWisSkills();
+            updateChaSkills();
+        };
     </script>
     <!-- Sidebar -->
     <!-- Sidebar -->
@@ -86,28 +100,20 @@
             <header id="character-basic-info" class="page-width w3-container w3-content w3-margin-top">
                 <div id="basic-info" class="w3-col w3-card w3-round w3-margin-bottom">
                     <div class="w3-col w3-padding m6 l4">
+                        <span class="label">Character Name: </span>
                         <input type="text" name="char-name" value="{{ character.name }}"/>
-                        <span class="label">Character Name</span>
                     </div>
                     <div class="w3-col w3-padding m6 l4">
-                        <input type="text" name="level">
-                        <span class="label">Class/Level</span>
+                        <span class="label">Class/Level: </span>
+                        <input type="text" name="level" value="{{ character.class_and_level }}"/>
                     </div>
                     <div class="w3-col w3-padding m6 l4">
-                        <input type="text" name="level-two">
-                        <span class="label">Class/Level</span>
+                        <span class="label">Race: </span>
+                        <input type="text" name="race-class" value="{{ character.race }}"/>
                     </div>
                     <div class="w3-col w3-padding m6 l4">
-                        <input type="text" name="race-class" />
-                        <span class="label">Race</span>
-                    </div>
-                    <div class="w3-col w3-padding m6 l4">
-                        <input type="text" name="player-name" />
-                        <span class="label">Player Name</span>
-                    </div>
-                    <div class="w3-col w3-padding m6 l4">
-                        <input type="text" name="alignment" />
-                        <span class="label">Alignment</span>
+                         <span class="label">Alignment: </span>
+                        <input type="text" name="alignment" value="{{ character.alignment }}"/>
                     </div>
                 </div>
             </header>
@@ -117,11 +123,11 @@
             <div id="page-1" class="page w3-container w3-content w3-margin-top" onclick="w3_close()">
                 <!-- Top Bar -->
                 <div class="w3-col w3-margin-bottom">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Attributes</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Attributes</button>
                     <div id="top-bar" class="w3-col w3-center w3-card w3-round w3-animate-opacity">
                         <div class="w3-col w3-padding m4 l2">
                             <div class="input-frame">
-                                <input type="text" name="proficiency" maxlength="2" size="2" />
+                                <input type="text" name="proficiency" maxlength="3" size="3" value="{{ character.prof_bonus }}"/>
                             </div>
                             <div class="label-frame">
                                 <span class="label">Proficiency Bonus</span>
@@ -129,7 +135,7 @@
                         </div>
                         <div class="w3-col w3-padding m4 l2">
                             <div class="input-frame">
-                                <input type="text" name="initiative" maxlength="2" size="2" />
+                                <input type="text" name="initiative" maxlength="3" size="3" value="{{ character.initiative_mod }}"/>
                             </div>
                             <div class="label-frame">
                                 <span class="label">Initiative Bonus</span>
@@ -137,7 +143,7 @@
                         </div>
                         <div class="w3-col w3-padding m4 l2">
                             <div class="input-frame">
-                                <input class="auto-filled-border" type="text" name="passive-perception" maxlength="2" size="2" />
+                                <input type="text" name="passive-perception" maxlength="3" size="3" value="{{ character.passive_wis}}"/>
                             </div>
                             <div class="label-frame">
                                 <span class="label">Passive Perception</span>
@@ -145,7 +151,7 @@
                         </div>
                         <div class="w3-col w3-padding m4 l2">
                             <div class="input-frame">
-                                <input type="text" name="ac" maxlength="2" size="2" />
+                                <input type="text" name="ac" maxlength="3" size="3" value="{{ character.armour_class }}"/>
                             </div>
                             <div class="label-frame">
                                 <span class="label">Armor Class</span>
@@ -153,7 +159,7 @@
                         </div>
                         <div class="w3-col w3-padding m4 l2">
                             <div class="input-frame">
-                                <input type="text" name="speed" maxlength="2" size="2" />
+                                <input type="text" name="speed" maxlength="3" size="3" value="{{ character.speed }}"/>
                             </div>
                             <div class="label-frame">
                                 <span class="label">Speed</span>
@@ -161,7 +167,7 @@
                         </div>
                         <div class="w3-col w3-padding m4 l2">
                             <div class="input-frame">
-                                <input class="auto-filled-border" type="text" name="spell-dc" maxlength="2" size="2" />
+                                <input type="text" name="spell-dc" maxlength="3" size="3" value="{{ character.spell_save_dc }}"/>
                             </div>
                             <div class="label-frame">
                                 <span class="label">Spell Save DC</span>
@@ -169,67 +175,67 @@
                         </div>
                         <div class="w3-col w3-padding m4 l2" style="display:none">
                             <div class="input-frame">
-                                <input type="text" name="insperation" maxlength="2" size="2" />
+                                <input type="text" name="inspiration" maxlength="3" size="3" />
                             </div>
                             <div class="label-frame">
-                                <span class="label">Insperation</span>
+                                <span class="label">Inspiration</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Attributes -->
                 <div class="w3-col w3-margin-bottom">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Attributes</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Ability Scores</button>
                     <div id="attributes" class="w3-col w3-center w3-card w3-round w3-animate-opacity">
                         <div id="str" class="w3-col w3-padding m4 l2">
                             <span class="label">Strength</span>
-                            <input type="text" class="att" name="str" maxlength="2" size="2" />
+                            <input type="text" class="att" name="str" maxlength="2" size="2" value="{{character.str_score}}"/>
                             <input type="text" class="att-mod auto-filled-border" name="str-mod" maxlength="2" size="2" />
                         </div>
                         <div id="dex" class="w3-col w3-padding m4 l2">
                             <span class="label">Dexterity</span>
-                            <input type="text" class="att" name="dex" maxlength="2" size="2" />
+                            <input type="text" class="att" name="dex" maxlength="2" size="2" value="{{character.dex_score}}"/>
                             <input type="text" class="att-mod auto-filled-border" name="dex-mod" maxlength="2" size="2" />
                         </div>
                         <div id="con" class="w3-col w3-padding m4 l2">
                             <span class="label">Constitution</span>
-                            <input type="text" class="att" name="con" maxlength="2" size="2" />
+                            <input type="text" class="att" name="con" maxlength="2" size="2" value="{{character.con_score}}"/>
                             <input type="text" class="att-mod auto-filled-border" name="con-mod" maxlength="2" size="2" />
                         </div>
                         <div id="int" class="w3-col w3-padding m4 l2">
                             <span class="label">Intelligence</span>
-                            <input type="text" class="att" name="int" maxlength="2" size="2" />
+                            <input type="text" class="att" name="int" maxlength="2" size="2" value="{{character.int_score}}"/>
                             <input type="text" class="att-mod auto-filled-border" name="int-mod" maxlength="2" size="2" />
                         </div>
                         <div id="wis" class="w3-col w3-padding m4 l2">
                             <span class="label">Wisdom</span>
-                            <input type="text" class="att" name="wis" maxlength="2" size="2" />
+                            <input type="text" class="att" name="wis" maxlength="2" size="2" value="{{character.wis_score}}"/>
                             <input type="text" class="att-mod auto-filled-border" name="wis-mod" maxlength="2" size="2" />
                         </div>
                         <div id="cha" class="w3-col w3-padding m4 l2">
                             <span class="label">Charisma</span>
-                            <input type="text" class="att" name="cha" maxlength="2" size="2" />
+                            <input type="text" class="att" name="cha" maxlength="2" size="2" value="{{character.cha_score}}"/>
                             <input type="text" class="att-mod auto-filled-border" name="cha-mod" maxlength="2" size="2" />
                         </div>
                     </div>
                 </div>
                 <!-- Status & Life -->
                 <div class="w3-col w3-margin-bottom w3-card w3-round">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Status</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Status</button>
                     <div id="status" class="w3-animate-opacity">
                         <div id="hit-points" class="w3-col w3-padding  m8 l4 w3-border-right">
                             <div id="temp-health" class="w3-col w3-padding">
-                                <input type="text" name="temp-health" />
+                                <input type="text" name="temp-health" value="{{character.temp_hp}}"/>
                                 <br/>
                                 <span class="label w3-padding">Temporary Health</span>
                             </div>
                             <div id="current-health" class="w3-col s6 m6 l6">
-                                <input type="text" name="current-health" />
+                                <input type="text" name="current-health" value="{{character.current_hp}}"/>
                                 <br/>
                                 <span class="label">Current Health</span>
                             </div>
                             <div id="max-health" class="w3-col s6 m6 l6">
-                                <input type="text" name="max-health" />
+                                <input type="text" name="max-health" value="{{character.max_hp}}"/>
                                 <br/>
                                 <span class="label">Maximum Health</span>
                             </div>
@@ -238,8 +244,8 @@
                             <span class="label">Hit Dice</span>
                             <div>
                                 <span class="sub-label">Current</span>
-                                <input class="label" type="text" name="current-hd" />
-                                <input type="text" name="hit-dice" />
+                                <input class="label" type="text" name="current-hd" value="{{character.hit_dice_remaining}}"/>
+                                <input type="text" name="hit-dice" value="{{character.hit_dice}}"/>
                             </div>
                         </div>
                         <div id="death-saves" class="w3-col w3-padding m5 l2">
@@ -247,33 +253,33 @@
                             <div id="successes">
                                 <span class="sub-label">Success</span>
                                 <div id="success-num">
-                                    <input class="w3-check" type="checkbox" name="success-1" />
-                                    <input class="w3-check" type="checkbox" name="success-2" />
-                                    <input class="w3-check" type="checkbox" name="success-3" />
+                                    <input class="w3-check" type="checkbox" name="success-1" {% if character.death_save_passes >= 1 %} checked {% endif %}/>
+                                    <input class="w3-check" type="checkbox" name="success-2" {% if character.death_save_passes >= 2 %} checked {% endif %}/>
+                                    <input class="w3-check" type="checkbox" name="success-3" {% if character.death_save_passes >= 3 %} checked {% endif %}/>
                                 </div>
                             </div>
                             <div id="failures" class="">
-                                <span class="sub-label">Failure</span>
+                                <span class="sub-label">Failures</span>
                                 <div id="failure-num">
-                                    <input class="w3-check" type="checkbox" name="failure-1" />
-                                    <input class="w3-check" type="checkbox" name="failure-2" />
-                                    <input class="w3-check" type="checkbox" name="failure-3" />
+                                    <input class="w3-check" type="checkbox" name="failure-1" {% if character.death_save_fails >= 1 %} checked {% endif %}/>
+                                    <input class="w3-check" type="checkbox" name="failure-2" {% if character.death_save_fails >= 2 %} checked {% endif %}/>
+                                    <input class="w3-check" type="checkbox" name="failure-3" {% if character.death_save_fails >= 3 %} checked {% endif %}/>
                                 </div>
                             </div>
                         </div>
                         <div id="conditions" class="w3-col w3-padding m4 l2">
                             <span class="label">Conditions</span>
-                            <textarea name="conditions" rows="5"></textarea>
+                            <textarea name="conditions" rows="5" style="font-size: 11px">{{ character.conditions }}</textarea>
                         </div>
                         <div id="boons" class="w3-col w3-padding m4 l2">
                             <span class="label">Boons</span>
-                            <textarea name="boons" rows="5"></textarea>
+                            <textarea name="boons" rows="5" style="font-size: 11px">{{ character.boons }}</textarea>
                         </div>
                     </div>
                 </div>
                 <!-- Saves & Skills -->
                 <div class="w3-col w3-margin-bottom w3-card w3-round">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Saving Throws & Skills</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Saving Throws & Skills</button>
                     <div id="saves-skills" class="w3-col w3-center w3-animate-opacity">
                         <div id="saves" class="w3-col w3-padding w3-left-align l12">
                             <div>
@@ -283,32 +289,32 @@
                                 <span class="sub-label">Prof</span>
                             </div>
                             <div id="str-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="prof" />
-                                <input type="text" name="str-save" maxlength="2" size="2" />
+                                <input type="checkbox" name="prof" {% if character.str_save %} checked {% endif %}/>
+                                <input type="text" name="str-save" maxlength="2" size="2"/>
                                 <span class="sub-label">Strength</span>
                             </div>
                             <div id="dex-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="prof" />
+                                <input type="checkbox" name="prof" {% if character.dex_save %} checked {% endif %}/>
                                 <input type="text" name="dex-save" maxlength="2" size="2" />
                                 <span class="sub-label">Dexterity</span>
                             </div>
                             <div id="con-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="prof" />
+                                <input type="checkbox" name="prof" {% if character.con_save %} checked {% endif %}/>
                                 <input type="text" name="con-save" maxlength="2" size="2" />
                                 <span class="sub-label">Constitution</span>
                             </div>
                             <div id="int-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="prof" />
+                                <input type="checkbox" name="prof" {% if character.int_save %} checked {% endif %}/>
                                 <input type="text" name="int-save" maxlength="2" size="2" />
                                 <span class="sub-label">Intelligence</span>
                             </div>
                             <div id="wis-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="prof" />
+                                <input type="checkbox" name="prof" {% if character.wis_save %} checked {% endif %}/>
                                 <input type="text" name="wis-save" maxlength="2" size="2" />
                                 <span class="sub-label">Wisdom</span>
                             </div>
                             <div id="cha-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="prof" />
+                                <input type="checkbox" name="prof" {% if character.cha_save %} checked {% endif %}/>
                                 <input type="text" name="cha-save" maxlength="2" size="2" />
                                 <span class="sub-label">Charisma</span>
                             </div>
@@ -322,8 +328,8 @@
                                 <span class="sub-label">Expr</span>
                             </div>
                             <div id="athletics-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.athletics_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.athletics_exp %} checked {% endif %}/>
                                 <input type="text" name="athletics-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Athletics</span>
                             </div>
@@ -337,20 +343,20 @@
                                 <span class="sub-label">Expr</span>
                             </div>
                             <div id="acrobatics-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.acrobatics_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.acrobatics_exp %} checked {% endif %}/>
                                 <input type="text" name="acrobatics-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Acrobtics</span>
                             </div>
                             <div id="sleight-hand-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.sleight_of_hand_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.sleight_of_hand_exp %} checked {% endif %}/>
                                 <input type="text" name="sleight-hand-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Sleight of Hand</span>
                             </div>
                             <div id="stealth-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.stealth_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.stealth_exp %} checked {% endif %}/>
                                 <input type="text" name="stealth-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Stealth</span>
                             </div>
@@ -364,26 +370,26 @@
                                 <span class="sub-label">Expr</span>
                             </div>
                             <div id="arcana-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.arcana_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.arcana_exp %} checked {% endif %}/>
                                 <input type="text" name="arcana-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Arcana</span>
                             </div>
                             <div id="history-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.history_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.history_exp %} checked {% endif %}/>
                                 <input type="text" name="history-skill" maxlength="3" size="3" />
                                 <span class="sub-label">History</span>
                             </div>
                             <div id="investigation-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.investigation_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.investigation_exp %} checked {% endif %}/>
                                 <input type="text" name="investigation-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Investigation</span>
                             </div>
                             <div id="religion-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.religion_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.religion_exp %} checked {% endif %}/>
                                 <input type="text" name="religion-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Religion</span>
                             </div>
@@ -397,38 +403,38 @@
                                 <span class="sub-label">Expr</span>
                             </div>
                             <div id="animal-handling-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.animal_handling_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.animal_handling_exp %} checked {% endif %}/>
                                 <input type="text" name="animal-handling-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Animal Handling</span>
                             </div>
                             <div id="insight-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.insight_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.insight_exp %} checked {% endif %}/>
                                 <input type="text" name="insight-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Insight</span>
                             </div>
                             <div id="medicine-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.medicine_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.medicine_exp %} checked {% endif %}/>
                                 <input type="text" name="medicine-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Medicine</span>
                             </div>
                             <div id="nature-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.nature_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.nature_exp %} checked {% endif %}/>
                                 <input type="text" name="nature-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Nature</span>
                             </div>
                             <div id="perception-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.perception_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.perception_exp %} checked {% endif %}/>
                                 <input type="text" name="perception-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Perception</span>
                             </div>
                             <div id="survival-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.survival_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.survival_exp %} checked {% endif %}/>
                                 <input type="text" name="survival-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Survival</span>
                             </div>
@@ -442,26 +448,26 @@
                                 <span class="sub-label">Expr</span>
                             </div>
                             <div id="deception-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.deception_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.deception_exp %} checked {% endif %}/>
                                 <input type="text" name="deception-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Deception</span>
                             </div>
                             <div id="intimidation-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.intimidation_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.intimidation_exp %} checked {% endif %}/>
                                 <input type="text" name="intimidation-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Intimidation</span>
                             </div>
                             <div id="performance-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.performance_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.performance_exp %} checked {% endif %}/>
                                 <input type="text" name="performance-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Performance</span>
                             </div>
                             <div id="persuasion-skill" class="box">
-                                <input type="checkbox" name="prof" />
-                                <input type="checkbox" name="expr" />
+                                <input type="checkbox" name="prof" {% if character.persuasion_prof %} checked {% endif %}/>
+                                <input type="checkbox" name="expr" {% if character.persuasion_exp %} checked {% endif %}/>
                                 <input type="text" name="persuasion-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Persuasion</span>
                             </div>
@@ -471,50 +477,57 @@
                                 <span class="label">Spell Save DC</span>
                             </div>
                             <select name="spell-att">
-                    <option value="none">No Spell Casting</option>
-                    <option value="str">Strength</option>
-                    <option value="dex">Dexterity</option>
-                    <option value="con">Constitution</option>
-                    <option value="int">Intelligence</option>
-                    <option value="wis">Wisdom</option>
-                    <option value="cha">Charisma</option>
-                </select>
+                                <option value="none" {% if character.spellcasting_ability == None %} selected {% endif %}>No Spell Casting</option>
+                                <option value="str" {% if character.spellcasting_ability == "Strength" %} selected {% endif %}>Strength</option>
+                                <option value="dex" {% if character.spellcasting_ability == "Dexterity" %} selected {% endif %}>Dexterity</option>
+                                <option value="con" {% if character.spellcasting_ability == "Constitution" %} selected {% endif %}>Constitution</option>
+                                <option value="int" {% if character.spellcasting_ability == "Intelligence" %} selected {% endif %}>Intelligence</option>
+                                <option value="wis" {% if character.spellcasting_ability == "Wisdom" %} selected {% endif %}>Wisdom</option>
+                                <option value="cha" {% if character.spellcasting_ability == "Charisma" %} selected {% endif %}>Charisma</option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div id="prof-traits-container" class="w3-col m12 l4">
                     <!-- Proficiencies -->
                     <div id="proficiencies" class="w3-col w3-margin-bottom">
-                        <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Proficiencies</button>
+                        <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Proficiencies</button>
                         <div id="prof" class="w3-card w3-padding w3-round w3-animate-opacity">
                             <div id="weapons-armor">
                                 <span class="label">Weapons & Armor</span>
-                                <textarea name="weapons-armor" rows="3"></textarea>
+                                <textarea name="weapons-armor" rows="3">{{ character.weapons_and_armour }}</textarea>
                             </div>
                             <div id="tools">
                                 <span class="label">Tools</span>
-                                <textarea name="tools" rows="3"></textarea>
+                                <textarea name="tools" rows="3">{{ character.tools }}</textarea>
                             </div>
                             <div id="languages">
                                 <span class="label">Known Languages</span>
-                                <textarea name="languages" rows="3"></textarea>
+                                <textarea name="languages" rows="3">{{ character.languages }}</textarea>
                             </div>
                         </div>
                     </div>
                     <!-- Features -->
                     <div id="features-container" class="w3-col w3-card w3-round w3-margin-bottom">
-                        <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Features & Traits</button>
+                        <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Features & Traits</button>
                         <div id="features" class="w3-padding w3-animate-opacity">
                             <span class="label">Features and Traits</span>
-                            <textarea name="features" rows="11"></textarea>
+                            <textarea name="features" rows="11">{{ character.features_and_traits }}</textarea>
                         </div>
+                    </div>
+                </div>
+                <!-- Attacks -->
+                <div class="w3-col w3-margin-bottom w3-card w3-round l8">
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Attacks</button>
+                    <div id="attacks" class="w3-padding w3-animate-opacity">
+                        <textarea name="features" rows="12">{{ character.attacks }}</textarea>
                     </div>
                 </div>
                 <!-- Charges, Ammo, Resources -->
                 <div id="charges-ammo" class="w3-col w3-card w3-round w3-margin-bottom m12 l8">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Class Resources, Ammo, & Charges</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Class Resources, Ammo, & Charges</button>
                     <div id="charges" class="w3-padding w3-animate-opacity">
-                        <div id="charge-1" class="w3-col w3-padding m8 l8">
+                        <div id="charge-1" class="w3-col w3-padding m8 l9">
                             <input type="text" name="charge-1" />
                             <input type="checkbox" name="1" />
                             <input type="checkbox" name="2" />
@@ -527,11 +540,11 @@
                             <input type="checkbox" name="9" />
                             <input type="checkbox" name="10" />
                         </div>
-                        <div class="w3-col m4 l4">
-                            <button class="button empty w3-button ha-saddlebrown w3-round-large">Empty</button>
-                            <button class="button fill w3-button ha-saddlebrown w3-round-large">Fill</button>
+                        <div class="w3-col m3 l3">
+                            <button class="button empty w3-button ha-saddlebrown w3-round-large" onclick="return emptyCheckboxes(event, 1)">Empty</button>
+                            <button class="button fill w3-button ha-saddlebrown w3-round-large" onclick="return fillCheckboxes(event, 1)">Fill</button>
                         </div>
-                        <div id="charge-2" class="w3-col w3-padding m8 l8">
+                        <div id="charge-2" class="w3-col w3-padding m8 l9">
                             <input type="text" name="charge-2" />
                             <input type="checkbox" name="1" />
                             <input type="checkbox" name="2" />
@@ -544,11 +557,11 @@
                             <input type="checkbox" name="9" />
                             <input type="checkbox" name="10" />
                         </div>
-                        <div class="w3-col m4 l4">
-                            <button class="button empty w3-button ha-saddlebrown w3-round-large">Empty</button>
-                            <button class="button fill w3-button ha-saddlebrown w3-round-large">Fill</button>
+                        <div class="w3-col m3 l3">
+                            <button class="button empty w3-button ha-saddlebrown w3-round-large" onclick="return emptyCheckboxes(event, 2)">Empty</button>
+                            <button class="button fill w3-button ha-saddlebrown w3-round-large" onclick="return fillCheckboxes(event, 2)">Fill</button>
                         </div>
-                        <div id="charge-3" class="w3-col w3-padding m8 l8">
+                        <div id="charge-3" class="w3-col w3-padding m8 l9">
                             <input type="text" name="charge-3" />
                             <input type="checkbox" name="1" />
                             <input type="checkbox" name="2" />
@@ -561,11 +574,11 @@
                             <input type="checkbox" name="9" />
                             <input type="checkbox" name="10" />
                         </div>
-                        <div class="w3-col m4 l4">
-                            <button class="button empty w3-button ha-saddlebrown w3-round-large">Empty</button>
-                            <button class="button fill w3-button ha-saddlebrown w3-round-large">Fill</button>
+                        <div class="w3-col m3 l3">
+                            <button class="button empty w3-button ha-saddlebrown w3-round-large" onclick="return emptyCheckboxes(event, 3)">Empty</button>
+                            <button class="button fill w3-button ha-saddlebrown w3-round-large" onclick="return fillCheckboxes(event, 3)">Fill</button>
                         </div>
-                        <div id="charge-4" class="w3-col w3-padding m8 l8">
+                        <div id="charge-4" class="w3-col w3-padding m8 l9">
                             <input type="text" name="charge-4" />
                             <input type="checkbox" name="1" />
                             <input type="checkbox" name="2" />
@@ -578,11 +591,11 @@
                             <input type="checkbox" name="9" />
                             <input type="checkbox" name="10" />
                         </div>
-                        <div class="w3-col m4 l4">
-                            <button class="button empty w3-button ha-saddlebrown w3-round-large">Empty</button>
-                            <button class="button fill w3-button ha-saddlebrown w3-round-large">Fill</button>
+                        <div class="w3-col m3 l3">
+                            <button class="button empty w3-button ha-saddlebrown w3-round-large" onclick="return emptyCheckboxes(event, 4)">Empty</button>
+                            <button class="button fill w3-button ha-saddlebrown w3-round-large" onclick="return fillCheckboxes(event, 4)">Fill</button>
                         </div>
-                        <div id="charge-5" class="w3-col w3-padding m8 l8">
+                        <div id="charge-5" class="w3-col w3-padding m8 l9">
                             <input type="text" name="charge-5" />
                             <input type="checkbox" name="1" />
                             <input type="checkbox" name="2" />
@@ -595,11 +608,11 @@
                             <input type="checkbox" name="9" />
                             <input type="checkbox" name="10" />
                         </div>
-                        <div class="w3-col m4 l4">
-                            <button class="button empty w3-button ha-saddlebrown w3-round-large">Empty</button>
-                            <button class="button fill w3-button ha-saddlebrown w3-round-large">Fill</button>
+                        <div class="w3-col m3 l3">
+                            <button class="button empty w3-button ha-saddlebrown w3-round-large" onclick="return emptyCheckboxes(event, 5)">Empty</button>
+                            <button class="button fill w3-button ha-saddlebrown w3-round-large" onclick="return fillCheckboxes(event, 5)">Fill</button>
                         </div>
-                        <div id="charge-6" class="w3-col w3-padding m8 l8">
+                        <div id="charge-6" class="w3-col w3-padding m8 l9">
                             <input type="text" name="charge-6" />
                             <input type="checkbox" name="1" />
                             <input type="checkbox" name="2" />
@@ -612,85 +625,20 @@
                             <input type="checkbox" name="9" />
                             <input type="checkbox" name="10" />
                         </div>
-                        <div class="w3-col m4 l4">
-                            <button class="button empty w3-button ha-saddlebrown w3-round-large">Empty</button>
-                            <button class="button fill w3-button ha-saddlebrown w3-round-large">Fill</button>
+                        <div class="w3-col m3 l3">
+                            <button class="button empty w3-button ha-saddlebrown w3-round-large" onclick="return emptyCheckboxes(event, 6)">Empty</button>
+                            <button class="button fill w3-button ha-saddlebrown w3-round-large" onclick="return fillCheckboxes(event, 6)">Fill</button>
                         </div>
                     </div>
                 </div>
-                <!-- Attacks -->
-                <div class="w3-col w3-margin-bottom l8">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Attacks</button>
-                    <div id="attacks-spells" class="w3-card w3-padding w3-round w3-animate-opacity">
-                        <table id="attacks">
-                            <tr>
-                                <th>Name</th>
-                                <th>Base Stat</th>
-                                <th>Bonus/DC</th>
-                                <th>Damage</th>
-                                <th>Damage Type</th>
-                            </tr>
-                        </table>
-                        <div id="add-attack">
-                            <span class="label title">Add a new attack:</span>
-                            <div id="attack-form">
-                                <div id="att-name" class="w3-rest w3-padding w3-card">
-                                    <input type="text" name="name" />
-                                    <span class="label">Name of the attack</span>
-                                </div>
-                                <div id="attack-stack" class="w3-rest w3-padding w3-card">
-                                    <select name="stat">
-                            <option value="str">Strength</option>
-                            <option value="dex">Dexterity</option>
-                            <option value="con">Constitution</option>
-                            <option value="int">Intelligence</option>
-                            <option value="wis">Wisdom</option>
-                            <option value="cha">Charisma</option>
-                        </select>
-                                    <span class="label">Choose the base Stat</span>
-                                </div>
-                                <div id="attack-type" class="w3-rest w3-padding w3-card">
-                                    <select name="type">
-                            <option value="toHit">Roll to hit</option>
-                            <option value="save">Save DC</option>
-                        </select>
-                                    <span class="label">Choose the type of attack</span>
-                                </div>
-                                <div id="attack-prof" class="w3-rest w3-padding w3-card">
-                                    <input type="checkbox" name="proficiency">
-                                    <span class="sub-label">Add Proficency</span>
-                                </div>
-                                <div id="attack-dc" class="w3-rest w3-padding w3-card" style="display: none;">
-                                    <input type="text" name="dc" />
-                                    <input type="checkbox" name="spell-dc" />
-                                    <span class="sub-label">Use Spell DC?</span>
-                                    <span class="label">Set DC</span>
-                                </div>
-                                <div id="attack-dice" class="w3-rest w3-padding w3-card">
-                                    <input type="text" name="dice" />
-                                    <span class="label">Enter Dice</span>
-                                </div>
-                                <div id="attack-bonus" class="w3-rest w3-padding w3-card">
-                                    <input type="text" name="bonus" />
-                                    <span class="label">Bonus</span>
-                                </div>
-                                <div id="attack-dmg-type" class="w3-rest w3-padding w3-card">
-                                    <input type="text" name="dmg-type">
-                                    <span class="label">Damage Type</span>
-                                </div>
-                                <button class="button w3-button ha-saddlebrown w3-round-large" onclick="att_attack()">Add Attack</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+             </div>
             <!-- Page 2 -->
             <!-- Page 2 -->
             <!-- Page 2 -->
             <div id="page-2" class="page w3-container w3-content w3-margin-top" style="display:none">
                 <!-- Equipment -->
                 <div class="w3-col w3-margin-bottom w3-card w3-round">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Inventory</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Inventory</button>
                     <div id="equipment" class="w3-padding w3-animate-opacity">
                         <div id="currancy-encumberance" class="col-3 w3-col w3-border l4">
                             <div id="currancy" class="box w3-padding w3-margin w3-border-bottom">
@@ -765,7 +713,7 @@
                                 </tr>
                                 <tr>
                                     <td><input type="text" name="name" /></td>
-                                    <td><input type="text" name="weight"></td>
+                                    <td><input type="text" name="weight" value=" {{ c.weight }}"></td>
                                 </tr>
                                 <tr>
                                     <td><input type="text" name="name" /></td>
@@ -817,7 +765,7 @@
                 </div>
                 <!-- Mount & Pet -->
                 <div class="w3-col w3-margin-bottom w3-card w3-round">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Mount/Pet</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Mount/Pet</button>
                     <div id="mount-pet" class="w3-container w3-padding w3-animate-opacity">
                         <div class="w3-col w3-padding w3-border-right w3-border-bottom m12 l6">
                             <div class="w3-col w3-padding w3-right-align m5 l4">
@@ -884,7 +832,7 @@
             <div id="page-3" class="page w3-container w3-content w3-margin-top" style="display:none">
                 <!-- Spell Info -->
                 <div class="w3-col w3-margin-bottom w3-card w3-round">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Spell Info</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Spell Info</button>
                     <div id="spell-info" class="w3-padding w3-animate-opacity">
                         <div id="class" class="w3-col w3-padding m6 l3">
                             <div class="input-frame">
@@ -922,7 +870,7 @@
                 </div>
                 <!-- Spells -->
                 <div class="w3-col w3-margin-bottom w3-card w3-round">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Spells</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Spells</button>
                     <div id="spells" class="w3-padding w3-animate-opacity">
                         <div id="cantrips" class="w3-col w3-padding w3-border-bottom">
                             <div class="w3-col">
@@ -1535,51 +1483,71 @@
             <div id="page-4" class="page w3-container w3-content w3-margin-top" style="display:none">
                 <!-- Personality -->
                 <div class="w3-col w3-margin-bottom w3-card w3-round">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Personality</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Personality</button>
                     <div id="personality" class="w3-animate-opacity">
                         <div id="personality-traits" class="w3-col w3-padding m6 l3">
                             <span class="label">Personality Traits</span>
-                            <textarea name="personality-traits" rows="4"></textarea>
+                            <textarea name="personality-traits" rows="4">{{ character.personality_traits }}</textarea>
                         </div>
                         <div id="ideals" class="w3-col w3-padding m6 l3">
                             <span class="label">Ideals</span>
-                            <textarea name="ideals" rows="4"></textarea>
+                            <textarea name="ideals" rows="4">{{ character.ideals }}</textarea>
                         </div>
                         <div id="bonds" class="w3-col w3-padding m6 l3">
                             <span class="label">Bonds</span>
-                            <textarea name="bonds" rows="4"></textarea>
+                            <textarea name="bonds" rows="4">{{ character.bonds }}</textarea>
                         </div>
                         <div id="flaws" class="w3-col w3-padding m6 l3">
                             <span class="label">Flaws</span>
-                            <textarea name="flaws" rows="4"></textarea>
+                            <textarea name="flaws" rows="4">{{ character.flaws }}</textarea>
                         </div>
                     </div>
                 </div>
                 <!-- Backstory -->
                 <div class="w3-col w3-margin-bottom w3-card w3-round">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Backstory</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Backstory</button>
                     <div id="character-background" class="w3-padding w3-animate-opacity">
                         <div id="backstory" class="w3-col w3-padding m6 l6">
                             <span class="label">Character Backstory</span>
-                            <textarea name="backstory" rows="30"></textarea>
+                            <textarea name="backstory" rows="30">{{character.backstory }}</textarea>
                         </div>
-                        <div id="apperance" class="w3-col w3-padding m6 l6">
-                            <span class="label">Character Apperance</span>
-                            <div id="char-img" class="w3-card w3-round"></div>
+                        <div class="w3-col w3-padding label m6 l6">
+                            <span class="label">Character Appearance</span>
                         </div>
-                        <div id="allies-organizations" class="w3-col w3-padding w3-center w3-round w3-border m6 l6">
-                            <div id="name" class="w3-col w3-padding l6">
-                                <input type="text" name="name" />
-                                <span class="label">Organization or Guild</span>
+                        <div id="appearance" class="w3-col w3-border w3-round m6 l6">
+                            <div class="w3-col w3-padding l5 m5">
+                                <span class="label">Age:  </span>
+                                <input type="text" name="age" value="{{ character.age }}"/>
                             </div>
-                            <div id="symbol" class="w3-col w3-padding l6">
-                                <span class="label">Symbol</span>
-                                <div id="alli-img" class="w3-round"></div>
+                            <div class="w3-col w3-padding l5 m5">
+                                <span class="label">Height: </span>
+                                <input type="text" name="height" value="{{ character.height }}"/>
                             </div>
-                            <div class="w3-col">
-                                <span class="label">Allies and Organizations</span>
-                                <textarea name="allies-organizations" rows="4"></textarea>
+                            <div class="w3-col w3-padding l5 m5">
+                                <span class="label">Weight: </span>
+                                <input type="text" name="weight" value="{{ character.weight }}"/>
                             </div>
+                            <div class="w3-col w3-padding l5 m5">
+                                 <span class="label">Hair: </span>
+                                <input type="text" name="hair" value="{{ character.hair }}"/>
+                            </div>
+                            <div class="w3-col w3-padding l5 m5">
+                                 <span class="label">Eyes: </span>
+                                <input type="text" name="eyes" value="{{ character.eyes }}"/>
+                            </div>
+                            <div class="w3-col w3-padding l5 m5">
+                                 <span class="label">Skin: </span>
+                                <input type="text" name="skin" value="{{ character.skin }}"/>
+                            </div>
+                            <div class="w3-col w3-padding w3-round">
+                                <span class="label">Description</span>
+                                <textarea name="description" rows="8">{{ character.description}}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="w3-col m6 l6 w3-padding w3-round ">
+                            <span class="label">Allies and Organizations</span>
+                            <textarea name="allies-organizations" rows="6">{{ character.allies_and_orgs }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -1590,7 +1558,7 @@
             <div id="page-5" class="page w3-container w3-content w3-margin-top" style="display:none">
                 <!-- Notes -->
                 <div class="w3-col w3-margin-bottom w3-card w3-round">
-                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown">Notes</button>
+                    <button class="expando w3-button w3-bar-block w3-left-align ha-saddlebrown" onclick="return preventSubmit(event)">Notes</button>
                     <div id="notes-page" class="w3-animate-opacity">
                         <div id="notes-1" class="w3-col w3-padding m6 l6">
                             <textarea name="notes-1" rows="15"></textarea>
@@ -1604,7 +1572,9 @@
             <!-- Footer -->
             <!-- Footer -->
             <!-- Footer -->
-            <button type="submit">Save Character Sheet</button>
+            <div style="text-align: center; font-size: large">
+                <button type="submit" class="w3-round w3-button ha-saddlebrown w3-border w3-margin" style="text-align: center">Save Character Sheet</button>
+            </div>
             <footer class="page-width w3-container w3-content">
                 <div class="footer ha-saddlebrown w3-round w3-padding">
                     DnD 5<sup>th</sup> Edition Character Sheet || Created by <a href="https://github.com/Chee32" target="_blank">Chee32</a> & <a href="https://github.com/lckynmbrsvn" target="_blank">lckynmbrsvn</a> ||

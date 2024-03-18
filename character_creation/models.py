@@ -271,89 +271,92 @@ class Character(models.Model):
     # Ability scores, modifiers, and saving throws
     str_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
     str_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
-    str_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    str_save = models.BooleanField(default=False)
     dex_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
     dex_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
-    dex_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    dex_save = models.BooleanField(default=False)
     con_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
     con_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
-    con_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    con_save = models.BooleanField(default=False)
     int_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
     int_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
-    int_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    int_save = models.BooleanField(default=False)
     wis_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
     wis_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
-    wis_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    wis_save = models.BooleanField(default=False)
     cha_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(30)], default=1)
     cha_mod = models.SmallIntegerField(validators=[MinValueValidator(-10), MaxValueValidator(10)], default=0)
-    cha_save = models.SmallIntegerField(validators=[MinValueValidator(-30), MaxValueValidator(30)], default=0)
+    cha_save = models.BooleanField(default=False)
 
     # Skills
+    proficiency_bonus = models.SmallIntegerField(default=2)
+
     acrobatics_prof = models.BooleanField(default=False)
-    acrobatics_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    acrobatics_exp = models.BooleanField(default=False)
 
     animal_handling_prof = models.BooleanField(default=False)
-    animal_handling_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    animal_handling_exp = models.BooleanField(default=False)
 
     arcana_prof = models.BooleanField(default=False)
-    arcana_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    arcana_exp = models.BooleanField(default=False)
 
     athletics_prof = models.BooleanField(default=False)
-    athletics_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    athletics_exp = models.BooleanField(default=False)
 
     deception_prof = models.BooleanField(default=False)
-    deception_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    deception_exp = models.BooleanField(default=False)
 
     history_prof = models.BooleanField(default=False)
-    history_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    history_exp = models.BooleanField(default=False)
 
     insight_prof = models.BooleanField(default=False)
-    insight_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    insight_exp = models.BooleanField(default=False)
 
     intimidation_prof = models.BooleanField(default=False)
-    intimidation_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    intimidation_exp = models.BooleanField(default=False)
 
     investigation_prof = models.BooleanField(default=False)
-    investigation_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    investigation_exp = models.BooleanField(default=False)
 
     medicine_prof = models.BooleanField(default=False)
-    medicine_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    medicine_exp = models.BooleanField(default=False)
 
     nature_prof = models.BooleanField(default=False)
-    nature_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    nature_exp = models.BooleanField(default=False)
 
     perception_prof = models.BooleanField(default=False)
-    perception_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    perception_exp = models.BooleanField(default=False)
 
     performance_prof = models.BooleanField(default=False)
-    performance_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    performance_exp = models.BooleanField(default=False)
 
     persuasion_prof = models.BooleanField(default=False)
-    persuasion_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    persuasion_exp = models.BooleanField(default=False)
 
     religion_prof = models.BooleanField(default=False)
-    religion_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    religion_exp = models.BooleanField(default=False)
 
     sleight_of_hand_prof = models.BooleanField(default=False)
-    sleight_of_hand_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    sleight_of_hand_exp = models.BooleanField(default=False)
 
     stealth_prof = models.BooleanField(default=False)
-    stealth_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    stealth_exp = models.BooleanField(default=False)
 
     survival_prof = models.BooleanField(default=False)
-    survival_val = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
+    survival_exp = models.BooleanField(default=False)
 
     passive_wis = models.SmallIntegerField(default=0, validators=[MinValueValidator(-30), MaxValueValidator(30)])
 
     # Other quantitative modifiers
     armour_class = models.PositiveSmallIntegerField(default=10)
     initiative_mod = models.SmallIntegerField(default=0)
-    size = models.CharField(max_length=1, choices=size_choices, default="M")
+    size = models.CharField(max_length=1, choices=size_choices, default="M  ")
     speed = models.PositiveSmallIntegerField(default=30)
     max_hp = models.PositiveSmallIntegerField(default=1)
     current_hp = models.SmallIntegerField(default=1)
     temp_hp = models.SmallIntegerField(default=0)
     hit_dice = models.CharField(max_length=4, choices=dice_choices, blank=True, null=True, default="")
+    hit_dice_remaining_and_total = models.CharField(default="1/1")
     death_save_fails = models.SmallIntegerField(validators=[MaxValueValidator(3)], default=0)
     death_save_passes = models.SmallIntegerField(validators=[MaxValueValidator(3)], default=0)
 
@@ -378,7 +381,9 @@ class Character(models.Model):
     attacks = models.TextField(blank=True, null=True, default="")
 
     # Other proficiencies and languages
-    profs_and_langs = models.TextField(blank=True, null=True, default="")
+    weapons_and_armour = models.TextField(blank=True, null=True, default="")
+    tools = models.TextField(blank=True, null=True, default="")
+    languages = models.TextField(blank=True, null=True, default="")
 
     # Equipment and currency
     equipment = models.TextField(blank=True, null=True, default="")
@@ -401,6 +406,8 @@ class Character(models.Model):
     eyes = models.CharField(blank=True, null=True, default="")
     skin = models.CharField(blank=True, null=True, default="")
     hair = models.CharField(blank=True, null=True, default="")
+    description = models.TextField(blank=True, null=True, default="")
+    allies_and_organisations = models.TextField(blank=True, null=True, default="")
     backstory = models.TextField(blank=True, null=True, default="")
 
     # Spellcasting
@@ -435,6 +442,10 @@ class Character(models.Model):
 
     lvl_9_slots_total = models.SmallIntegerField(default=0)
     lvl_9_slots_expended = models.SmallIntegerField(default=0)
+
+    # Contextual information
+    conditions = models.TextField(blank=True, null=True, default="")
+    boons = models.TextField(blank=True, null=True, default="")
 
     def __str__(self):
         return self.name

@@ -15,6 +15,11 @@ function w3_close() {
     document.getElementById("mySidebar").style.display = "none";
 }
 
+function preventSubmit(e) {
+    e.preventDefault();
+    return false;
+}
+
 $(document).ready(function() {
     $(".expando").click(function() {
         $(this).next().slideToggle();

@@ -1,5 +1,5 @@
 .topnav {
-  background-color: brown;
+  background-color: saddlebrown;
   overflow: hidden;
   font-family: Helvetica;
 }
@@ -31,13 +31,12 @@
 
 /* Change the color of links on hover */
 .topnav a:hover {
-  background-color: #ddd;
-  color: black;
+  background-color: brown;
 }
 
 /* Add a color to the active/current link */
 .topnav a.active {
-  background-color: saddlebrown;
+  background-color: brown;
   color: white;
 }
 

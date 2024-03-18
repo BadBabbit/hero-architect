@@ -233,14 +233,15 @@ def character_detail(request, character_id):
         "character_id": character_id,
         "character": None
     }
-    c = Character.objects.get(pk=character_id)
-    username = request.user.username
-    user = HA_User.objects.get(username=username)
 
     # Check if the user is logged in
     if not request.user.is_authenticated:
         # If not, redirect to login page
         return redirect('/auth/login/')
+
+    c = Character.objects.get(pk=character_id)
+    username = request.user.username
+    user = HA_User.objects.get(username=username)
 
     # Check if the character belongs to the user
     if c.user != user:
@@ -254,12 +255,17 @@ def character_detail(request, character_id):
         print(request.POST)
 
     c_race = c.subrace.name if c.subrace else c.race.name
+
+    # Parses database-formatted hit dice into standard dice notation
+    hit_dice = "d" + str(int(c.hit_dice.split("D")[1]))
+
     character_dict = {
         "name": c.name,
         "size": c.size,
         "class_and_level": c.character_class_and_level,
         "inventory": c.inventory,
         "race": c_race,
+        "prof_bonus": c.proficiency_bonus,
 
         "str_score": c.str_score,
         "str_mod": c.str_mod,
@@ -286,41 +292,46 @@ def character_detail(request, character_id):
         "cha_save": c.cha_save,
 
         "acrobatics_prof": c.acrobatics_prof,
-        "acrobatics_val": c.acrobatics_val,
+        "acrobatics_exp": c.acrobatics_exp,
         "animal_handling_prof": c.animal_handling_prof,
-        "animal_handling_val": c.animal_handling_val,
+        "animal_handling_exp": c.animal_handling_exp,
         "arcana_prof": c.arcana_prof,
-        "arcana_val": c.arcana_val,
+        "arcana_exp": c.arcana_exp,
         "athletics_prof": c.athletics_prof,
-        "athletics_val": c.athletics_val,
+        "athletics_exp": c.athletics_exp,
         "deception_prof": c.deception_prof,
-        "deception_val": c.deception_val,
+        "deception_exp": c.deception_exp,
         "history_prof": c.history_prof,
-        "history_val": c.history_val,
+        "history_exp": c.history_exp,
         "insight_prof": c.insight_prof,
-        "insight_val": c.insight_val,
+        "insight_exp": c.insight_exp,
         "intimidation_prof": c.intimidation_prof,
-        "intimidation_val": c.intimidation_val,
+        "intimidation_exp": c.intimidation_exp,
         "investigation_prof": c.investigation_prof,
-        "investigation_val": c.investigation_val,
+        "investigation_exp": c.investigation_exp,
         "medicine_prof": c.medicine_prof,
-        "medicine_val": c.medicine_val,
+        "medicine_exp": c.medicine_exp,
         "nature_prof": c.nature_prof,
-        "nature_val": c.nature_val,
+        "nature_exp": c.nature_exp,
         "perception_prof": c.perception_prof,
-        "perception_val": c.perception_val,
+        "perception_exp": c.perception_exp,
         "performance_prof": c.performance_prof,
         "persuasion_prof": c.persuasion_prof,
-        "persuasion_val": c.persuasion_val,
+        "persuasion_exp": c.persuasion_exp,
         "religion_prof": c.religion_prof,
-        "religion_val": c.religion_val,
+        "religion_exp": c.religion_exp,
         "sleight_of_hand_prof": c.sleight_of_hand_prof,
-        "sleight_of_hand_val": c.sleight_of_hand_val,
+        "sleight_of_hand_exp": c.sleight_of_hand_exp,
         "stealth_prof": c.stealth_prof,
-        "stealth_val": c.stealth_val,
+        "stealth_exp": c.stealth_exp,
         "survival_prof": c.survival_prof,
-        "survival_val": c.survival_val,
+        "survival_exp": c.survival_exp,
         "passive_wis": c.passive_wis,
+
+        # Other proficiencies
+        "weapons_and_armour": c.weapons_and_armour,
+        "tools": c.tools,
+        "languages": c.languages,
 
         "armour_class": c.armour_class,
         "initiative_mod": c.initiative_mod,
@@ -328,9 +339,13 @@ def character_detail(request, character_id):
         "max_hp": c.max_hp,
         "current_hp": c.current_hp,
         "temp_hp": c.temp_hp,
-        "hit_dice": c.hit_dice,
+        "hit_dice": hit_dice,
+        "hit_dice_remaining": c.hit_dice_remaining_and_total,
         "death_save_fails": c.death_save_fails,
         "death_save_passes": c.death_save_passes,
+
+        "boons": c.boons,
+        "conditions": c.conditions,
 
         "attacks": c.attacks,
 
@@ -352,6 +367,8 @@ def character_detail(request, character_id):
         "eyes": c.eyes,
         "skin": c.skin,
         "hair": c.hair,
+        "description": c.description,
+        "allies_and_orgs": c.allies_and_organisations,
         "backstory": c.backstory,
 
         "is_spellcaster": c.spellcaster,
@@ -387,6 +404,7 @@ def character_detail(request, character_id):
         "lvl_9_slots_total": c.lvl_9_slots_total,
         "lvl_9_slots_expended": c.lvl_9_slots_expended,
         "lvl_9_spells": []
+
     }
 
     context["character"] = character_dict

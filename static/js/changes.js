@@ -1,5 +1,9 @@
 var LOCKED = false;
 
+$(document).ready(function(argument) {
+
+});
+
 function lock(argument) {
     LOCKED = !LOCKED;
     if (LOCKED)
@@ -140,31 +144,6 @@ function updateSaves() {
     var base = parseInt($('#attributes input[name="cha-mod"]').val()) || 0;
     var save = ((base + chaProf) < 0 ? "" : "+") + (base + chaProf);
     $('#saves input[name="cha-save"]').val(save);
-}
-
-function updateSpells() {
-    var att = $('#saves-skills select[name="spell-att"]').val();
-
-    if (att == 'none') {
-        $('#top-bar input[name="spell-dc"]').val('Na');
-        $('#spell-info input[name="dc"]').val('Na');
-        return;
-    }
-
-    var base = parseInt($('#attributes input[name="' + att + '-mod"]').val()) || 0;
-    var prof = parseInt($('#top-bar input[name="proficiency"]').val()) || 0;
-
-    //Update DC
-    var dc = 8 + base + prof;
-    $('#top-bar input[name="spell-dc"]').val(dc);
-    $('#spell-info input[name="dc"]').val(dc);
-
-    //Update Spell Bonus
-    var bonus = base + prof;
-    $('#spell-info input[name="bonus"]').val("+" + bonus);
-
-    //Update Spell Attribute
-    $('#spell-info input[name="att"]').val(att);
 }
 
 function updateStrSkills() {
@@ -618,6 +597,24 @@ function updateSpellSlots(total) {
     }
 }
 
+function emptyCheckboxes(e, row) {
+    var checkboxes = document.querySelectorAll(`#charge-${row} input[type="checkbox"]`);
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = false;
+    });
+    e.preventDefault();
+    return false;
+}
+
+function fillCheckboxes(e, row) {
+    var checkboxes = document.querySelectorAll(`#charge-${row} input[type="checkbox"]`);
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = true;
+    });
+    e.preventDefault();
+    return false;
+}
+
 $('document').ready(function(argument) {
     //Run when strength changes
     $('#attributes input[name="str"]').on('input', function(argument) {
@@ -684,7 +681,7 @@ $('document').ready(function(argument) {
         updateSpells();
     });
 
-    //Run when proficience changes
+    //Run when proficiency changes
     $('#top-bar input[name="proficiency"]').on('input', function(argument) {
         if (LOCKED)
             return;
