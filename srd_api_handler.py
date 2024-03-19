@@ -495,20 +495,18 @@ def create_spells():
         'Accept': 'application/json'
     }
 
-    # spells = extract_indexes(
-    #     requests.request(
-    #         "GET", url, headers=headers, data=payload
-    #     ).json()
-    # )
+    spells = extract_indexes(
+        requests.request(
+            "GET", url, headers=headers, data=payload
+        ).json()
+    )
 
-    spells = ["acid-arrow"]
-
-    print(spells)
     for spell in spells:
         print(f"adding {spell}...")
         spell_url = url + '/' + spell
-        print(spell_url)
-        response = requests.request("GET", url, headers=headers, data=payload).json()
+        response = requests.request("GET", spell_url, headers=headers, data=payload).json()
+
+        print(response)
 
         s = Spell()
         s.name = response["name"]

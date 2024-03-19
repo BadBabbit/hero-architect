@@ -254,7 +254,44 @@ def character_detail(request, character_id):
         print("hello")
         print(request.POST)
 
-    c_race = c.subrace.name if c.subrace else c.race.name
+    c_race = c.subrace.name if c.subrace else c.race
+
+    spells = CharacterSpell.objects.filter(character=c)
+
+    cantrips = []
+    level_1_spells = []
+    level_2_spells = []
+    level_3_spells = []
+    level_4_spells = []
+    level_5_spells = []
+    level_6_spells = []
+    level_7_spells = []
+    level_8_spells = []
+    level_9_spells = []
+
+    for char_spell in spells:
+        spell = (char_spell.spell.name, char_spell.prepared)
+        if char_spell.spell.level == 0:
+            cantrips.append(spell)
+        elif char_spell.spell.level == 1:
+            level_1_spells.append(spell)
+        # elif char_spell.spell.level == 2:
+        #     # add to l2 spells
+        # elif char_spell.spell.level == 3:
+        #     # add to l3
+        # elif char_spell.spell.level == 4:
+        #     # add to l4
+        # elif char_spell.spell.level == 5:
+        #     # etc
+        # elif char_spell.spell.level == 6:
+        #
+        # elif char_spell.spell.level == 7:
+        #
+        # elif char_spell.spell.level == 8:
+        #
+        # elif char_spell.spell.level == 9:
+
+
 
     # Parses database-formatted hit dice into standard dice notation
     hit_dice = "d" + str(int(c.hit_dice.split("D")[1]))
@@ -377,10 +414,10 @@ def character_detail(request, character_id):
         "spell_save_dc": c.spell_save_dc,
         "spell_attack_bonus": c.spell_attack_bonus,
 
-        "cantrips": [],
+        "cantrips": cantrips,
         "lvl_1_slots_total": c.lvl_1_slots_total,
         "lvl_1_slots_expended": c.lvl_1_slots_expended,
-        "lvl_1_spells": [],
+        "lvl_1_spells": level_1_spells,
         "lvl_2_slots_total": c.lvl_2_slots_total,
         "lvl_2_slots_expended": c.lvl_2_slots_expended,
         "lvl_2_spells": [],

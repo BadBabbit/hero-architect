@@ -733,7 +733,7 @@
                             </div>
                             <div class="spells w3-col w3-margin-bottom">
                                 <div class="spell w3-col m6 l3">
-                                    <input type="text" name="cantrip-1" />
+                                    <input type="text" name="cantrip-1" value="{{ character.cantrips.0.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
                                     <input type="text" name="cantrip-2" />
@@ -775,8 +775,8 @@
                             </div>
                             <div class="spells w3-col w3-margin-bottom">
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-1-prepped" />
-                                    <input type="text" name="l1-1-spell" />
+                                    <input type="checkbox" name="l1-1-prepped" {% if character.lvl_1_spells.0.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-1-spell" value="{{ character.lvl_1_spells.0.0 }}" />
                                 </div>
                                 <div class="spell w3-col m6 l3">
                                     <input type="checkbox" name="l1-2-prepped" />

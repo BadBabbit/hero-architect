@@ -436,7 +436,7 @@ class Character(models.Model):
 
 class Spell(models.Model):
     name = models.CharField(blank=True, default="", unique=True)
-    desc = models.CharField(blank=True, default="")
+    desc = models.TextField(blank=True, default="")
     concentration = models.BooleanField()
     ritual = models.BooleanField()
     level = models.SmallIntegerField(default=0)
@@ -445,6 +445,8 @@ class Spell(models.Model):
     duration = models.CharField()
     components = models.CharField()
 
+    def __str__(self):
+        return self.name
 
 class CharacterSpell(models.Model):
     spell = models.ForeignKey(Spell, on_delete=models.CASCADE)
