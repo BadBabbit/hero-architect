@@ -186,7 +186,7 @@ textarea {
 
 #saves-skills>div {
     /*min-height: 240px;*/
-    min-width: 290px;
+    /*min-width: 290px;*/
     border-right: 1px solid #ccc!important;
     border-top: 1px solid #ccc!important;
 }

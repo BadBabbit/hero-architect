@@ -263,7 +263,7 @@ class Character(models.Model):
     user = models.ForeignKey(HA_User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=32, blank=True, default="")
     character_class_and_level = models.CharField(blank=True, default="")
-    character_level = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(20)], default=1)
+    character_class = models.CharField(default="")
     inventory = models.TextField(blank=True, default="")
     race = models.ForeignKey(Race, on_delete=models.RESTRICT)
     subrace = models.ForeignKey(Subrace, on_delete=models.RESTRICT, null=True)
@@ -360,23 +360,6 @@ class Character(models.Model):
     death_save_fails = models.SmallIntegerField(validators=[MaxValueValidator(3)], default=0)
     death_save_passes = models.SmallIntegerField(validators=[MaxValueValidator(3)], default=0)
 
-    # # Weapon attacks (yes, i know this is not normalised. no, i do not care.)
-    ## Commented out for now, will experiment with one large text field first.
-    # wpn_name_1 = models.CharField(blank=True, default = "")
-    # wpn_attack_bonus_1 = models.SmallIntegerField()
-    # wpn_damage_1 = models.CharField(max_length=4, choices=dice_choices, blank=True, null=True, default="")
-    # wpn_damage_type_1 = models.CharField(max_length=20, choices=damage_type_choices, blank=True, default="")
-    #
-    # wpn_name_2 = models.CharField(blank=True, default = "")
-    # wpn_attack_bonus_2 = models.SmallIntegerField()
-    # wpn_damage_2 = models.CharField(max_length=4, choices=dice_choices, blank=True, null=True, default="")
-    # wpn_damage_type_2 = models.CharField(max_length=20, choices=damage_type_choices, blank=True, default="")
-    #
-    # wpn_name_3 = models.CharField(blank=True, default = "")
-    # wpn_attack_bonus_3 = models.SmallIntegerField()
-    # wpn_damage_3 = models.CharField(max_length=4, choices=dice_choices, blank=True, null=True, default="")
-    # wpn_damage_type_3 = models.CharField(max_length=20, choices=damage_type_choices, blank=True, default="")
-
     # Weapon attacks
     attacks = models.TextField(blank=True, null=True, default="")
 
@@ -452,7 +435,7 @@ class Character(models.Model):
 
 
 class Spell(models.Model):
-    name = models.CharField(blank=True, default="")
+    name = models.CharField(blank=True, default="", unique=True)
     desc = models.CharField(blank=True, default="")
     concentration = models.BooleanField()
     ritual = models.BooleanField()
@@ -466,7 +449,7 @@ class Spell(models.Model):
 class CharacterSpell(models.Model):
     spell = models.ForeignKey(Spell, on_delete=models.CASCADE)
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
-    prepared = models.BooleanField()
+    prepared = models.BooleanField(default=False)
 
 
 class CharacterClass(models.Model):

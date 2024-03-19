@@ -372,6 +372,7 @@ def character_detail(request, character_id):
         "backstory": c.backstory,
 
         "is_spellcaster": c.spellcaster,
+        "spellcasting_class": c.character_class,
         "spellcasting_ability": c.spellcasting_ability,
         "spell_save_dc": c.spell_save_dc,
         "spell_attack_bonus": c.spell_attack_bonus,

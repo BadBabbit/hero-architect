@@ -486,8 +486,59 @@ def create_weapons():
 
         w.save()
 
+def create_spells():
+
+    url = "https://www.dnd5eapi.co/api/spells"
+
+    payload = {}
+    headers = {
+        'Accept': 'application/json'
+    }
+
+    # spells = extract_indexes(
+    #     requests.request(
+    #         "GET", url, headers=headers, data=payload
+    #     ).json()
+    # )
+
+    spells = ["acid-arrow"]
+
+    print(spells)
+    for spell in spells:
+        print(f"adding {spell}...")
+        spell_url = url + '/' + spell
+        print(spell_url)
+        response = requests.request("GET", url, headers=headers, data=payload).json()
+
+        s = Spell()
+        s.name = response["name"]
+
+        desc = "\n\n".join(response["desc"])
+        s.desc = desc
+
+        s.concentration = response["concentration"]
+        s.ritual = response["ritual"]
+        s.level = response["level"]
+        s.range = response["range"]
+        s.casting_time = response["casting_time"]
+        s.duration = response["duration"]
+        s.components = ", ".join(response["components"])
+
+        try:
+            s.save()
+
+        except IntegrityError:
+            try:
+                s.delete()
+            except ValueError:
+                pass
+            continue
+
+
 def main():
-    create_subraces()
+
+    create_spells()
+
 
 
 if __name__ == "__main__":

@@ -150,12 +150,12 @@ function updateStrSkills() {
     var prof = parseInt($('#top-bar input[name="proficiency"]').val()) || 0;
     var base = parseInt($('#attributes input[name="str-mod"]').val()) || 0;
 
-    if ($('#skills #athletics-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #athletics-skill input[name="athletics_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #athletics-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #athletics-skill input[name="athletics_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
@@ -167,36 +167,36 @@ function updateDexSkills() {
     var prof = parseInt($('#top-bar input[name="proficiency"]').val()) || 0;
     var base = parseInt($('#attributes input[name="dex-mod"]').val()) || 0;
 
-    if ($('#skills #acrobatics-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #acrobatics-skill input[name="acrobatics_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #acrobatics-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #acrobatics-skill input[name="acrobatics_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
     var skill = ((base + skillProf) < 0 ? "" : "+") + (base + skillProf);
     $('#skills #acrobatics-skill input[type="text"]').val(skill);
 
-    if ($('#skills #sleight-hand-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #sleight-hand-skill input[name="sleight_of_hand_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #sleight-hand-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #sleight-hand-skill input[name="sleight_of_hand_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
     var skill = ((base + skillProf) < 0 ? "" : "+") + (base + skillProf);
     $('#skills #sleight-hand-skill input[type="text"]').val(skill);
 
-    if ($('#skills #stealth-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #stealth-skill input[name="stealth_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #stealth-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #stealth-skill input[name="stealth_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
@@ -208,48 +208,48 @@ function updateIntSkills() {
     var prof = parseInt($('#top-bar input[name="proficiency"]').val()) || 0;
     var base = parseInt($('#attributes input[name="int-mod"]').val()) || 0;
 
-    if ($('#skills #arcana-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #arcana-skill input[name="arcana_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #arcana-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #arcana-skill input[name="arcana_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
     var skill = ((base + skillProf) < 0 ? "" : "+") + (base + skillProf);
     $('#skills #arcana-skill input[type="text"]').val(skill);
 
-    if ($('#skills #history-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #history-skill input[name="history_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #history-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #history-skill input[name="history_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
     var skill = ((base + skillProf) < 0 ? "" : "+") + (base + skillProf);
     $('#skills #history-skill input[type="text"]').val(skill);
 
-    if ($('#skills #investigation-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #investigation-skill input[name="investigation_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #investigation-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #investigation-skill input[name="investigation_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
     var skill = ((base + skillProf) < 0 ? "" : "+") + (base + skillProf);
     $('#skills #investigation-skill input[type="text"]').val(skill);
 
-    if ($('#skills #religion-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #religion-skill input[name="religion_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #religion-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #religion-skill input[name="religion_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
@@ -262,13 +262,13 @@ function updateWisSkills() {
     var prof = parseInt($('#top-bar input[name="proficiency"]').val()) || 0;
     var base = parseInt($('#attributes input[name="wis-mod"]').val()) || 0;
 
-    if ($('#skills #animal-handling-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #animal-handling-skill input[name="animal_handling_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
 
-    if ($('#skills #animal-handling-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #animal-handling-skill input[name="animal_handling_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
@@ -276,13 +276,13 @@ function updateWisSkills() {
 
     $('#skills #animal-handling-skill input[type="text"]').val(skill);
 
-    if ($('#skills #insight-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #insight-skill input[name="insight_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
 
-    if ($('#skills #insight-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #insight-skill input[name="insight_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
@@ -290,13 +290,13 @@ function updateWisSkills() {
 
     $('#skills #insight-skill input[type="text"]').val(skill);
 
-    if ($('#skills #medicine-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #medicine-skill input[name="medicine_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
 
-    if ($('#skills #medicine-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #medicine-skill input[name="medicine_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
@@ -304,25 +304,25 @@ function updateWisSkills() {
 
     $('#skills #medicine-skill input[type="text"]').val(skill);
 
-    if ($('#skills #nature-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #nature-skill input[name="nature_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #nature-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #nature-skill input[name="nature_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
     var skill = ((base + skillProf) < 0 ? "" : "+") + (base + skillProf);
     $('#skills #nature-skill input[type="text"]').val(skill);
 
-    if ($('#skills #perception-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #perception-skill input[name="perception_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
 
-    if ($('#skills #perception-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #perception-skill input[name="perception_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
@@ -330,13 +330,13 @@ function updateWisSkills() {
 
     $('#skills #perception-skill input[type="text"]').val(skill);
 
-    if ($('#skills #survival-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #survival-skill input[name="survival_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
 
-    if ($('#skills #survival-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #survival-skill input[name="survival_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
@@ -350,48 +350,48 @@ function updateChaSkills() {
     var prof = parseInt($('#top-bar input[name="proficiency"]').val()) || 0;
     var base = parseInt($('#attributes input[name="cha-mod"]').val()) || 0;
 
-    if ($('#skills #deception-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #deception-skill input[name="deception_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #deception-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #deception-skill input[name="deception_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
     var skill = ((base + skillProf) < 0 ? "" : "+") + (base + skillProf);
     $('#skills #deception-skill input[type="text"]').val(skill);
 
-    if ($('#skills #intimidation-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #intimidation-skill input[name="intimidation_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #intimidation-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #intimidation-skill input[name="intimidation_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
     var skill = ((base + skillProf) < 0 ? "" : "+") + (base + skillProf);
     $('#skills #intimidation-skill input[type="text"]').val(skill);
 
-    if ($('#skills #performance-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #performance-skill input[name="performance_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #performance-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #performance-skill input[name="performance_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
     var skill = ((base + skillProf) < 0 ? "" : "+") + (base + skillProf);
     $('#skills #performance-skill input[type="text"]').val(skill);
 
-    if ($('#skills #persuasion-skill input[name="prof"]').prop("checked") == true) {
+    if ($('#skills #persuasion-skill input[name="persuasion_prof"]').prop("checked") == true) {
         var skillProf = prof;
     } else {
         var skillProf = 0;
     }
-    if ($('#skills #persuasion-skill input[name="expr"]').prop("checked") == true) {
+    if ($('#skills #persuasion-skill input[name="persuasion_exp"]').prop("checked") == true) {
         var skillProf = prof * 2;
     }
 
