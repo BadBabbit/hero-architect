@@ -18,13 +18,22 @@ class OpenAIClient:
     def get_client():
         return OpenAIClient.client
 
-class Assistant:
+class ChatAssistant:
     load_dotenv()
-    id = os.getenv("ASSISTANT_ID")
+    id = os.getenv("CHAT_ASSISTANT_ID")
 
     @staticmethod
     def get_id():
-        return Assistant.id
+        return ChatAssistant.id
+
+class GenerationAssistant:
+    load_dotenv()
+    id = os.getenv("GEN_ASSISTANT_ID")
+
+    @staticmethod
+    def get_id():
+        return ChatAssistant.id
+
 
 def initialise_thread():
     client = OpenAIClient.get_client()
@@ -34,11 +43,11 @@ def get_thread(thread_id):
     client = OpenAIClient.get_client()
     return client.beta.threads.retrieve(thread_id)
 
-def add_message_to_thread(content, thread_id):
+def add_message_to_thread(content, thread_id, role="user"):
     client = OpenAIClient.get_client()
     message = client.beta.threads.messages.create(
         thread_id=thread_id,
-        role="user",
+        role=role,
         content=content
     )
     return message
@@ -95,7 +104,7 @@ def main():
     _ = add_message_to_thread(content, t)
 
     LOGGER.debug("Getting assistant ID...")
-    a = Assistant.get_id()
+    a = ChatAssistant.get_id()
     LOGGER.debug("Running assistant...")
     r = run_assistant(t, a)
 

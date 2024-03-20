@@ -47,7 +47,7 @@ def initialise_conversation(initialiser):
         content = "BEGIN_THREAD"
         _ = heroArchitect.add_message_to_thread(content, t.id)
         LOGGER.debug("Getting assistant ID...")
-        a = heroArchitect.Assistant.get_id()
+        a = heroArchitect.ChatAssistant.get_id()
         LOGGER.debug("Running assistant...")
         r = heroArchitect.run_assistant(t.id, a)
         c = 0
@@ -166,7 +166,7 @@ def create_character(request):
             heroArchitect.add_message_to_thread(message, t_id)
 
             # Generate response
-            a_id = heroArchitect.Assistant.get_id()  # Assistant ID
+            a_id = heroArchitect.ChatAssistant.get_id()  # Assistant ID
             LOGGER.info("Running assistant.")
             run = heroArchitect.run_assistant(t_id, a_id)
 
@@ -270,28 +270,29 @@ def character_detail(request, character_id):
     level_9_spells = []
 
     for char_spell in spells:
-        spell = (char_spell.spell.name, char_spell.prepared)
-        if char_spell.spell.level == 0:
+        spell = (char_spell.spell, char_spell.prepared)
+        if char_spell.level == 0:
             cantrips.append(spell)
-        elif char_spell.spell.level == 1:
+        elif char_spell.level == 1:
             level_1_spells.append(spell)
-        # elif char_spell.spell.level == 2:
-        #     # add to l2 spells
-        # elif char_spell.spell.level == 3:
-        #     # add to l3
-        # elif char_spell.spell.level == 4:
-        #     # add to l4
-        # elif char_spell.spell.level == 5:
-        #     # etc
-        # elif char_spell.spell.level == 6:
-        #
-        # elif char_spell.spell.level == 7:
-        #
-        # elif char_spell.spell.level == 8:
-        #
-        # elif char_spell.spell.level == 9:
+        elif char_spell.level == 2:
+            level_2_spells.append(spell)
+        elif char_spell.level == 3:
+            level_3_spells.append(spell)
+        elif char_spell.level == 4:
+            level_4_spells.append(spell)
+        elif char_spell.level == 5:
+            level_5_spells.append(spell)
+        elif char_spell.level == 6:
+            level_6_spells.append(spell)
+        elif char_spell.level == 7:
+            level_7_spells.append(spell)
+        elif char_spell.level == 8:
+            level_8_spells.append(spell)
+        elif char_spell.level == 9:
+            level_9_spells.append(spell)
 
-
+    print(sorted(level_1_spells, key=lambda i:i[0]))
 
     # Parses database-formatted hit dice into standard dice notation
     hit_dice = "d" + str(int(c.hit_dice.split("D")[1]))
@@ -414,34 +415,34 @@ def character_detail(request, character_id):
         "spell_save_dc": c.spell_save_dc,
         "spell_attack_bonus": c.spell_attack_bonus,
 
-        "cantrips": cantrips,
+        "cantrips": sorted(cantrips, key=lambda i:i[0]),
         "lvl_1_slots_total": c.lvl_1_slots_total,
         "lvl_1_slots_expended": c.lvl_1_slots_expended,
-        "lvl_1_spells": level_1_spells,
+        "lvl_1_spells": sorted(level_1_spells, key=lambda i:i[0]),
         "lvl_2_slots_total": c.lvl_2_slots_total,
         "lvl_2_slots_expended": c.lvl_2_slots_expended,
-        "lvl_2_spells": [],
+        "lvl_2_spells": sorted(level_2_spells, key=lambda i:i[0]),
         "lvl_3_slots_total": c.lvl_3_slots_total,
         "lvl_3_slots_expended": c.lvl_3_slots_expended,
-        "lvl_3_spells": [],
+        "lvl_3_spells": sorted(level_3_spells, key=lambda i:i[0]),
         "lvl_4_slots_total": c.lvl_4_slots_total,
         "lvl_4_slots_expended": c.lvl_4_slots_expended,
-        "lvl_4_spells": [],
+        "lvl_4_spells": sorted(level_4_spells, key=lambda i:i[0]),
         "lvl_5_slots_total": c.lvl_5_slots_total,
         "lvl_5_slots_expended": c.lvl_5_slots_expended,
-        "lvl_5_spells": [],
+        "lvl_5_spells": sorted(level_5_spells, key=lambda i:i[0]),
         "lvl_6_slots_total": c.lvl_6_slots_total,
         "lvl_6_slots_expended": c.lvl_6_slots_expended,
-        "lvl_6_spells": [],
+        "lvl_6_spells": sorted(level_6_spells, key=lambda i:i[0]),
         "lvl_7_slots_total": c.lvl_7_slots_total,
         "lvl_7_slots_expended": c.lvl_7_slots_expended,
-        "lvl_7_spells": [],
+        "lvl_7_spells": sorted(level_7_spells, key=lambda i:i[0]),
         "lvl_8_slots_total": c.lvl_8_slots_total,
         "lvl_8_slots_expended": c.lvl_8_slots_expended,
-        "lvl_8_spells": [],
+        "lvl_8_spells": sorted(level_8_spells, key=lambda i:i[0]),
         "lvl_9_slots_total": c.lvl_9_slots_total,
         "lvl_9_slots_expended": c.lvl_9_slots_expended,
-        "lvl_9_spells": []
+        "lvl_9_spells": sorted(level_9_spells, key=lambda i:i[0])
 
     }
 

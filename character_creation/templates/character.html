@@ -736,25 +736,25 @@
                                     <input type="text" name="cantrip-1" value="{{ character.cantrips.0.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="text" name="cantrip-2" />
+                                    <input type="text" name="cantrip-2" value="{{ character.cantrips.1.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="text" name="cantrip-3" />
+                                    <input type="text" name="cantrip-3" value="{{ character.cantrips.2.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="text" name="cantrip-4" />
+                                    <input type="text" name="cantrip-4" value="{{ character.cantrips.3.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="text" name="cantrip-5" />
+                                    <input type="text" name="cantrip-5" value="{{ character.cantrips.4.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="text" name="cantrip-6" />
+                                    <input type="text" name="cantrip-6" value="{{ character.cantrips.5.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="text" name="cantrip-7" />
+                                    <input type="text" name="cantrip-7" value="{{ character.cantrips.6.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="text" name="cantrip-8" />
+                                    <input type="text" name="cantrip-8" value="{{ character.cantrips.7.0 }}"/>
                                 </div>
                             </div>
                         </div>
@@ -779,48 +779,48 @@
                                     <input type="text" name="l1-1-spell" value="{{ character.lvl_1_spells.0.0 }}" />
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-2-prepped" />
-                                    <input type="text" name="l1-2-spell" />
+                                    <input type="checkbox" name="l1-2-prepped" {% if character.lvl_1_spells.1.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-2-spell" value="{{ character.lvl_1_spells.1.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-3-prepped" />
-                                    <input type="text" name="l1-3-spell" />
+                                    <input type="checkbox" name="l1-3-prepped" {% if character.lvl_1_spells.2.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-3-spell" value="{{ character.lvl_1_spells.2.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-4-prepped" />
-                                    <input type="text" name="l1-4-spell" />
+                                    <input type="checkbox" name="l1-4-prepped" {% if character.lvl_1_spells.3.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-4-spell" value="{{ character.lvl_1_spells.3.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-5-prepped" />
-                                    <input type="text" name="l1-5-spell" />
+                                    <input type="checkbox" name="l1-5-prepped" {% if character.lvl_1_spells.4.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-5-spell" value="{{ character.lvl_1_spells.4.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-6-prepped" />
-                                    <input type="text" name="l1-6-spell" />
+                                    <input type="checkbox" name="l1-6-prepped" {% if character.lvl_1_spells.5.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-6-spell" value="{{ character.lvl_1_spells.5.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-7-prepped" />
-                                    <input type="text" name="l1-7-spell" />
+                                    <input type="checkbox" name="l1-7-prepped" {% if character.lvl_1_spells.6.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-7-spell" value="{{ character.lvl_1_spells.6.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-8-prepped" />
-                                    <input type="text" name="l1-8-spell" />
+                                    <input type="checkbox" name="l1-8-prepped" {% if character.lvl_1_spells.7.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-8-spell" value="{{ character.lvl_1_spells.7.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-9-prepped" />
-                                    <input type="text" name="l1-9-spell" />
+                                    <input type="checkbox" name="l1-9-prepped" {% if character.lvl_1_spells.8.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-9-spell" value="{{ character.lvl_1_spells.8.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-10-prepped" />
-                                    <input type="text" name="l1-10-spell" />
+                                    <input type="checkbox" name="l1-10-prepped" {% if character.lvl_1_spells.9.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-10-spell" value="{{ character.lvl_1_spells.9.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-11-prepped" />
-                                    <input type="text" name="l1-11-spell" />
+                                    <input type="checkbox" name="l1-11-prepped" {% if character.lvl_1_spells.10.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-11-spell" value="{{ character.lvl_1_spells.10.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l1-12-prepped" />
-                                    <input type="text" name="l1-12-spell" />
+                                    <input type="checkbox" name="l1-12-prepped" {% if character.lvl_1_spells.11.1 %} checked {% endif %}/>
+                                    <input type="text" name="l1-12-spell" value="{{ character.lvl_1_spells.11.0 }}"/>
                                 </div>
                             </div>
                         </div>
@@ -841,52 +841,52 @@
                             </div>
                             <div class="spells w3-col w3-margin-bottom">
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-1-prepped" />
-                                    <input type="text" name="l2-1-spell" />
+                                    <input type="checkbox" name="l2-1-prepped" {% if character.lvl_2_spells.0.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-1-spell" value="{{ character.lvl_2_spells.0.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-2-prepped" />
-                                    <input type="text" name="l2-2-spell" />
+                                    <input type="checkbox" name="l2-2-prepped" {% if character.lvl_2_spells.1.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-2-spell" value="{{ character.lvl_2_spells.1.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-3-prepped" />
-                                    <input type="text" name="l2-3-spell" />
+                                    <input type="checkbox" name="l2-3-prepped" {% if character.lvl_2_spells.2.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-3-spell" value="{{ character.lvl_2_spells.2.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-4-prepped" />
-                                    <input type="text" name="l2-4-spell" />
+                                    <input type="checkbox" name="l2-4-prepped" {% if character.lvl_2_spells.3.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-4-spell" value="{{ character.lvl_2_spells.3.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-5-prepped" />
-                                    <input type="text" name="l2-5-spell" />
+                                    <input type="checkbox" name="l2-5-prepped" {% if character.lvl_2_spells.4.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-5-spell" value="{{ character.lvl_2_spells.4.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-6-prepped" />
-                                    <input type="text" name="l2-6-spell" />
+                                    <input type="checkbox" name="l2-6-prepped" {% if character.lvl_2_spells.5.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-6-spell" value="{{ character.lvl_2_spells.5.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-7-prepped" />
-                                    <input type="text" name="l2-7-spell" />
+                                    <input type="checkbox" name="l2-7-prepped" {% if character.lvl_2_spells.6.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-7-spell" value="{{ character.lvl_2_spells.6.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-8-prepped" />
-                                    <input type="text" name="l2-8-spell" />
+                                    <input type="checkbox" name="l2-8-prepped" {% if character.lvl_2_spells.7.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-8-spell" value="{{ character.lvl_2_spells.7.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-9-prepped" />
-                                    <input type="text" name="l2-9-spell" />
+                                    <input type="checkbox" name="l2-9-prepped" {% if character.lvl_2_spells.8.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-9-spell" value="{{ character.lvl_2_spells.8.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-10-prepped" />
-                                    <input type="text" name="l2-10-spell" />
+                                    <input type="checkbox" name="l2-10-prepped" {% if character.lvl_2_spells.9.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-10-spell" value="{{ character.lvl_2_spells.9.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-11-prepped" />
-                                    <input type="text" name="l2-11-spell" />
+                                    <input type="checkbox" name="l2-11-prepped" {% if character.lvl_2_spells.10.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-11-spell" value="{{ character.lvl_2_spells.10.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l2-12-prepped" />
-                                    <input type="text" name="l2-12-spell" />
+                                    <input type="checkbox" name="l2-12-prepped" {% if character.lvl_2_spells.11.1 %} checked {% endif %}/>
+                                    <input type="text" name="l2-12-spell" value="{{ character.lvl_2_spells.11.0 }}"/>
                                 </div>
                             </div>
                         </div>
@@ -907,52 +907,52 @@
                             </div>
                             <div class="spells w3-col w3-margin-bottom">
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-1-prepped" />
-                                    <input type="text" name="l3-1-spell" />
+                                    <input type="checkbox" name="l3-1-prepped" {% if character.lvl_3_spells.0.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-1-spell" value="{{ character.lvl_3_spells.0.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-2-prepped" />
-                                    <input type="text" name="l3-2-spell" />
+                                    <input type="checkbox" name="l3-2-prepped" {% if character.lvl_3_spells.1.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-2-spell" value="{{ character.lvl_3_spells.1.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-3-prepped" />
-                                    <input type="text" name="l3-3-spell" />
+                                    <input type="checkbox" name="l3-3-prepped" {% if character.lvl_3_spells.2.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-3-spell" value="{{ character.lvl_3_spells.2.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-4-prepped" />
-                                    <input type="text" name="l3-4-spell" />
+                                    <input type="checkbox" name="l3-4-prepped" {% if character.lvl_3_spells.3.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-4-spell" value="{{ character.lvl_3_spells.3.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-5-prepped" />
-                                    <input type="text" name="l3-5-spell" />
+                                    <input type="checkbox" name="l3-5-prepped" {% if character.lvl_3_spells.4.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-5-spell" value="{{ character.lvl_3_spells.4.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-6-prepped" />
-                                    <input type="text" name="l3-6-spell" />
+                                    <input type="checkbox" name="l3-6-prepped" {% if character.lvl_3_spells.5.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-6-spell" value="{{ character.lvl_3_spells.5.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-7-prepped" />
-                                    <input type="text" name="l3-7-spell" />
+                                    <input type="checkbox" name="l3-7-prepped" {% if character.lvl_3_spells.6.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-7-spell" value="{{ character.lvl_3_spells.6.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-8-prepped" />
-                                    <input type="text" name="l3-8-spell" />
+                                    <input type="checkbox" name="l3-8-prepped" {% if character.lvl_3_spells.7.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-8-spell" value="{{ character.lvl_3_spells.7.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-9-prepped" />
-                                    <input type="text" name="l3-9-spell" />
+                                    <input type="checkbox" name="l3-9-prepped" {% if character.lvl_3_spells.8.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-9-spell" value="{{ character.lvl_3_spells.8.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-10-prepped" />
-                                    <input type="text" name="l3-10-spell" />
+                                    <input type="checkbox" name="l3-10-prepped" {% if character.lvl_3_spells.9.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-10-spell" value="{{ character.lvl_3_spells.9.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-11-prepped" />
-                                    <input type="text" name="l3-11-spell" />
+                                    <input type="checkbox" name="l3-11-prepped" {% if character.lvl_3_spells.10.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-11-spell" value="{{ character.lvl_3_spells.10.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l3-12-prepped" />
-                                    <input type="text" name="l3-12-spell" />
+                                    <input type="checkbox" name="l3-12-prepped" {% if character.lvl_3_spells.11.1 %} checked {% endif %}/>
+                                    <input type="text" name="l3-12-spell" value="{{ character.lvl_3_spells.11.0 }}"/>
                                 </div>
                             </div>
                         </div>
@@ -973,52 +973,52 @@
                             </div>
                             <div class="spells w3-col w3-margin-bottom">
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-1-prepped" />
-                                    <input type="text" name="l4-1-spell" />
+                                    <input type="checkbox" name="l4-1-prepped" {% if character.lvl_4_spells.0.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-1-spell" value="{{ character.lvl_4_spells.0.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-2-prepped" />
-                                    <input type="text" name="l4-2-spell" />
+                                    <input type="checkbox" name="l4-2-prepped" {% if character.lvl_4_spells.1.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-2-spell" value="{{ character.lvl_4_spells.1.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-3-prepped" />
-                                    <input type="text" name="l4-3-spell" />
+                                    <input type="checkbox" name="l4-3-prepped" {% if character.lvl_4_spells.2.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-3-spell" value="{{ character.lvl_4_spells.2.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-4-prepped" />
-                                    <input type="text" name="l4-4-spell" />
+                                    <input type="checkbox" name="l4-4-prepped" {% if character.lvl_4_spells.3.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-4-spell" value="{{ character.lvl_4_spells.3.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-5-prepped" />
-                                    <input type="text" name="l4-5-spell" />
+                                    <input type="checkbox" name="l4-5-prepped" {% if character.lvl_4_spells.4.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-5-spell" value="{{ character.lvl_4_spells.4.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-6-prepped" />
-                                    <input type="text" name="l4-6-spell" />
+                                    <input type="checkbox" name="l4-6-prepped" {% if character.lvl_4_spells.5.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-6-spell" value="{{ character.lvl_4_spells.5.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-7-prepped" />
-                                    <input type="text" name="l4-7-spell" />
+                                    <input type="checkbox" name="l4-7-prepped" {% if character.lvl_4_spells.6.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-7-spell" value="{{ character.lvl_4_spells.6.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-8-prepped" />
-                                    <input type="text" name="l4-8-spell" />
+                                    <input type="checkbox" name="l4-8-prepped" {% if character.lvl_4_spells.7.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-8-spell" value="{{ character.lvl_4_spells.7.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-9-prepped" />
-                                    <input type="text" name="l4-9-spell" />
+                                    <input type="checkbox" name="l4-9-prepped" {% if character.lvl_4_spells.8.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-9-spell" value="{{ character.lvl_4_spells.8.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-10-prepped" />
-                                    <input type="text" name="l4-10-spell" />
+                                    <input type="checkbox" name="l4-10-prepped" {% if character.lvl_4_spells.9.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-10-spell" value="{{ character.lvl_4_spells.9.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-11-prepped" />
-                                    <input type="text" name="l4-11-spell" />
+                                    <input type="checkbox" name="l4-11-prepped" {% if character.lvl_4_spells.10.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-11-spell" value="{{ character.lvl_4_spells.10.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l4-12-prepped" />
-                                    <input type="text" name="l4-12-spell" />
+                                    <input type="checkbox" name="l4-12-prepped" {% if character.lvl_4_spells.11.1 %} checked {% endif %}/>
+                                    <input type="text" name="l4-12-spell" value="{{ character.lvl_4_spells.11.0 }}"/>
                                 </div>
                             </div>
                         </div>
@@ -1039,52 +1039,52 @@
                             </div>
                             <div class="spells w3-col w3-margin-bottom">
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-1-prepped" />
-                                    <input type="text" name="l5-1-spell" />
+                                    <input type="checkbox" name="l5-1-prepped" {% if character.lvl_5_spells.0.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-1-spell" value="{{ character.lvl_5_spells.0.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-2-prepped" />
-                                    <input type="text" name="l5-2-spell" />
+                                    <input type="checkbox" name="l5-2-prepped" {% if character.lvl_5_spells.1.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-2-spell" value="{{ character.lvl_5_spells.1.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-3-prepped" />
-                                    <input type="text" name="l5-3-spell" />
+                                    <input type="checkbox" name="l5-3-prepped" {% if character.lvl_5_spells.2.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-3-spell" value="{{ character.lvl_5_spells.2.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-4-prepped" />
-                                    <input type="text" name="l5-4-spell" />
+                                    <input type="checkbox" name="l5-4-prepped" {% if character.lvl_5_spells.3.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-4-spell" value="{{ character.lvl_5_spells.3.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-5-prepped" />
-                                    <input type="text" name="l5-5-spell" />
+                                    <input type="checkbox" name="l5-5-prepped" {% if character.lvl_5_spells.4.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-5-spell" value="{{ character.lvl_5_spells.4.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-6-prepped" />
-                                    <input type="text" name="l5-6-spell" />
+                                    <input type="checkbox" name="l5-6-prepped" {% if character.lvl_5_spells.5.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-6-spell" value="{{ character.lvl_5_spells.5.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-7-prepped" />
-                                    <input type="text" name="l5-7-spell" />
+                                    <input type="checkbox" name="l5-7-prepped" {% if character.lvl_5_spells.6.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-7-spell" value="{{ character.lvl_5_spells.6.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-8-prepped" />
-                                    <input type="text" name="l5-8-spell" />
+                                    <input type="checkbox" name="l5-8-prepped" {% if character.lvl_5_spells.7.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-8-spell" value="{{ character.lvl_5_spells.7.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-9-prepped" />
-                                    <input type="text" name="l5-9-spell" />
+                                    <input type="checkbox" name="l5-9-prepped" {% if character.lvl_5_spells.8.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-9-spell" value="{{ character.lvl_5_spells.8.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-10-prepped" />
-                                    <input type="text" name="l5-10-spell" />
+                                    <input type="checkbox" name="l5-10-prepped" {% if character.lvl_5_spells.9.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-10-spell" value="{{ character.lvl_5_spells.9.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-11-prepped" />
-                                    <input type="text" name="l5-11-spell" />
+                                    <input type="checkbox" name="l5-11-prepped" {% if character.lvl_5_spells.10.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-11-spell" value="{{ character.lvl_5_spells.10.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l5-12-prepped" />
-                                    <input type="text" name="l5-12-spell" />
+                                    <input type="checkbox" name="l5-12-prepped" {% if character.lvl_5_spells.11.1 %} checked {% endif %}/>
+                                    <input type="text" name="l5-12-spell" value="{{ character.lvl_5_spells.11.0 }}"/>
                                 </div>
                             </div>
                         </div>
@@ -1105,36 +1105,36 @@
                             </div>
                             <div class="spells w3-col w3-margin-bottom">
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l6-1-prepped" />
-                                    <input type="text" name="l6-1-spell" />
+                                    <input type="checkbox" name="l6-1-prepped" {% if character.lvl_6_spells.0.1 %} checked {% endif %}/>
+                                    <input type="text" name="l6-1-spell" value="{{ character.lvl_6_spells.0.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l6-2-prepped" />
-                                    <input type="text" name="l6-2-spell" />
+                                    <input type="checkbox" name="l6-2-prepped" {% if character.lvl_6_spells.1.1 %} checked {% endif %}/>
+                                    <input type="text" name="l6-2-spell" value="{{ character.lvl_6_spells.1.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l6-3-prepped" />
-                                    <input type="text" name="l6-3-spell" />
+                                    <input type="checkbox" name="l6-3-prepped" {% if character.lvl_6_spells.2.1 %} checked {% endif %}/>
+                                    <input type="text" name="l6-3-spell" value="{{ character.lvl_6_spells.2.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l6-4-prepped" />
-                                    <input type="text" name="l6-4-spell" />
+                                    <input type="checkbox" name="l6-4-prepped" {% if character.lvl_6_spells.3.1 %} checked {% endif %}/>
+                                    <input type="text" name="l6-4-spell" value="{{ character.lvl_6_spells.3.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l6-5-prepped" />
-                                    <input type="text" name="l6-5-spell" />
+                                    <input type="checkbox" name="l6-5-prepped" {% if character.lvl_6_spells.4.1 %} checked {% endif %}/>
+                                    <input type="text" name="l6-5-spell" value="{{ character.lvl_6_spells.4.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l6-6-prepped" />
-                                    <input type="text" name="l6-6-spell" />
+                                    <input type="checkbox" name="l6-6-prepped" {% if character.lvl_6_spells.5.1 %} checked {% endif %}/>
+                                    <input type="text" name="l6-6-spell" value="{{ character.lvl_6_spells.5.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l6-7-prepped" />
-                                    <input type="text" name="l6-7-spell" />
+                                    <input type="checkbox" name="l6-7-prepped" {% if character.lvl_6_spells.6.1 %} checked {% endif %}/>
+                                    <input type="text" name="l6-7-spell" value="{{ character.lvl_6_spells.6.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l6-8-prepped" />
-                                    <input type="text" name="l6-8-spell" />
+                                    <input type="checkbox" name="l6-8-prepped" {% if character.lvl_6_spells.7.1 %} checked {% endif %}/>
+                                    <input type="text" name="l6-8-spell" value="{{ character.lvl_6_spells.7.0 }}"/>
                                 </div>
                             </div>
                         </div>
@@ -1155,36 +1155,36 @@
                             </div>
                             <div class="spells w3-col w3-margin-bottom">
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l7-1-prepped" />
-                                    <input type="text" name="l7-1-spell" />
+                                    <input type="checkbox" name="l7-1-prepped" {% if character.lvl_7_spells.0.1 %} checked {% endif %}/>
+                                    <input type="text" name="l7-1-spell" value="{{ character.lvl_7_spells.0.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l7-2-prepped" />
-                                    <input type="text" name="l7-2-spell" />
+                                    <input type="checkbox" name="l7-2-prepped" {% if character.lvl_7_spells.1.1 %} checked {% endif %}/>
+                                    <input type="text" name="l7-2-spell" value="{{ character.lvl_7_spells.1.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l7-3-prepped" />
-                                    <input type="text" name="l7-3-spell" />
+                                    <input type="checkbox" name="l7-3-prepped" {% if character.lvl_7_spells.2.1 %} checked {% endif %}/>
+                                    <input type="text" name="l7-3-spell" value="{{ character.lvl_7_spells.2.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l7-4-prepped" />
-                                    <input type="text" name="l7-4-spell" />
+                                    <input type="checkbox" name="l7-4-prepped" {% if character.lvl_7_spells.3.1 %} checked {% endif %}/>
+                                    <input type="text" name="l7-4-spell" value="{{ character.lvl_7_spells.3.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l7-5-prepped" />
-                                    <input type="text" name="l7-5-spell" />
+                                    <input type="checkbox" name="l7-5-prepped" {% if character.lvl_7_spells.4.1 %} checked {% endif %}/>
+                                    <input type="text" name="l7-5-spell" value="{{ character.lvl_7_spells.4.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l7-6-prepped" />
-                                    <input type="text" name="l7-6-spell" />
+                                    <input type="checkbox" name="l7-6-prepped" {% if character.lvl_7_spells.5.1 %} checked {% endif %}/>
+                                    <input type="text" name="l7-6-spell" value="{{ character.lvl_7_spells.5.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l7-7-prepped" />
-                                    <input type="text" name="l7-7-spell" />
+                                    <input type="checkbox" name="l7-7-prepped" {% if character.lvl_7_spells.6.1 %} checked {% endif %}/>
+                                    <input type="text" name="l7-7-spell" value="{{ character.lvl_7_spells.6.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l7-8-prepped" />
-                                    <input type="text" name="l7-8-spell" />
+                                    <input type="checkbox" name="l7-8-prepped" {% if character.lvl_7_spells.7.1 %} checked {% endif %}/>
+                                    <input type="text" name="l7-8-spell" value="{{ character.lvl_7_spells.7.0 }}"/>
                                 </div>
                             </div>
                         </div>
@@ -1205,36 +1205,36 @@
                             </div>
                             <div class="spells w3-col w3-margin-bottom">
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l8-1-prepped" />
-                                    <input type="text" name="l8-1-spell" />
+                                    <input type="checkbox" name="l8-1-prepped" {% if character.lvl_8_spells.0.1 %} checked {% endif %}/>
+                                    <input type="text" name="l8-1-spell" value="{{ character.lvl_8_spells.0.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l8-2-prepped" />
-                                    <input type="text" name="l8-2-spell" />
+                                    <input type="checkbox" name="l8-2-prepped" {% if character.lvl_8_spells.1.1 %} checked {% endif %}/>
+                                    <input type="text" name="l8-2-spell" value="{{ character.lvl_8_spells.1.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l8-3-prepped" />
-                                    <input type="text" name="l8-3-spell" />
+                                    <input type="checkbox" name="l8-3-prepped" {% if character.lvl_8_spells.2.1 %} checked {% endif %}/>
+                                    <input type="text" name="l8-3-spell" value="{{ character.lvl_8_spells.2.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l8-4-prepped" />
-                                    <input type="text" name="l8-4-spell" />
+                                    <input type="checkbox" name="l8-4-prepped" {% if character.lvl_8_spells.3.1 %} checked {% endif %}/>
+                                    <input type="text" name="l8-4-spell" value="{{ character.lvl_8_spells.3.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l8-5-prepped" />
-                                    <input type="text" name="l8-5-spell" />
+                                    <input type="checkbox" name="l8-5-prepped" {% if character.lvl_8_spells.4.1 %} checked {% endif %}/>
+                                    <input type="text" name="l8-5-spell" value="{{ character.lvl_8_spells.4.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l8-6-prepped" />
-                                    <input type="text" name="l8-6-spell" />
+                                    <input type="checkbox" name="l8-6-prepped" {% if character.lvl_8_spells.5.1 %} checked {% endif %}/>
+                                    <input type="text" name="l8-6-spell" value="{{ character.lvl_8_spells.5.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l8-7-prepped" />
-                                    <input type="text" name="l8-7-spell" />
+                                    <input type="checkbox" name="l8-7-prepped" {% if character.lvl_8_spells.6.1 %} checked {% endif %}/>
+                                    <input type="text" name="l8-7-spell" value="{{ character.lvl_8_spells.6.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l8-8-prepped" />
-                                    <input type="text" name="l8-8-spell" />
+                                    <input type="checkbox" name="l8-8-prepped" {% if character.lvl_8_spells.7.1 %} checked {% endif %}/>
+                                    <input type="text" name="l8-8-spell" value="{{ character.lvl_8_spells.7.0 }}"/>
                                 </div>
                             </div>
                         </div>
@@ -1255,36 +1255,36 @@
                             </div>
                             <div class="spells w3-col w3-margin-bottom">
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l9-1-prepped" />
-                                    <input type="text" name="l9-1-spell" />
+                                    <input type="checkbox" name="l9-1-prepped" {% if character.lvl_9_spells.0.1 %} checked {% endif %}/>
+                                    <input type="text" name="l9-1-spell" value="{{ character.lvl_9_spells.0.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l9-2-prepped" />
-                                    <input type="text" name="l9-2-spell" />
+                                    <input type="checkbox" name="l9-2-prepped" {% if character.lvl_9_spells.1.1 %} checked {% endif %}/>
+                                    <input type="text" name="l9-2-spell" value="{{ character.lvl_9_spells.1.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l9-3-prepped" />
-                                    <input type="text" name="l9-3-spell" />
+                                    <input type="checkbox" name="l9-3-prepped" {% if character.lvl_9_spells.2.1 %} checked {% endif %}/>
+                                    <input type="text" name="l9-3-spell" value="{{ character.lvl_9_spells.2.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l9-4-prepped" />
-                                    <input type="text" name="l9-4-spell" />
+                                    <input type="checkbox" name="l9-4-prepped" {% if character.lvl_9_spells.3.1 %} checked {% endif %}/>
+                                    <input type="text" name="l9-4-spell" value="{{ character.lvl_9_spells.3.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l9-5-prepped" />
-                                    <input type="text" name="l9-5-spell" />
+                                    <input type="checkbox" name="l9-5-prepped" {% if character.lvl_9_spells.4.1 %} checked {% endif %}/>
+                                    <input type="text" name="l9-5-spell" value="{{ character.lvl_9_spells.4.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l9-6-prepped" />
-                                    <input type="text" name="l9-6-spell" />
+                                    <input type="checkbox" name="l9-6-prepped" {% if character.lvl_9_spells.5.1 %} checked {% endif %}/>
+                                    <input type="text" name="l9-6-spell" value="{{ character.lvl_9_spells.5.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l9-7-prepped" />
-                                    <input type="text" name="l9-7-spell" />
+                                    <input type="checkbox" name="l9-7-prepped" {% if character.lvl_9_spells.6.1 %} checked {% endif %}/>
+                                    <input type="text" name="l9-7-spell" value="{{ character.lvl_9_spells.6.0 }}"/>
                                 </div>
                                 <div class="spell w3-col m6 l3">
-                                    <input type="checkbox" name="l9-8-prepped" />
-                                    <input type="text" name="l9-8-spell" />
+                                    <input type="checkbox" name="l9-8-prepped" {% if character.lvl_9_spells.7.1 %} checked {% endif %}/>
+                                    <input type="text" name="l9-8-spell" value="{{ character.lvl_9_spells.7.0 }}"/>
                                 </div>
                             </div>
                         </div>

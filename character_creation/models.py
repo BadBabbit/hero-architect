@@ -449,9 +449,14 @@ class Spell(models.Model):
         return self.name
 
 class CharacterSpell(models.Model):
-    spell = models.ForeignKey(Spell, on_delete=models.CASCADE)
+    # spell = models.ForeignKey(Spell, on_delete=models.CASCADE)
+    spell = models.CharField(blank=False, null=False, default="")
+    level = models.SmallIntegerField(default=0)
     character = models.ForeignKey(Character, on_delete=models.CASCADE)
     prepared = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.character.name + ": " + self.spell
 
 
 class CharacterClass(models.Model):
