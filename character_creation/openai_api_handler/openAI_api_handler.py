@@ -86,6 +86,21 @@ def wait_on_run(run, thread):
         run = retrieve_run(thread, run)
         LOGGER.debug(f"r_status: {run.status}")
 
+def put_run_out_of_misery(thread, run, call_id, output):
+    client = OpenAIClient.get_client()
+    run = client.beta.threads.runs.submit_tool_outputs(
+        thread_id=thread.id,
+        run_id=run.id,
+        tool_outputs=[
+            {
+                "tool_call_id": call_id,
+                "output": output,
+            },
+        ]
+    )
+    return run
+
+
 def openAI_API_call(client, messages):
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",

@@ -1,0 +1,119 @@
+{
+  "name": "create_character",
+  "description": "Create a new character using the user's preferences.",
+  "parameters": {
+    "type": "object",
+
+  }
+}
+
+
+{
+  "name": <>,
+  "class": <>, # The class of the character (for example, "bard", "wizard", or "barbarian".
+  "level": <>, # The character level (1, 2, 3, etc.).
+  "race": <>, # If the user has specified a subrace, this should go here instead. Else, just the race is fine.
+  "ability-scores": { # The user may have opted to generate their own ability scores. If this is the case, still include this field but leave it blank.
+    "str-score": <>,
+    "dex-score": <>,
+    "con-score": <>,
+    "int-score": <>,
+    "wis-score": <>,
+    "cha-score": <>
+  },
+  "ability-score-manipulations": {  # This field should represent ability score increases that have come from racial bonuses, as well as ability score increases from levels if any apply. Using the selected race and subrace (if any), you will need to find the ability score increases that apply.
+      "str": <>,
+      "dex": <>,
+      "con": <>,
+      "int": <>,
+      "wis": <>,
+      "cha": <>
+  },
+"skill-proficiencies": { # Values here represent whether the character has proficiencies or expertises in the listed skills. Possible values are "prof" for proficiency, "exp" for expertise, and "none" for neither.
+	"acrobatics": <>,
+	"animal-handling": <>,
+	"arcana": <>,
+	"athletics": <>,
+	"deception": <>,
+	"history": <>,
+	"insight": <>,
+	"intimidation": <>,
+	"investigation": <>,
+	"medicine": <>,
+	"nature": <>,
+	"perception": <>,
+	"performance": <>,
+	"persuasion": <>,
+	"religion": <>,
+	"sleight-of-hand": <>,
+	"stealth": <>,
+	"survival": <>,
+},
+"save-proficiencies": { # Values here represent whether the character has proficiencies in the listed saving throws. Possible values are "true" or "false".
+	"str": <>,
+	"dex": <>,
+	"con": <>,
+	"int": <>,
+	"wis": <>,
+	"cha": <>,
+},
+"other-proficiencies": { # For every type of equipment that the character has proficiency in from their class and race, you should append it in the response in the following format: "- [PROFICIENCY]\n". This should appear as a list to the user. Repeat this for all three fields in this section while adhering to field-specific stipulations.
+	"weapons_and_armour": <>, # Only weapons and armour proficiencies should go here.
+	"tools": <>, # Only tool proficiencies should go here. For example, thieves' tools and forgery kits.
+	"languages": <>, # Only language proficiencies should go here. For example, Common, Celestial, and Draconic.
+}
+
+"size": <>, # This information is determined by the character's race. possible values are "small" and "medium".
+"speed": <>, # This information is also determined by race, though class features can sometimes effect it; if the character is a monk or ranger, you will need to adjust accordingly. Encode the value as an integer string (for example, "30" or "25").
+"hit_dice": <>, # Determined by character's class. Possible values are "d6", "d8", "d10", and "d12".
+"attacks": <>, # This field is likely to have a lot of text, especially for characters belonging to martial classes. This field should be generated depending on what weapons the user has requested to have. You will likely be missing some information, but the format of the attack is as follows and you should fill it out to the best of your ability: '[WEAPON_NAME]. [MELEE_OR_RANGED] weapon attacl. +[HIT] to hit, [RANGE/REACH]. Hit: [NUM_DICE]d[DICE] + [DMG_MOD] [DMG_TYPE] damage." If there are multiple attacks, include them all in the same string with two line breaks ("\n\n") between them.
+"features-and-traits": <>, # This field will also be a large string. You should include here ever class trait and racial feature that the character has, along with the description of each trait/feature. Each trait/feature should be separated by two line breaks ("\n\n").
+"equipment": <>, # Include here a list of names of all of the pieces of equipment that the character would gain from their class, exlcuding money (you should consult the System Reference Document for this information. If a choice was required by the player, check the conversation to see if they made one. If none was made, choose the first option from the option set).
+"money": { # This information is determined by the player's class; consult the System Reference Document. In most cases, they will only have Gold Pieces. In this case, set the other two fields to 0.
+	"copper": <>,
+	"silver": <>,
+	"gold": <>,
+}
+"descriptors": { # These values are "soft" values that have no bearing on the mechanics of the game. As such, you will only find information pertaining to these fields detailed in the conversation. If no preference has been specified for a field, leave the field blank.
+	"personality-traits": <>,
+	"ideals": <>,
+	"bonds": <>,
+	"flaws": <>,
+	"alignment": <>, # refers to the famous alignment chart, containing 9 possible values ranging from Lawful Good to Chaotic Evil. stick strictly to the values in the chart.
+	"age": <>,
+	"height": <>,
+	"weight": <>,
+	"eyes": <>,
+	"skin": <>,
+	"hair": <>,
+	"description": <>, # This field has the potential to be as long or as short as needed. It should be a narrative description of the character's overall appearance and personality.
+	"allies-and-organisations": <>,
+	"backstory": <> # This field can also be as long or as short as is needed. It should be a brief narrative description of the character's past life up to this point.
+},
+"spellcasting": { # This set of fields relates to the character's spell casting abilities. As such, leave this entire field blank if the character's class has no spellcasting, for example if they are a fighter or a monk.
+	"spellcasting-ability": <>, # the ability used to cast spells; "INT", "WIS", or "CHA". This is determined by the character's class. Consult the System Reference Document.
+	"spell-save-dc": <>, # Equal to 8 + proficiency + spellcasting ability modifier. It is likely you will not have enough information to carry out this calculation. In such cases, leave this blank.
+	"spell-attack-bonus": <>, # Equal to proficiency + spellcasting ability modifier. It is likely you will not have enough information to carry out this calculation. In such cases, leave this blank.
+	"cantrips": <>, # Store this as a list containing the names of cantrips the player has chosen. If none have been specified, leave this blank.
+	"lvl-1-slots": <>, # Number of 1st-level spell slots the character has.
+	"lvl-1-spells": <>, # Store this as a list containing the names of 1st level spells the player has chosen. If none have been specified, leave this blank. Repeat this for levels 2 to 9.
+	"lvl-2-slots": <>,
+	"lvl-2-spells": <>,
+	"lvl-3-slots": <>,
+	"lvl-3-spells": <>,
+	"lvl-4-slots": <>,
+	"lvl-4-spells": <>,
+	"lvl-5-slots": <>,
+	"lvl-5-spells": <>,
+	"lvl-6-slots": <>,
+	"lvl-6-spells": <>,
+	"lvl-7-slots": <>,
+	"lvl-7-spells": <>,
+	"lvl-8-slots": <>,
+	"lvl-8-spells": <>,
+	"lvl-9-slots": <>,
+	"lvl-9-spells": <>,
+
+}
+`
+}
