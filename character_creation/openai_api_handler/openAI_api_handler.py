@@ -35,13 +35,37 @@ class GenerationAssistant:
         return ChatAssistant.id
 
 
+def create_assistant(name, instructions, model="gpt-4-1106-preview", functions=None):
+    client = OpenAIClient.get_client()
+
+    if functions is None:
+        tools = []
+    else:
+        tools = [{
+            "type": "function",
+            "function": functions
+        }]
+
+    logging.info("Creating assistant...")
+    a = client.beta.assistants.create(
+        name=name,
+        instructions=instructions,
+        model=model,
+        tools=tools
+    )
+    logging.info(f"Assistant created with ID {a.id}.")
+    return a
+
+
 def initialise_thread():
     client = OpenAIClient.get_client()
     return client.beta.threads.create()
 
+
 def get_thread(thread_id):
     client = OpenAIClient.get_client()
     return client.beta.threads.retrieve(thread_id)
+
 
 def add_message_to_thread(content, thread_id, role="user"):
     client = OpenAIClient.get_client()
@@ -52,6 +76,7 @@ def add_message_to_thread(content, thread_id, role="user"):
     )
     return message
 
+
 def run_assistant(thread_id, assistant_id, instructions=""):
     client = OpenAIClient.get_client()
     run = client.beta.threads.runs.create(
@@ -61,6 +86,7 @@ def run_assistant(thread_id, assistant_id, instructions=""):
     )
     return run
 
+
 def retrieve_run(thread, run):
     client = OpenAIClient.get_client()
     run = client.beta.threads.runs.retrieve(
@@ -69,12 +95,14 @@ def retrieve_run(thread, run):
     )
     return run
 
+
 def retrieve_messages(thread):
     client = OpenAIClient.get_client()
     messages = client.beta.threads.messages.list(
         thread_id=thread.id
     )
     return messages
+
 
 def wait_on_run(run, thread):
     c = 0
@@ -85,6 +113,7 @@ def wait_on_run(run, thread):
         time.sleep(0.1)
         run = retrieve_run(thread, run)
         LOGGER.debug(f"r_status: {run.status}")
+
 
 def put_run_out_of_misery(thread, run, call_id, output):
     client = OpenAIClient.get_client()
@@ -107,6 +136,7 @@ def openAI_API_call(client, messages):
         messages=messages
     )
     return completion.choices[0].message
+
 
 def main():
 

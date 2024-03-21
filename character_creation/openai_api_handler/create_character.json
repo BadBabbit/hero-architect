@@ -1,0 +1,98 @@
+{
+  "name": "create_character",
+  "description": "A function which generates a character based on the user's preferences. Returns the character's ID, which the user can then use to locate their character.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "The character's name. If no name has been decided, input an empty string."
+      },
+      "class": {
+        "type": "string",
+        "description": "The character's class.",
+        "enum": [
+          "Barbarian",
+          "Bard",
+          "Cleric",
+          "Druid",
+          "Fighter",
+          "Monk",
+          "Paladin",
+          "Ranger",
+          "Rogue",
+          "Sorcerer",
+          "Warlock",
+          "Wizard"
+        ]
+      },
+      "level": {
+        "type": "integer",
+        "description": "An integer value between 1 and 20 (inclusive) representing the character's level. If no level has been decided, default to 1."
+      },
+      "race": {
+        "type": "string",
+        "description": "The character's race. Do not confuse this with subrace.",
+        "enum": [
+          "Dwarf",
+          "Elf",
+          "Halfling",
+          "Human",
+          "Dragonborn",
+          "Gnome",
+          "Half-Elf",
+          "Half-Orc",
+          "Tiefling"
+        ]
+      },
+      "subrace": {
+        "type": "string",
+        "description": "The character's subrace. Not to be confused with their race.",
+        "enum": [
+          "None",
+          "Hill Dwarf",
+          "High Elf",
+          "Lightfoot Halfling",
+          "Rock Gnome"
+        ]
+      },
+      "str-score": {
+        "type": "integer",
+        "description": "The character's base Strength score, before any racial bonuses are applied."
+      },
+      "dex-score": {
+        "type": "integer",
+        "description": "The character's base Dexterity score, before any racial bonuses are applied."
+      },
+      "con-score": {
+        "type": "integer",
+        "description": "The character's base Constitution score, before any racial bonuses are applied."
+      },
+      "int-score": {
+        "type": "integer",
+        "description": "The character's base Intelligence score, before any racial bonuses are applied."
+      },
+      "wis-score": {
+        "type": "integer",
+        "description": "The character's base Wisdom score, before any racial bonuses are applied."
+      },
+      "cha-score": {
+        "type": "integer",
+        "description": "The character's base Charisma score, before any racial bonuses are applied."
+      },
+      "saving-throw-proficiencies": {
+        "type": "",
+        "description": "The types of saving throws the character would have proficiency, depending on their class; consult the System Reference Document."
+      },
+      "skill-proficiencies": {
+        "type": "",
+        "description": "The types of skills that the character is proficient in, depending on their race and class choices."
+      }
+    },
+    "required": [
+      "class",
+      "level",
+      "race"
+    ]
+  }
+}
