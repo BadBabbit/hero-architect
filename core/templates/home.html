@@ -1,7 +1,11 @@
 {% extends "generic.html" %}
 
+{% load static %}
+
 {% block title %}
     <title>HeroArchitect | Home</title>
+    <link rel="stylesheet" href="{% static 'css/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
 {% endblock %}
 
 {% block content %}

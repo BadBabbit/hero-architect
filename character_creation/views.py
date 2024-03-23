@@ -7,7 +7,7 @@ from character_creation.openai_api_handler import openAI_api_handler as heroArch
 from character_creation.models import *
 from accounts.models import HA_User
 
-logging.basicConfig(level=logging.NOTSET)
+logging.basicConfig(level=logging.INFO)
 if __name__ == "__main__":
     LOGGER = logging.getLogger("general")
 else:
@@ -30,6 +30,14 @@ def create_message_dict(author, content):
     }
     return message
 
+
+def parse_dice_notation(dice_notation):
+    d_list = dice_notation.split('d')
+
+    # Handles constant values
+    if len(d_list) == 1:
+        return [d_list[0]]
+    return [d_list[0], f'D{int(d_list[1]):03d}']  # formats sides as an int, and then forces a width of three by padding with 0s
 
 def initialise_conversation(initialiser):
     """
@@ -76,6 +84,29 @@ def add_message_to_database(user, conversation, content):
     except Exception as e:
         LOGGER.error(f"ERROR: TRANSACTION COULD NOT BE COMPLETED: {e.__str__()}")
 
+def apply_asis(character, asis):
+    for asi in asis:
+        asi_ability = asi.ability.abbreviation
+        if asi_ability == "STR":
+            character.str_score += asi_ability.bonus
+        elif asi_ability == "DEX":
+            character.str_score += asi_ability.bonus
+        elif asi_ability == "CON":
+            character.str_score += asi_ability.bonus
+        elif asi_ability == "INT":
+            character.str_score += asi_ability.bonus
+        elif asi_ability == "WIS":
+            character.str_score += asi_ability.bonus
+        elif asi_ability == "CHA":
+            character.str_score += asi_ability.bonus
+
+def add_spells_to_char(character, spells, level):
+    for spell in spells:
+        char_spell = CharacterSpell(
+            spell=spell,
+            level=level,
+            character=character
+        ).save()
 
 # view for create.html, at index /characters/create/
 def create_character(request):
@@ -100,6 +131,7 @@ def create_character(request):
 
         start = data.get("start")
         message = data.get("user_input")
+        generate = data.get("generate")
 
         # Retrieve user
         try:
@@ -109,6 +141,7 @@ def create_character(request):
             raise ObjectDoesNotExist
 
         # Handles initial prompt
+
         if start is not None:
 
             t = initialise_conversation(start)
@@ -171,7 +204,7 @@ def create_character(request):
             run = heroArchitect.run_assistant(t_id, a_id)
 
             # Retrieve response
-            heroArchitect.wait_on_run(run, thread)
+            heroArchitect.wait_on_run(run, thread, target_status="completed")
             LOGGER.info("Run complete.")
             ms = heroArchitect.retrieve_messages(thread)
 
@@ -193,6 +226,151 @@ def create_character(request):
             # Add new message to database
             ha = HA_User.objects.get(username="HeroArchitect")
             add_message_to_database(ha, conversation, new_message)
+
+        # Handles character generation
+        elif generate is not None and generate == "true":
+            LOGGER.info("Beginning character generation...")
+            conversation = Conversation.objects.filter(user=user).get()
+            t_id = conversation.thread_id
+
+            LOGGER.info("Generating character data...")
+            c_data = heroArchitect.generate_character_data(t_id)
+
+            LOGGER.info("Data generated. Creating character...")
+
+            c = Character()
+            c.name = c_data["name"]
+            c.character_class = c_data["class"]
+            race = Race.objects.get(name=c_data["race"])
+            c.race = race
+            if c_data["subrace"] != "None":
+                subrace = Subrace.objects.get(name=c_data["subrace"])
+                c.subrace = subrace
+            c.str_score = c_data["str-score"]
+            c.dex_score = c_data["dex-score"]
+            c.con_score = c_data["con-score"]
+            c.int_score = c_data["int-score"]
+            c.wis_score = c_data["wis-score"]
+            c.cha_score = c_data["cha-score"]
+
+            racial_asis = race.ability_score_bonuses.all()
+            apply_asis(c, racial_asis)
+            if c_data["subrace"] != "None":
+                subracial_asis = c.subrace.ability_score_bonuses.all()
+                apply_asis(c, subracial_asis)
+
+            for saving_throw in c_data["saving-throw-proficiencies"]:
+                if saving_throw == "strength":
+                    c.str_save = True
+                elif saving_throw == "dexterity":
+                    c.dex_save = True
+                elif saving_throw == "constitution":
+                    c.con_save = True
+                elif saving_throw == "intelligence":
+                    c.int_save = True
+                elif saving_throw == "wisdom":
+                    c.wis_save = True
+                elif saving_throw == "charisma":
+                    c.cha_save = True
+
+            for skill_prof in c_data["skill-proficiencies"]:
+                if skill_prof == "acrobatics":
+                    c.acrobatics_prof = True
+                elif skill_prof == "animal_handling":
+                    c.animal_handling_prof = True
+                elif skill_prof == "arcana":
+                    c.arcana_prof = True
+                elif skill_prof == "athletics":
+                    c.athletics_prof = True
+                elif skill_prof == "deception":
+                    c.deception_prof = True
+                elif skill_prof == "history":
+                    c.history_prof = True
+                elif skill_prof == "insight":
+                    c.insight_prof = True
+                elif skill_prof == "intimidation":
+                    c.intimidation_prof = True
+                elif skill_prof == "investigation":
+                    c.investigation_prof = True
+                elif skill_prof == "medicine":
+                    c.medicine_prof = True
+                elif skill_prof == "nature":
+                    c.nature_prof = True
+                elif skill_prof == "perception":
+                    c.perception_prof = True
+                elif skill_prof == "persuasion":
+                    c.persuasion_prof = True
+                elif skill_prof == "performance":
+                    c.performance_prof = True
+                elif skill_prof == "religion":
+                    c.religion_prof = True
+                elif skill_prof == "sleight_of_hand":
+                    c.sleight_of_hand_prof = True
+                elif skill_prof == "stealth":
+                    c.stealth_prof = True
+                elif skill_prof == "survival":
+                    c.survival_prof = True
+
+            for skill_exp in c_data["skill-expertises"]:
+                # I haven't yet implemented skill expertises as a return param from the AI.
+                # That will need doing before this is implemented.
+                pass
+
+            c.weapons_and_armour = c_data["weapons-and-armour-proficiencies"]
+            c.tools = c_data["tool-proficiencies"]
+            c.languages = c_data["languages"]
+            c.size = c_data["size"]
+            c.speed = str(c_data["speed"])
+
+            # Parses hit dice into valid database-compatible notation
+            c.hit_dice = parse_dice_notation("1"+c_data["hit-dice"])[1]
+
+            equipments = c_data["equipment"]
+            for equipment in equipments:
+                c.equipment += "-"+equipment+"\n"
+            attacks = c_data["attacks"]
+            for attack in attacks:
+                c.attacks += "-"+attack+("\n")
+            c.personality_traits = c_data["personality-traits"]
+            c.ideals = c_data["ideals"]
+            c.bonds = c_data["bonds"]
+            c.flaws = c_data["flaws"]
+            c.alignment = c_data["alignment"]
+            c.age = c_data["age"]
+            c.height = c_data["height"]
+            c.eyes = c_data["eyes"]
+            c.skin = c_data["skin"]
+            c.hair = c_data["hair"]
+            c.description = c_data["desc"]
+            c.backstory = c_data["backstory"]
+            c.spell_save_dc = c_data["spell-save-dc"]
+            c.spell_attack_bonus = c_data["spell-attack-bonus"]
+
+            c.save()
+
+            cantrips = c_data["cantrips"]
+            l1_spells = c_data["1st-level-spells"]
+            l2_spells = c_data["2nd-level-spells"]
+            l3_spells = c_data["3rd-level-spells"]
+            l4_spells = c_data["4th-level-spells"]
+            l5_spells = c_data["5th-level-spells"]
+            l6_spells = c_data["6th-level-spells"]
+            l7_spells = c_data["7th-level-spells"]
+            l8_spells = c_data["8th-level-spells"]
+            l9_spells = c_data["9th-level-spells"]
+
+            add_spells_to_char(c, cantrips, 0)
+            add_spells_to_char(c, l1_spells, 1)
+            add_spells_to_char(c, l2_spells, 2)
+            add_spells_to_char(c, l3_spells, 3)
+            add_spells_to_char(c, l4_spells, 4)
+            add_spells_to_char(c, l5_spells, 5)
+            add_spells_to_char(c, l6_spells, 6)
+            add_spells_to_char(c, l7_spells, 7)
+            add_spells_to_char(c, l8_spells, 8)
+            add_spells_to_char(c, l9_spells, 9)
+
+            c.save()
 
     context["messages"] = reverse_list(context["messages"])
     return render(request, 'create.html', context=context)
@@ -218,9 +396,6 @@ def my_characters(request):
             "class_and_level": character.character_class_and_level
         }
         context["characters"].append(character_dict)
-
-    if request.method == 'POST':
-        pass
 
     return render(request, 'mycharacters.html', context=context)
 
@@ -391,6 +566,8 @@ def character_detail(request, character_id):
         "cp": c.cp,
         "sp": c.sp,
         "gp": c.gp,
+        "ep": c.ep,
+        "pp": c.pp,
 
         "features_and_traits": c.features_and_traits,
 

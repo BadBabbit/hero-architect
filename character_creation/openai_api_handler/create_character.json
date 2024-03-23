@@ -30,6 +30,10 @@
         "type": "integer",
         "description": "An integer value between 1 and 20 (inclusive) representing the character's level. If no level has been decided, default to 1."
       },
+      "proficiency-modifier": {
+        "type": "integer",
+        "description": "The character's proficiency modifier, determined by their level; check the System Refernece Document with which you are provided for the relation between level and proficiency bonus. Default to 0 if unsure."
+      },
       "race": {
         "type": "string",
         "description": "The character's race. Do not confuse this with subrace.",
@@ -81,18 +85,300 @@
         "description": "The character's base Charisma score, before any racial bonuses are applied."
       },
       "saving-throw-proficiencies": {
-        "type": "",
-        "description": "The types of saving throws the character would have proficiency, depending on their class; consult the System Reference Document."
+        "type": "array",
+        "description": "The types of saving throws the character would have proficiency, depending on their class; consult the respective class entry in the System Reference Document.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "strength",
+            "dexterity",
+            "constitution",
+            "intelligence",
+            "wisdom",
+            "charisma"
+          ]
+        }
       },
       "skill-proficiencies": {
-        "type": "",
-        "description": "The types of skills that the character is proficient in, depending on their race and class choices."
+        "type": "array",
+        "description": "The names of skills that the character is proficient in, depending on their race and class choices.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "acrobatics",
+            "animal_handling",
+            "arcana",
+            "athletics",
+            "deception",
+            "history",
+            "insight",
+            "intimidation",
+            "investigation",
+            "medicine",
+            "nature",
+            "perception",
+            "performance",
+            "persuasion",
+            "religion",
+            "sleight_of_hand",
+            "stealth",
+            "survival"
+          ]
+        }
+      },
+      "weapon-and-armour-proficiencies": {
+        "type": "string",
+        "description": "A comma-separated list of all of the weapons and armour types that the character is proficient in."
+      },
+      "tool-proficiencies": {
+        "type": "string",
+        "description": "A comma-separated list of all of the types of tools that the character is proficient in."
+      },
+      "languages": {
+        "type": "string",
+        "description": "A comma-separated list of all the languages that the character speaks, owing to their race; consult the character's Race entry in the System Reference Document."
+      },
+      "size": {
+        "type": "string",
+        "description": "The character's mechanical size, determined by their race.",
+        "enum": [
+          "small",
+          "medium"
+        ]
+      },
+      "speed": {
+        "type": "integer",
+        "description": "The character's speed in feet per round. In most cases has a value of 30, but can be higher if the character is a monk."
+      },
+      "hit-dice": {
+        "type": "string",
+        "description": "The character's hit dice size, determined by their class.",
+        "enum": [
+          "d6",
+          "d8",
+          "d10",
+          "d12"
+        ]
+      },
+      "equipment": {
+        "type": "array",
+        "description": "A list of all of the pieces of weapons, armour, and equipment that the character has to start off with.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "attacks": {
+        "type": "array",
+        "description": "A list of the names of all of the possible weapon attacks a character can make, depending on the weapons they have.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "personality-traits": {
+        "type": "string",
+        "description": "The character's personality traits, if any."
+      },
+      "ideals": {
+        "type": "string",
+        "description": "The character's ideals, if any."
+      },
+      "bonds": {
+        "type": "string",
+        "description": "The character's bonds, if any."
+      },
+      "flaws": {
+        "type": "string",
+        "description": "The character's personality flaws, if any."
+      },
+      "alignment": {
+        "type": "string",
+        "description": "The character's moral alignment, if any.",
+        "enum": [
+          "None",
+          "Lawful Good",
+          "Lawful Neutral",
+          "Lawful Evil",
+          "Neutral Good",
+          "True Neutral",
+          "Neutral Evil",
+          "Chaotic Good",
+          "Chaotic Neutral",
+          "Chaotic Evil"
+        ]
+      },
+      "age": {
+        "type": "string",
+        "description": "The character's age."
+      },
+      "height": {
+        "type": "string",
+        "description": "The character's height, in any units of the user's choosing."
+      },
+      "weight": {
+        "type": "string",
+        "description": "The character's weight, in any units of the user's choosing."
+      },
+      "eyes": {
+        "type": "string",
+        "description": "A very brief description of the character's eyes, if one has been provided."
+      },
+      "skin": {
+        "type": "string",
+        "description": "A very brief description of the character's skin, if one has been provided."
+      },
+      "hair": {
+        "type": "string",
+        "description": "A very brief description of the character's hair, if one has been provided."
+      },
+      "desc": {
+        "type": "string",
+        "description": "Can be as long or as short as needed. This field is a narrative description of the character's overall appearance and personality."
+      },
+      "backstory": {
+        "type": "string",
+        "description": "A narrative summary of the character's backstory and personal history, if any has been provided."
+      },
+      "spellcasting-ability": {
+        "type": "string",
+        "description": "The ability this character uses to cast spells, if any. If the character is not a spell caster, enter 'None'.",
+        "enum": [
+          "None",
+          "Strength",
+          "Dexterity",
+          "Constitution",
+          "Intelligence",
+          "Wisdom",
+          "Charisma"
+        ]
+      },
+      "spell-save-dc": {
+        "type": "integer",
+        "description": "Equal to 8 + spellcasting ability + proficiency modifier. Default to 0 if you do not have enough information."
+      },
+      "spell-attack-bonus": {
+        "type": "integer",
+        "description": "Equal to spellcasting ability + proficiency modifier. Default to 0 if you do not have enough information."
+      },
+      "cantrips": {
+        "type": "array",
+        "description": "The names of the cantrips that the user has selected. Leave empty if unsure.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "1st-level-spells": {
+        "type": "array",
+        "description": "The names of the 1st-level spells that the user has selected. Leave empty if unsure.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "2nd-level-spells": {
+        "type": "array",
+        "description": "The names of the 2nd-level spells that the user has selected. Leave empty if unsure.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "3rd-level-spells": {
+        "type": "array",
+        "description": "The names of the 1st-level spells that the user has selected. Leave empty if unsure.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "4th-level-spells": {
+        "type": "array",
+        "description": "The names of the 4th-level spells that the user has selected. Leave empty if unsure.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "5th-level-spells": {
+        "type": "array",
+        "description": "The names of the 5th-level spells that the user has selected. Leave empty if unsure.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "6th-level-spells": {
+        "type": "array",
+        "description": "The names of the 6th-level spells that the user has selected. Leave empty if unsure.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "7th-level-spells": {
+        "type": "array",
+        "description": "The names of the 7th-level spells that the user has selected. Leave empty if unsure.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "8th-level-spells": {
+        "type": "array",
+        "description": "The names of the 8th-level spells that the user has selected. Leave empty if unsure.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "9th-level-spells": {
+        "type": "array",
+        "description": "The names of the 9th-level spells that the user has selected. Leave empty if unsure.",
+        "items": {
+          "type": "string"
+        }
       }
     },
     "required": [
+      "name",
       "class",
       "level",
-      "race"
+      "proficiency-modifier",
+      "race",
+      "subrace",
+      "str-score",
+      "dex-score",
+      "con-score",
+      "int-score",
+      "wis-score",
+      "cha-score",
+      "saving-throw-proficiencies",
+      "skill-proficiencies",
+      "weapon-and-armour-proficiencies",
+      "tool-proficiencies",
+      "languages",
+      "size",
+      "speed",
+      "hit-dice",
+      "equipment",
+      "attacks",
+      "personality-traits",
+      "ideals",
+      "bonds",
+      "flaws",
+      "alignment",
+      "age",
+      "height",
+      "weight",
+      "eyes",
+      "skin",
+      "hair",
+      "desc",
+      "backstory",
+      "spellcasting-ability",
+      "spell-save-dc",
+      "spell-attack-bonus",
+      "cantrips",
+      "1st-level-spells",
+      "2nd-level-spells",
+      "3rd-level-spells",
+      "4th-level-spells",
+      "5th-level-spells",
+      "6th-level-spells",
+      "7th-level-spells",
+      "8th-level-spells",
+      "9th-level-spells"
     ]
   }
 }

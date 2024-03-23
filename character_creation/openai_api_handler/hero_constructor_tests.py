@@ -8,48 +8,17 @@ if __name__ == "__main__":
 else:
     LOGGER = logging.getLogger(__name__)
 
-def get_json_file(file):
-    with open(file, "r") as rf:
-        data = json.load(rf)
-    return data
 
-def get_txt_file(file):
-    with open(file, "r") as rf:
-        data = rf.read()
-    return data
-
-def delete_assistant(assistant_id):
-    client = OpenAIClient.get_client()
-    return client.beta.assistants.delete(assistant_id=assistant_id)
 
 def test_hero_constructor():
     LOGGER.debug("Getting assistant ID...")
-    # a_id = GenerationAssistant.get_id()
-    client = OpenAIClient.get_client()
+    a_id = GenerationAssistant.get_id()
 
-    instructions = get_txt_file("hero_constructor_instructions.txt")
-    function = get_json_file("create_character.json")
-    # a = client.beta.assistants.create(
-    #     name="HeroConstructor",
-    #     instructions=instructions,
-    #     model="gpt-4-1106-preview",
-    #     tools=[{
-    #         "type": "function",
-    #         "function": function
-    #     }]
-    # )
-    # a_id = a.id
-    a_id = create_assistant(
-        name="HeroConstructor",
-        instructions=instructions,
-        functions=function
-    ).id
+    LOGGER.info("Generating thread...")
+    t = get_thread("thread_8AepugBMKRL6vLkdwYcJLIYh")
+    # t = initialise_thread()
 
-    LOGGER.info("Getting thread...")
-    # t = get_thread("thread_hzIDtsSfNZPIljheUhfxvCxe")
-    t = initialise_thread()
-
-    content = "Hi! Can you create a level 1 High Elf Bard for me?"
+    content = "Please generate my character for me using the information above."
     _ = add_message_to_thread(content, t.id, role="user")
 
     LOGGER.info("Running assistant...")
@@ -90,7 +59,8 @@ def test_hero_constructor():
     print(ms.data)
 
 def main():
-    # test_hero_constructor()
+    # create_hero_constructor()
+    test_hero_constructor()
 
 
 

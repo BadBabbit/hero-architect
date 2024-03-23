@@ -1,7 +1,11 @@
 {% extends "generic.html" %}
 
+{% load static %}
+
 {% block title %}
     <title>HeroArchitect | Create</title>
+    <link rel="stylesheet" href="{% static 'css/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
 {% endblock %}
 
 {% block styletag %}
@@ -78,9 +82,10 @@
 
         }
         button.send {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             margin-left: 10px;
+            padding: 5px!important;
         }
     </style>
 {% endblock %}
@@ -91,36 +96,46 @@
         <form method="post" class="fill start">
             {% csrf_token %}
             <div id="initial-prompt" class="fill" style="text-align: center;">
-                <button name="start" class="start vertical-centre" value="ai">Start me off</button>
-                <button name="start" class="start vertical-centre" value="user">I have an idea!</button>
+                <button name="start" class="start vertical-centre w3-round w3-button w3-border ha-brown" value="ai">Start me off</button>
+                <button name="start" class="start vertical-centre w3-round w3-button w3-border ha-brown" value="user">I have an idea!</button>
             </div>
         </form>
         {% endif %}
-        <div id="conversation" style="width: 100%">
-            {% if show_messages %}
-            {% if messages %}
-            <div class="message-thread" id="message-thread">
-                {% for message in messages %}
-                <div class="message-{% if message.author == 'user' %}sent{% else %}received{% endif %}">
-                    {% if message.author == 'user' %}
-                        <strong>You: </strong><p>{{ message.content|linebreaks }}</p>
-                    {% else %}
-                        <strong>HeroArchitect: </strong><p>{{ message.content|linebreaks }}</p>
-                    {% endif %}
+        {% if show_messages %}
+            <div id="conversation" style="width: 100%">
+                {% if messages %}
+                <div class="message-thread" id="message-thread">
+                    {% for message in messages %}
+                    <div class="message-{% if message.author == 'user' %}sent{% else %}received{% endif %}">
+                        {% if message.author == 'user' %}
+                            <strong>You: </strong><p>{{ message.content|linebreaks }}</p>
+                        {% else %}
+                            <strong>HeroArchitect: </strong><p>{{ message.content|linebreaks }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+                {% endif %}
+                <div class="textarea-container">
+                    <form id="message-form" method="post" action="{% url 'create_character' %}" style="display: flex; align-items: flex-start; width: 100%">
+                        {% csrf_token %}
+                        <textarea name="user_input" oninput="auto_grow(this)" id="user-input" placeholder="Send a message to HeroArchitect..."></textarea>
+                        <button type="submit" class="send w3-button w3-border w3-round ha-brown">Send</button>
+                    </form>
+                </div>
             </div>
-            {% endif %}
-            <div class="textarea-container">
-                <form id="message-form" method="post" action="{% url 'create_character' %}" style="display: flex; align-items: flex-start; width: 100%">
-                    {% csrf_token %}
-                    <textarea name="user_input" oninput="auto_grow(this)" id="user-input" placeholder="Send a message to HeroArchitect..."></textarea>
-                    <button type="submit" class="send">Send</button>
-                </form>
-            </div>
-            {% endif %}
-        </div>
+        {% endif %}
     </div>
+    {% if show_messages %}
+        <form id="generate-character" method="post">
+            {% csrf_token %}
+            <div style="text-align: center; font-size: x-large">
+                <button name="generate" value="true" class="w3-round w3-button ha-saddlebrown w3-border w3-margin w3-display-bottommiddle" style="text-align: center; margin-bottom: 50px!important">Generate Character</button>
+            </div>
+        </form>
+    {% endif %}
+
+
 
     <script>
         function auto_grow(element) {

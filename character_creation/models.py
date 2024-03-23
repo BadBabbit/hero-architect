@@ -373,6 +373,8 @@ class Character(models.Model):
     cp = models.SmallIntegerField(default=0)
     sp = models.SmallIntegerField(default=0)
     gp = models.SmallIntegerField(default=0)
+    ep = models.SmallIntegerField(default=0)
+    pp = models.SmallIntegerField(default=0)
 
     # Features and traits
     features_and_traits = models.TextField(blank=True, null=True, default="")

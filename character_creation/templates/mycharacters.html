@@ -1,7 +1,11 @@
 {% extends "generic.html" %}
 
+{% load static %}
+
 {% block title %}
     <title>HeroArchitect | My Characters</title>
+    <link rel="stylesheet" href="{% static 'css/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
 {% endblock %}
 
 {% block styletag %}
@@ -21,7 +25,6 @@
             display: inline-block;
             margin: 0 auto;
             text-align: left;
-
         }
         .text-centre p {
             margin-bottom: 0;
@@ -37,7 +40,8 @@
             height: 100%;
         }
         .list-container {
-            width: 60%;
+            width: auto;
+            min-width: 50%;
             height: auto;
             min-height: 10%;
             max-height: 80%;
@@ -62,8 +66,8 @@
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            width: 95%;
             text-align: left;
+            padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             font-size: x-large;
             color: black;
@@ -76,18 +80,19 @@
 {% endblock %}
 
 {% block content %}
-    <div class="list-container absolute-centre vertical-centre">
+    <div class="list-container absolute-centre vertical-centre" style="text-align: center">
         {% if characters %}
             {% for character in characters %}
-            <!-- need to make this clickable so that it redirects to character page -->
-            <a href="{{ character.id }}" style="text-decoration: none">
-                <div class="character">
-                    <strong>{{ character.name }}</strong>
-                    <span style="float: right">
-                        {{ character.class_and_level }}
-                    </span>
-                </div>
-            </a>
+            <div style="text-align: center!important;">
+                <a href="{{ character.id }}" style="text-decoration: none">
+                    <div class="character">
+                        <strong>{{ character.name }}</strong>
+                        <span style="float: right">
+                            {{ character.class_and_level }}
+                        </span>
+                    </div>
+                </a>
+            </div>
             <br>
             {% endfor %}
         {% else %}

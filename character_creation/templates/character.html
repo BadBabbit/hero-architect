@@ -10,12 +10,8 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <!-- Scripts -->
     <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
-    <script type="text/javascript" src="{% static 'sheet/savedSheet.json' %}"></script>
     <script type="text/javascript" src="{% static 'js/extra.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/changes.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/add-attack.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/save.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/load.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/app.js' %}"></script>
 {% endblock %}
 
@@ -639,23 +635,23 @@
                                 <span class="label">Currency</span>
                                 <div id="copper" class="box">
                                     <span class="sub-label">Copper</span>
-                                    <input type="text" name="copper" />
+                                    <input type="text" name="copper" value="{{ character.cp }}"/>
                                 </div>
                                 <div id="silver" class="box">
                                     <span class="sub-label">Silver</span>
-                                    <input type="text" name="silver" />
+                                    <input type="text" name="silver" value="{{ character.sp }}"/>
                                 </div>
                                 <div id="gold" class="box">
                                     <span class="sub-label">Gold</span>
-                                    <input type="text" name="gold" />
+                                    <input type="text" name="gold" value="{{ character.gp }}"/>
                                 </div>
                                 <div id="electrum" class="box">
                                     <span class="sub-label">Electrum</span>
-                                    <input type="text" name="electrum" />
+                                    <input type="text" name="electrum" value="{{ character.ep }}"/>
                                 </div>
                                 <div id="platinum" class="box">
                                     <span class="sub-label">Platinum</span>
-                                    <input type="text" name="platinum" />
+                                    <input type="text" name="platinum" value="{{ character.pp }}"/>
                                 </div>
                                 <div id="total" class="box">
                                     <span class="label">Total</span>

@@ -381,10 +381,11 @@ def create_armour():
 
 def parse_dice_notation(dice_notation):
     d_list = dice_notation.split('d')
+
+    # Handles constant values
     if len(d_list) == 1:
         return [d_list[0]]
-    else:
-        return [d_list[0], f'D{int(d_list[1]):03d}']  # formats sides as an int, and then forces a width of three by padding with 0s
+    return [d_list[0], f'D{int(d_list[1]):03d}']  # formats sides as an int, and then forces a width of three by padding with 0s
 
 def get_key_by_value(dictionary, value):
     for key, val in dictionary.items():
@@ -532,10 +533,45 @@ def create_spells():
                 pass
             continue
 
+def add_ability_score_mods_to_races_and_subraces_for_real_this_time():
+
+    base_url = "https://www.dnd5eapi.co/api"
+
+    payload = {}
+    headers = {
+        'Accept': 'application/json'
+    }
+
+    races = extract_indexes(requests.request("GET", base_url + "/races", headers=headers, data=payload).json())
+    subraces = extract_indexes(requests.request("GET", base_url + "/subraces", headers=headers, data=payload).json())
+
+    for race in races:
+        url = base_url + "/races/" + race
+        response = requests.request("GET", url, headers=headers, data=payload).json()
+        r = Race.objects.get(name=response["name"])
+        r.ability_score_bonuses.clear()
+        for asb in response["ability_bonuses"]:
+            asb_obj = AbilityScoreBonus.objects.filter(ability__abbreviation=asb["ability_score"]["name"]).filter(bonus=asb["bonus"]).get()
+            r.ability_score_bonuses.add(asb_obj)
+        r.save()
+
+    for subrace in subraces:
+        url = base_url + "/subraces/" + subrace
+        response = requests.request("GET", url, headers=headers, data=payload).json()
+        s = Subrace.objects.get(name=response["name"])
+        s.ability_score_bonuses.clear()
+        for asb in response["ability_bonuses"]:
+            asb_obj = AbilityScoreBonus.objects.filter(ability__abbreviation=asb["ability_score"]["name"]).filter(bonus=asb["bonus"]).get()
+            s.ability_score_bonuses.add(asb_obj)
+        s.save()
 
 def main():
 
-    create_spells()
+    # add_ability_score_mods_to_races_and_subraces_for_real_this_time()
+    race = Race.objects.get(name="Half-Elf")
+    asbs = race.ability_score_bonuses.all()
+    for asb in asbs:
+        print(asb.ability.name + ": +" + str(asb.bonus))
 
 
 

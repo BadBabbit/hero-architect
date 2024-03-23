@@ -1,10 +1,8 @@
 from openai import OpenAI
 from dotenv import load_dotenv
-import logging
-import time
-import os
+import logging, time, json, os
 
-logging.basicConfig(level=logging.NOTSET)
+logging.basicConfig(level=logging.INFO)
 if __name__ == "__main__":
     LOGGER = logging.getLogger("general")
 else:
@@ -32,28 +30,41 @@ class GenerationAssistant:
 
     @staticmethod
     def get_id():
-        return ChatAssistant.id
+        return GenerationAssistant.id
+
+def upload_file(file):
+    client = OpenAIClient.get_client()
+    file_id = client.files.create(
+        file=open(file, "rb"),
+        purpose="assistants"
+    )
+    return file_id
 
 
-def create_assistant(name, instructions, model="gpt-4-1106-preview", functions=None):
+def create_assistant(name, instructions, model="gpt-4-1106-preview", functions=None, file_ids=[]):
     client = OpenAIClient.get_client()
 
-    if functions is None:
-        tools = []
-    else:
-        tools = [{
+    tools = []
+    if functions is not None:
+        tools.append({
             "type": "function",
             "function": functions
-        }]
+        })
+    if bool(file_ids):
+        tools.append({
+            "type": "retrieval"
+        })
 
     logging.info("Creating assistant...")
     a = client.beta.assistants.create(
         name=name,
         instructions=instructions,
         model=model,
-        tools=tools
+        tools=tools,
+        file_ids=file_ids
     )
     logging.info(f"Assistant created with ID {a.id}.")
+
     return a
 
 
@@ -105,8 +116,25 @@ def retrieve_messages(thread):
 
 
 def wait_on_run(run, thread):
+    # Run life-cycle: https://platform.openai.com/docs/assistants/how-it-works/run-lifecycle
     c = 0
-    while run.status != "completed":
+    while run.status == "in_progress":
+        if c % 5 == 0:
+            LOGGER.debug(f"Polling. {c * 0.1} seconds elapsed...")
+        c += 1
+        time.sleep(0.1)
+        run = retrieve_run(thread, run)
+        LOGGER.debug(f"r_status: {run.status}")
+    return run
+
+def cancel_run(run, thread):
+    client = OpenAIClient.get_client()
+    LOGGER.info("Cancelling run...")
+    run = client.beta.threads.runs.cancel(
+        run_id=run.id
+    )
+    c = 0
+    while not(run.status in ["cancelled", "failed", "completed"]):
         if c % 5 == 0:
             LOGGER.debug(f"Polling. {c * 0.1} seconds elapsed...")
         c += 1
@@ -129,13 +157,60 @@ def put_run_out_of_misery(thread, run, call_id, output):
     )
     return run
 
+def get_json_file(file):
+    with open(file, "r") as rf:
+        data = json.load(rf)
+    return data
 
-def openAI_API_call(client, messages):
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=messages
-    )
-    return completion.choices[0].message
+def get_txt_file(file):
+    with open(file, "r") as rf:
+        data = rf.read()
+    return data
+
+def delete_assistant(assistant_id):
+    client = OpenAIClient.get_client()
+    return client.beta.assistants.delete(assistant_id=assistant_id)
+
+def create_hero_constructor():
+    client = OpenAIClient.get_client()
+
+    instructions = get_txt_file("hero_constructor_instructions.txt")
+    function = get_json_file("create_character.json")
+    srd_id = os.getenv("SRD_FILE_ID")
+    file_ids = [srd_id]
+    a_id = create_assistant(
+        name="HeroConstructor",
+        instructions=instructions,
+        functions=function,
+        file_ids=file_ids
+    ).id
+    print(a_id)
+
+def generate_character_data(thread_id):
+    LOGGER.info("Generating character data...")
+    assistant_id = GenerationAssistant.get_id()
+    LOGGER.info(f"Thread ID: {thread_id}")
+
+    content = "Please generate the character using the information above."
+    add_message_to_thread(content, thread_id, role="user")
+
+    LOGGER.info("Running assistant...")
+    run = run_assistant(thread_id, assistant_id)
+
+    thread = get_thread(thread_id)
+    run = wait_on_run(run, thread)
+
+    if run.status == "completed":
+        LOGGER.error(f"ERROR: AI did not function call.")
+        ms = retrieve_messages(thread)
+        LOGGER.error(f"Conversation data: {ms.data}")
+        raise RuntimeError
+
+    args_str = run.required_action.submit_tool_outputs.tool_calls[0].function.arguments
+    args = json.loads(args_str)
+    cancel_run(run, thread)
+
+    return args
 
 
 def main():

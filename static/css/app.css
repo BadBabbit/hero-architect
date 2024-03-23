@@ -556,3 +556,10 @@ td {
     color: #fff!important;
     background-color: #8b4513!important;
 }
+
+.ha-brown,
+.ha-hover-brown:hover {
+    color: #fff!important;
+    background-color: brown!important;
+}
+
