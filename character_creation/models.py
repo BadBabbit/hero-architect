@@ -350,7 +350,7 @@ class Character(models.Model):
     # Other quantitative modifiers
     armour_class = models.PositiveSmallIntegerField(default=10)
     initiative_mod = models.SmallIntegerField(default=0)
-    size = models.CharField(max_length=1, choices=size_choices, default="M  ")
+    size = models.CharField(max_length=1, choices=size_choices, default="M")
     speed = models.PositiveSmallIntegerField(default=30)
     max_hp = models.PositiveSmallIntegerField(default=1)
     current_hp = models.SmallIntegerField(default=1)

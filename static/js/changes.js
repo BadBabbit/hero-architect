@@ -91,7 +91,7 @@ function updateSaves() {
 
     var prof = parseInt($('#top-bar input[name="proficiency"]').val()) || 0;
 
-    if ($('#saves #str-save input[name="prof"]').prop("checked") == true) {
+    if ($('#saves #str-save input[name="str-save-prof"]').prop("checked") == true) {
         var strProf = prof;
     } else {
         var strProf = 0;
@@ -100,7 +100,7 @@ function updateSaves() {
     var save = ((base + strProf) < 0 ? "" : "+") + (base + strProf);
     $('#saves input[name="str-save"]').val(save);
 
-    if ($('#saves #dex-save input[name="prof"]').prop("checked") == true) {
+    if ($('#saves #dex-save input[name="dex-save-prof"]').prop("checked") == true) {
         var dexProf = prof;
     } else {
         var dexProf = 0;
@@ -109,7 +109,7 @@ function updateSaves() {
     var save = ((base + dexProf) < 0 ? "" : "+") + (base + dexProf);
     $('#saves input[name="dex-save"]').val(save);
 
-    if ($('#saves #con-save input[name="prof"]').prop("checked") == true) {
+    if ($('#saves #con-save input[name="con-save-prof"]').prop("checked") == true) {
         var conProf = prof;
     } else {
         var conProf = 0;
@@ -118,7 +118,7 @@ function updateSaves() {
     var save = ((base + conProf) < 0 ? "" : "+") + (base + conProf);
     $('#saves input[name="con-save"]').val(save);
 
-    if ($('#saves #int-save input[name="prof"]').prop("checked") == true) {
+    if ($('#saves #int-save input[name="int-save-prof"]').prop("checked") == true) {
         var intProf = prof;
     } else {
         var intProf = 0;
@@ -127,7 +127,7 @@ function updateSaves() {
     var save = ((base + intProf) < 0 ? "" : "+") + (base + intProf);
     $('#saves input[name="int-save"]').val(save);
 
-    if ($('#saves #wis-save input[name="prof"]').prop("checked") == true) {
+    if ($('#saves #wis-save input[name="wis-save-prof"]').prop("checked") == true) {
         var wisProf = prof;
     } else {
         var wisProf = 0;
@@ -136,7 +136,7 @@ function updateSaves() {
     var save = ((base + wisProf) < 0 ? "" : "+") + (base + wisProf);
     $('#saves input[name="wis-save"]').val(save);
 
-    if ($('#saves #cha-save input[name="prof"]').prop("checked") == true) {
+    if ($('#saves #cha-save input[name="cha-save-prof"]').prop("checked") == true) {
         var chaProf = prof;
     } else {
         var chaProf = 0;
@@ -708,8 +708,8 @@ $('document').ready(function(argument) {
         });
     });
 
-    //Run skill prof/exp changes
-    $('#skills input[name="prof"]').each(function(index) {
+    //Run skill
+    $('#skills input[name=""]').each(function(index) {
         $(this).change(function(argument) {
             if (LOCKED)
                 return;

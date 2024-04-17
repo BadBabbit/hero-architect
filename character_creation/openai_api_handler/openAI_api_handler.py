@@ -110,28 +110,34 @@ def retrieve_run(thread, run):
 def retrieve_messages(thread):
     client = OpenAIClient.get_client()
     messages = client.beta.threads.messages.list(
-        thread_id=thread.id
+        thread_id=thread.id,
+        limit=28,
     )
     return messages
 
 
-def wait_on_run(run, thread):
+def wait_on_run(run, thread, target_statuses=["completed"]):
     # Run life-cycle: https://platform.openai.com/docs/assistants/how-it-works/run-lifecycle
     c = 0
-    while run.status == "in_progress":
+
+    LOGGER.info(f"Waiting on statuses: '{target_statuses}'")
+    while run.status not in target_statuses:
         if c % 5 == 0:
             LOGGER.debug(f"Polling. {c * 0.1} seconds elapsed...")
         c += 1
         time.sleep(0.1)
         run = retrieve_run(thread, run)
         LOGGER.debug(f"r_status: {run.status}")
+    LOGGER.info(f"Target status reached: '{run.status}'")
     return run
+
 
 def cancel_run(run, thread):
     client = OpenAIClient.get_client()
     LOGGER.info("Cancelling run...")
     run = client.beta.threads.runs.cancel(
-        run_id=run.id
+        run_id=run.id,
+        thread_id=thread.id
     )
     c = 0
     while not(run.status in ["cancelled", "failed", "completed"]):
@@ -198,7 +204,7 @@ def generate_character_data(thread_id):
     run = run_assistant(thread_id, assistant_id)
 
     thread = get_thread(thread_id)
-    run = wait_on_run(run, thread)
+    run = wait_on_run(run, thread, target_statuses=['completed', 'requires_action'])
 
     if run.status == "completed":
         LOGGER.error(f"ERROR: AI did not function call.")
@@ -207,40 +213,39 @@ def generate_character_data(thread_id):
         raise RuntimeError
 
     args_str = run.required_action.submit_tool_outputs.tool_calls[0].function.arguments
+    LOGGER.info(f"Data generated: {args_str}")
     args = json.loads(args_str)
+    LOGGER.info(f"Data parsed! Name: {args['name']}")
     cancel_run(run, thread)
 
     return args
 
 
+def duplicate_thread(t_id):
+    client = OpenAIClient.get_client()
+    LOGGER.info("Duplicating thread")
+    new_thread = client.beta.threads.create()
+    old_thread = get_thread(t_id)
+
+    ms = retrieve_messages(old_thread).data
+    ms.reverse()
+    for m in ms:
+        content = m.content[0].text.value
+        role = m.role
+        add_message_to_thread(content, new_thread.id, role)
+
+    LOGGER.info(f"Messages duplicated. New thread ID: {new_thread.id}")
+    return new_thread.id
+
 def main():
 
-    LOGGER.debug("Initialising thread...")
-    t = initialise_thread()
-    LOGGER.debug(f"Thread ID: {t.id}")
+    # duplicate_thread("thread_Y90wWQWMnrWKaztP4bpPLoJg")
 
-    LOGGER.debug("Adding message to thread...")
-    content = "I want to create a level 2 barbarian. How do I start?"
-    _ = add_message_to_thread(content, t)
-
-    LOGGER.debug("Getting assistant ID...")
-    a = ChatAssistant.get_id()
-    LOGGER.debug("Running assistant...")
-    r = run_assistant(t, a)
-
-    c = 0
-    while r.status != "completed":
-        LOGGER.debug(f"Polling. {c * 0.5} seconds elapsed...")
-        c+=1
-        time.sleep(0.5)
-        r = retrieve_run(t, r)
-        LOGGER.debug(f"r_status: {r.status}")
-    LOGGER.info("Run complete!")
-    LOGGER.debug("Retrieving messages...")
+    create_hero_constructor()
 
     # Response object layout can be found at https://platform.openai.com/docs/api-reference/messages/listMessages
-    ms = retrieve_messages(t)
-    print(ms.data[0].content[0].text.value)
+    # ms = retrieve_messages(t)
+    # print(ms.data[0].content[0].text.value)
 
 
 if __name__ == "__main__":

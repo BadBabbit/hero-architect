@@ -126,6 +126,33 @@
           ]
         }
       },
+      "skill-expertises": {
+        "type": "array",
+        "description": "The names of skills that the character has expertise in, depending on their race and class choices.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "acrobatics",
+            "animal_handling",
+            "arcana",
+            "athletics",
+            "deception",
+            "history",
+            "insight",
+            "intimidation",
+            "investigation",
+            "medicine",
+            "nature",
+            "perception",
+            "performance",
+            "persuasion",
+            "religion",
+            "sleight_of_hand",
+            "stealth",
+            "survival"
+          ]
+        }
+      },
       "weapon-and-armour-proficiencies": {
         "type": "string",
         "description": "A comma-separated list of all of the weapons and armour types that the character is proficient in."
@@ -345,6 +372,7 @@
       "cha-score",
       "saving-throw-proficiencies",
       "skill-proficiencies",
+      "skill-expertises",
       "weapon-and-armour-proficiencies",
       "tool-proficiencies",
       "languages",

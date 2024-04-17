@@ -283,32 +283,32 @@
                                 <span class="sub-label">Prof</span>
                             </div>
                             <div id="str-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="str_save_prof" {% if character.str_save %} checked {% endif %}/>
+                                <input type="checkbox" name="str-save-prof" {% if character.str_save %} checked {% endif %} onchange="updateSaves()"/>
                                 <input type="text" name="str-save" maxlength="2" size="2"/>
                                 <span class="sub-label">Strength</span>
                             </div>
                             <div id="dex-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="dex_save_prof" {% if character.dex_save %} checked {% endif %}/>
+                                <input type="checkbox" name="dex-save-prof" {% if character.dex_save %} checked {% endif %} onchange="updateSaves()"/>
                                 <input type="text" name="dex-save" maxlength="2" size="2" />
                                 <span class="sub-label">Dexterity</span>
                             </div>
                             <div id="con-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="con_save_prof" {% if character.con_save %} checked {% endif %}/>
+                                <input type="checkbox" name="con-save-prof" {% if character.con_save %} checked {% endif %} onchange="updateSaves()"/>
                                 <input type="text" name="con-save" maxlength="2" size="2" />
                                 <span class="sub-label">Constitution</span>
                             </div>
                             <div id="int-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="int_save_prof" {% if character.int_save %} checked {% endif %}/>
+                                <input type="checkbox" name="int-save-prof" {% if character.int_save %} checked {% endif %} onchange="updateSaves()"/>
                                 <input type="text" name="int-save" maxlength="2" size="2" />
                                 <span class="sub-label">Intelligence</span>
                             </div>
                             <div id="wis-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="wis_save_prof" {% if character.wis_save %} checked {% endif %}/>
+                                <input type="checkbox" name="wis-save-prof" {% if character.wis_save %} checked {% endif %} onchange="updateSaves()"/>
                                 <input type="text" name="wis-save" maxlength="2" size="2" />
                                 <span class="sub-label">Wisdom</span>
                             </div>
                             <div id="cha-save" class="box w3-col m4 l2">
-                                <input type="checkbox" name="cha_save_prof" {% if character.cha_save %} checked {% endif %}/>
+                                <input type="checkbox" name="cha-save-prof" {% if character.cha_save %} checked {% endif %} onchange="updateSaves()"/>
                                 <input type="text" name="cha-save" maxlength="2" size="2" />
                                 <span class="sub-label">Charisma</span>
                             </div>
@@ -322,8 +322,8 @@
                                 <span class="sub-label">Expr</span>
                             </div>
                             <div id="athletics-skill" class="box">
-                                <input type="checkbox" name="athletics_prof" {% if character.athletics_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="athletics_exp" {% if character.athletics_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="athletics_prof" {% if character.athletics_prof %} checked {% endif %} onchange="updateStrSkills()"/>
+                                <input type="checkbox" name="athletics_exp" {% if character.athletics_exp %} checked {% endif %} onchange="updateStrSkills()"/>
                                 <input type="text" name="athletics-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Athletics</span>
                             </div>
@@ -337,20 +337,20 @@
                                 <span class="sub-label">Expr</span>
                             </div>
                             <div id="acrobatics-skill" class="box">
-                                <input type="checkbox" name="acrobatics_prof" {% if character.acrobatics_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="acrobatics_exp" {% if character.acrobatics_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="acrobatics_prof" {% if character.acrobatics_prof %} checked {% endif %} onchange="updateDexSkills()"/>
+                                <input type="checkbox" name="acrobatics_exp" {% if character.acrobatics_exp %} checked {% endif %} onchange="updateDexSkills()"/>
                                 <input type="text" name="acrobatics-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Acrobtics</span>
                             </div>
                             <div id="sleight-hand-skill" class="box">
-                                <input type="checkbox" name="sleight_of_hand_prof" {% if character.sleight_of_hand_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="sleight_of_hand_exp" {% if character.sleight_of_hand_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="sleight_of_hand_prof" {% if character.sleight_of_hand_prof %} checked {% endif %} onchange="updateDexSkills()"/>
+                                <input type="checkbox" name="sleight_of_hand_exp" {% if character.sleight_of_hand_exp %} checked {% endif %} onchange="updateDexSkills()"/>
                                 <input type="text" name="sleight-hand-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Sleight of Hand</span>
                             </div>
                             <div id="stealth-skill" class="box">
-                                <input type="checkbox" name="stealth_prof" {% if character.stealth_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="stealth_expr" {% if character.stealth_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="stealth_prof" {% if character.stealth_prof %} checked {% endif %} onchange="updateDexSkills()"/>
+                                <input type="checkbox" name="stealth_expr" {% if character.stealth_exp %} checked {% endif %} onchange="updateDexSkills()"/>
                                 <input type="text" name="stealth-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Stealth</span>
                             </div>
@@ -364,26 +364,26 @@
                                 <span class="sub-label">Expr</span>
                             </div>
                             <div id="arcana-skill" class="box">
-                                <input type="checkbox" name="arcana_prof" {% if character.arcana_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="arcana_exp" {% if character.arcana_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="arcana_prof" {% if character.arcana_prof %} checked {% endif %} onchange="updateIntSkills()"/>
+                                <input type="checkbox" name="arcana_exp" {% if character.arcana_exp %} checked {% endif %} onchange="updateIntSkills()"/>
                                 <input type="text" name="arcana-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Arcana</span>
                             </div>
                             <div id="history-skill" class="box">
-                                <input type="checkbox" name="history_prof" {% if character.history_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="history_exp" {% if character.history_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="history_prof" {% if character.history_prof %} checked {% endif %} onchange="updateIntSkills()"/>
+                                <input type="checkbox" name="history_exp" {% if character.history_exp %} checked {% endif %} onchange="updateIntSkills()"/>
                                 <input type="text" name="history-skill" maxlength="3" size="3" />
                                 <span class="sub-label">History</span>
                             </div>
                             <div id="investigation-skill" class="box">
-                                <input type="checkbox" name="investigation_prof" {% if character.investigation_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="investigation_exp" {% if character.investigation_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="investigation_prof" {% if character.investigation_prof %} checked {% endif %} onchange="updateIntSkills()"/>
+                                <input type="checkbox" name="investigation_exp" {% if character.investigation_exp %} checked {% endif %} onchange="updateIntSkills()"/>
                                 <input type="text" name="investigation-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Investigation</span>
                             </div>
                             <div id="religion-skill" class="box">
-                                <input type="checkbox" name="religion_prof" {% if character.religion_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="religion_exp" {% if character.religion_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="religion_prof" {% if character.religion_prof %} checked {% endif %} onchange="updateIntSkills()"/>
+                                <input type="checkbox" name="religion_exp" {% if character.religion_exp %} checked {% endif %} onchange="updateIntSkills()"/>
                                 <input type="text" name="religion-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Religion</span>
                             </div>
@@ -399,38 +399,38 @@
                                 <span class="sub-label">Expr</span>
                             </div>
                             <div id="animal-handling-skill" class="box">
-                                <input type="checkbox" name="animal_handling_prof" {% if character.animal_handling_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="animal_handling_exp" {% if character.animal_handling_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="animal_handling_prof" {% if character.animal_handling_prof %} checked {% endif %} onchange="updateWisSkills()"/>
+                                <input type="checkbox" name="animal_handling_exp" {% if character.animal_handling_exp %} checked {% endif %} onchange="updateWisSkills()"/>
                                 <input type="text" name="animal-handling-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Animal Handling</span>
                             </div>
                             <div id="insight-skill" class="box">
-                                <input type="checkbox" name="insight_prof" {% if character.insight_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="insight_exp" {% if character.insight_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="insight_prof" {% if character.insight_prof %} checked {% endif %} onchange="updateWisSkills()"/>
+                                <input type="checkbox" name="insight_exp" {% if character.insight_exp %} checked {% endif %} onchange="updateWisSkills()"/>
                                 <input type="text" name="insight-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Insight</span>
                             </div>
                             <div id="medicine-skill" class="box">
-                                <input type="checkbox" name="medicine_prof" {% if character.medicine_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="medicine_exp" {% if character.medicine_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="medicine_prof" {% if character.medicine_prof %} checked {% endif %} onchange="updateWisSkills()"/>
+                                <input type="checkbox" name="medicine_exp" {% if character.medicine_exp %} checked {% endif %} onchange="updateWisSkills()"/>
                                 <input type="text" name="medicine-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Medicine</span>
                             </div>
                             <div id="nature-skill" class="box">
-                                <input type="checkbox" name="nature_prof" {% if character.nature_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="nature_exp" {% if character.nature_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="nature_prof" {% if character.nature_prof %} checked {% endif %} onchange="updateWisSkills()"/>
+                                <input type="checkbox" name="nature_exp" {% if character.nature_exp %} checked {% endif %} onchange="updateWisSkills()"/>
                                 <input type="text" name="nature-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Nature</span>
                             </div>
                             <div id="perception-skill" class="box">
-                                <input type="checkbox" name="perception_prof" {% if character.perception_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="perception_exp" {% if character.perception_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="perception_prof" {% if character.perception_prof %} checked {% endif %} onchange="updateWisSkills()"/>
+                                <input type="checkbox" name="perception_exp" {% if character.perception_exp %} checked {% endif %} onchange="updateWisSkills()"/>
                                 <input type="text" name="perception-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Perception</span>
                             </div>
                             <div id="survival-skill" class="box">
-                                <input type="checkbox" name="survival_prof" {% if character.survival_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="survival_exp" {% if character.survival_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="survival_prof" {% if character.survival_prof %} checked {% endif %} onchange="updateWisSkills()"/>
+                                <input type="checkbox" name="survival_exp" {% if character.survival_exp %} checked {% endif %} onchange="updateWisSkills()"/>
                                 <input type="text" name="survival-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Survival</span>
                             </div>
@@ -444,26 +444,26 @@
                                 <span class="sub-label">Expr</span>
                             </div>
                             <div id="deception-skill" class="box">
-                                <input type="checkbox" name="deception_prof" {% if character.deception_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="deception_exp" {% if character.deception_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="deception_prof" {% if character.deception_prof %} checked {% endif %} onchange="updateChaSkills()"/>
+                                <input type="checkbox" name="deception_exp" {% if character.deception_exp %} checked {% endif %} onchange="updateChaSkills()"/>
                                 <input type="text" name="deception-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Deception</span>
                             </div>
                             <div id="intimidation-skill" class="box">
-                                <input type="checkbox" name="intimidation_prof" {% if character.intimidation_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="intimidation_exp" {% if character.intimidation_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="intimidation_prof" {% if character.intimidation_prof %} checked {% endif %} onchange="updateChaSkills()"/>
+                                <input type="checkbox" name="intimidation_exp" {% if character.intimidation_exp %} checked {% endif %} onchange="updateChaSkills()"/>
                                 <input type="text" name="intimidation-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Intimidation</span>
                             </div>
                             <div id="performance-skill" class="box">
-                                <input type="checkbox" name="performance_prof" {% if character.performance_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="performance_exp" {% if character.performance_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="performance_prof" {% if character.performance_prof %} checked {% endif %} onchange="updateChaSkills()"/>
+                                <input type="checkbox" name="performance_exp" {% if character.performance_exp %} checked {% endif %} onchange="updateChaSkills()"/>
                                 <input type="text" name="performance-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Performance</span>
                             </div>
                             <div id="persuasion-skill" class="box">
-                                <input type="checkbox" name="persuasion_prof" {% if character.persuasion_prof %} checked {% endif %}/>
-                                <input type="checkbox" name="persuasion_exp" {% if character.persuasion_exp %} checked {% endif %}/>
+                                <input type="checkbox" name="persuasion_prof" {% if character.persuasion_prof %} checked {% endif %} onchange="updateChaSkills()"/>
+                                <input type="checkbox" name="persuasion_exp" {% if character.persuasion_exp %} checked {% endif %} onchange="updateChaSkills()"/>
                                 <input type="text" name="persuasion-skill" maxlength="3" size="3" />
                                 <span class="sub-label">Persuasion</span>
                             </div>

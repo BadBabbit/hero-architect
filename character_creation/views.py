@@ -87,18 +87,19 @@ def add_message_to_database(user, conversation, content):
 def apply_asis(character, asis):
     for asi in asis:
         asi_ability = asi.ability.abbreviation
+        LOGGER.info(f"Applying ASI: {asi_ability} +{asi.bonus}")
         if asi_ability == "STR":
-            character.str_score += asi_ability.bonus
+            character.str_score += asi.bonus
         elif asi_ability == "DEX":
-            character.str_score += asi_ability.bonus
+            character.dex_score += asi.bonus
         elif asi_ability == "CON":
-            character.str_score += asi_ability.bonus
+            character.con_score += asi.bonus
         elif asi_ability == "INT":
-            character.str_score += asi_ability.bonus
+            character.int_score += asi.bonus
         elif asi_ability == "WIS":
-            character.str_score += asi_ability.bonus
+            character.wis_score += asi.bonus
         elif asi_ability == "CHA":
-            character.str_score += asi_ability.bonus
+            character.cha_score += asi.bonus
 
 def add_spells_to_char(character, spells, level):
     for spell in spells:
@@ -204,7 +205,7 @@ def create_character(request):
             run = heroArchitect.run_assistant(t_id, a_id)
 
             # Retrieve response
-            heroArchitect.wait_on_run(run, thread, target_status="completed")
+            heroArchitect.wait_on_run(run, thread, target_statuses=["completed", "requires_action"])
             LOGGER.info("Run complete.")
             ms = heroArchitect.retrieve_messages(thread)
 
@@ -230,8 +231,11 @@ def create_character(request):
         # Handles character generation
         elif generate is not None and generate == "true":
             LOGGER.info("Beginning character generation...")
-            conversation = Conversation.objects.filter(user=user).get()
-            t_id = conversation.thread_id
+            # conversation = Conversation.objects.filter(user=user).get()
+            # t_id = conversation.thread_id
+
+            base_thread = "thread_egJWitpKQMsoaPgC6heK31CP"
+            t_id = heroArchitect.duplicate_thread(base_thread)
 
             LOGGER.info("Generating character data...")
             c_data = heroArchitect.generate_character_data(t_id)
@@ -239,8 +243,11 @@ def create_character(request):
             LOGGER.info("Data generated. Creating character...")
 
             c = Character()
+            c.user = user
+            LOGGER.info(f"Setting name: {c_data['name']}")
             c.name = c_data["name"]
             c.character_class = c_data["class"]
+            c.character_class_and_level = "Level "+str(c_data['level']) + " " + c_data["class"]
             race = Race.objects.get(name=c_data["race"])
             c.race = race
             if c_data["subrace"] != "None":
@@ -252,13 +259,16 @@ def create_character(request):
             c.int_score = c_data["int-score"]
             c.wis_score = c_data["wis-score"]
             c.cha_score = c_data["cha-score"]
+            c.save() # temp
 
+            LOGGER.info("Getting Racial ASIs...")
             racial_asis = race.ability_score_bonuses.all()
             apply_asis(c, racial_asis)
             if c_data["subrace"] != "None":
                 subracial_asis = c.subrace.ability_score_bonuses.all()
                 apply_asis(c, subracial_asis)
 
+            c.save() # temp
             for saving_throw in c_data["saving-throw-proficiencies"]:
                 if saving_throw == "strength":
                     c.str_save = True
@@ -312,15 +322,63 @@ def create_character(request):
                     c.survival_prof = True
 
             for skill_exp in c_data["skill-expertises"]:
-                # I haven't yet implemented skill expertises as a return param from the AI.
-                # That will need doing before this is implemented.
-                pass
+                if skill_exp == "acrobatics":
+                    c.acrobatics_prof = True
+                elif skill_exp == "animal_handling":
+                    c.animal_handling_prof = True
+                elif skill_exp == "arcana":
+                    c.arcana_prof = True
+                elif skill_exp == "athletics":
+                    c.athletics_prof = True
+                elif skill_exp == "deception":
+                    c.deception_prof = True
+                elif skill_exp == "history":
+                    c.history_prof = True
+                elif skill_exp == "insight":
+                    c.insight_prof = True
+                elif skill_exp == "intimidation":
+                    c.intimidation_prof = True
+                elif skill_exp == "investigation":
+                    c.investigation_prof = True
+                elif skill_exp == "medicine":
+                    c.medicine_prof = True
+                elif skill_exp == "nature":
+                    c.nature_prof = True
+                elif skill_exp == "perception":
+                    c.perception_prof = True
+                elif skill_exp == "persuasion":
+                    c.persuasion_prof = True
+                elif skill_exp == "performance":
+                    c.performance_prof = True
+                elif skill_exp == "religion":
+                    c.religion_prof = True
+                elif skill_exp == "sleight_of_hand":
+                    c.sleight_of_hand_prof = True
+                elif skill_exp == "stealth":
+                    c.stealth_prof = True
+                elif skill_exp == "survival":
+                    c.survival_prof = True
 
-            c.weapons_and_armour = c_data["weapons-and-armour-proficiencies"]
+            c.save() # temp
+
+            c.weapons_and_armour = c_data["weapon-and-armour-proficiencies"]
             c.tools = c_data["tool-proficiencies"]
             c.languages = c_data["languages"]
-            c.size = c_data["size"]
-            c.speed = str(c_data["speed"])
+
+            c.save() # temp
+
+            LOGGER.info(f"size: {c_data['size']}")
+            LOGGER.info(f"speed: {c_data['speed']}")
+
+            if c_data['size'] == "medium":
+                size = 'M'
+            elif c_data['size'] == "small":
+                size = 'S'
+
+            c.size = size
+            c.speed = int(c_data["speed"])
+
+            c.save() # temp
 
             # Parses hit dice into valid database-compatible notation
             c.hit_dice = parse_dice_notation("1"+c_data["hit-dice"])[1]
@@ -331,6 +389,8 @@ def create_character(request):
             attacks = c_data["attacks"]
             for attack in attacks:
                 c.attacks += "-"+attack+("\n")
+
+            c.save() # temp
             c.personality_traits = c_data["personality-traits"]
             c.ideals = c_data["ideals"]
             c.bonds = c_data["bonds"]
@@ -346,6 +406,7 @@ def create_character(request):
             c.spell_save_dc = c_data["spell-save-dc"]
             c.spell_attack_bonus = c_data["spell-attack-bonus"]
 
+            # data error occurs here
             c.save()
 
             cantrips = c_data["cantrips"]
