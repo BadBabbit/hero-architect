@@ -1,8 +1,10 @@
+
 from django.shortcuts import render, redirect
 from django.db import transaction, DatabaseError, IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 import logging, time
-from django.http import HttpResponse
 from character_creation.openai_api_handler import openAI_api_handler as heroArchitect
 from character_creation.models import *
 from accounts.models import HA_User
@@ -52,8 +54,8 @@ def initialise_conversation(initialiser):
     LOGGER.debug(f"Thread ID: {t.id}")
 
     if initialiser == "ai":
-        content = "BEGIN_THREAD"
-        _ = heroArchitect.add_message_to_thread(content, t.id)
+        content = "Hi!"
+        _ = heroArchitect.add_message_to_thread(content, t.id, role="user")
         LOGGER.debug("Getting assistant ID...")
         a = heroArchitect.ChatAssistant.get_id()
         LOGGER.debug("Running assistant...")
@@ -108,6 +110,13 @@ def add_spells_to_char(character, spells, level):
             level=level,
             character=character
         ).save()
+
+def retrieve_spells(c_data, spell_type):
+    try:
+        spells = c_data[spell_type]
+    except KeyError:
+        spells = []
+    return spells
 
 # view for create.html, at index /characters/create/
 def create_character(request):
@@ -164,17 +173,21 @@ def create_character(request):
             if start == "ai":
                 response = heroArchitect.retrieve_messages(t)
                 messages = response.data
+                first_msg = True
                 for m in messages:
                     content = m.content[0].text.value
+                    author = m.role
 
                     # Exclude thread initialiser message
-                    if content == "BEGIN_THREAD":
+                    if content == "Hi!" and author == "user" and first_msg == True:
+                        first_msg = False
                         continue
 
+                    first_msg = False
                     # Below should be unreachable by user messages
 
                     # Author can either be "user" or "assistant"
-                    author = m.role
+
                     if author == "user":
                         LOGGER.error(" USER MESSAGE HAS REACHED QUARANTINED BLOCK")
                         print("ERROR: USER MESSAGE HAS REACHED QUARANTINED BLOCK")
@@ -259,7 +272,6 @@ def create_character(request):
             c.int_score = c_data["int-score"]
             c.wis_score = c_data["wis-score"]
             c.cha_score = c_data["cha-score"]
-            c.save() # temp
 
             LOGGER.info("Getting Racial ASIs...")
             racial_asis = race.ability_score_bonuses.all()
@@ -268,7 +280,6 @@ def create_character(request):
                 subracial_asis = c.subrace.ability_score_bonuses.all()
                 apply_asis(c, subracial_asis)
 
-            c.save() # temp
             for saving_throw in c_data["saving-throw-proficiencies"]:
                 if saving_throw == "strength":
                     c.str_save = True
@@ -359,13 +370,9 @@ def create_character(request):
                 elif skill_exp == "survival":
                     c.survival_prof = True
 
-            c.save() # temp
-
             c.weapons_and_armour = c_data["weapon-and-armour-proficiencies"]
             c.tools = c_data["tool-proficiencies"]
             c.languages = c_data["languages"]
-
-            c.save() # temp
 
             LOGGER.info(f"size: {c_data['size']}")
             LOGGER.info(f"speed: {c_data['speed']}")
@@ -378,8 +385,6 @@ def create_character(request):
             c.size = size
             c.speed = int(c_data["speed"])
 
-            c.save() # temp
-
             # Parses hit dice into valid database-compatible notation
             c.hit_dice = parse_dice_notation("1"+c_data["hit-dice"])[1]
 
@@ -390,7 +395,6 @@ def create_character(request):
             for attack in attacks:
                 c.attacks += "-"+attack+("\n")
 
-            c.save() # temp
             c.personality_traits = c_data["personality-traits"]
             c.ideals = c_data["ideals"]
             c.bonds = c_data["bonds"]
@@ -406,19 +410,52 @@ def create_character(request):
             c.spell_save_dc = c_data["spell-save-dc"]
             c.spell_attack_bonus = c_data["spell-attack-bonus"]
 
-            # data error occurs here
+            c.features_and_traits = ""
+            traits = race.traits.all()
+            for t in traits:
+                c.features_and_traits += t.name + ": " + t.desc + "\n\n"
+
             c.save()
 
-            cantrips = c_data["cantrips"]
-            l1_spells = c_data["1st-level-spells"]
-            l2_spells = c_data["2nd-level-spells"]
-            l3_spells = c_data["3rd-level-spells"]
-            l4_spells = c_data["4th-level-spells"]
-            l5_spells = c_data["5th-level-spells"]
-            l6_spells = c_data["6th-level-spells"]
-            l7_spells = c_data["7th-level-spells"]
-            l8_spells = c_data["8th-level-spells"]
-            l9_spells = c_data["9th-level-spells"]
+            c.lvl_1_slots_total = c_data["1st-level-spell-slots"]
+            c.lvl_1_slots_expended = c_data["1st-level-spell-slots"]
+
+            c.lvl_2_slots_total = c_data["2nd-level-spell-slots"]
+            c.lvl_2_slots_expended = c_data["2nd-level-spell-slots"]
+
+            c.lvl_3_slots_total = c_data["3rd-level-spell-slots"]
+            c.lvl_3_slots_expended = c_data["3rd-level-spell-slots"]
+
+            c.lvl_4_slots_total = c_data["4th-level-spell-slots"]
+            c.lvl_4_slots_expended = c_data["4th-level-spell-slots"]
+
+            c.lvl_5_slots_total = c_data["5th-level-spell-slots"]
+            c.lvl_5_slots_expended = c_data["5th-level-spell-slots"]
+
+            c.lvl_6_slots_total = c_data["6th-level-spell-slots"]
+            c.lvl_6_slots_expended = c_data["6th-level-spell-slots"]
+
+            c.lvl_7_slots_total = c_data["7th-level-spell-slots"]
+            c.lvl_7_slots_expended = c_data["7th-level-spell-slots"]
+
+            c.lvl_8_slots_total = c_data["8th-level-spell-slots"]
+            c.lvl_8_slots_expended = c_data["8th-level-spell-slots"]
+
+            c.lvl_9_slots_total = c_data["9th-level-spell-slots"]
+            c.lvl_9_slots_expended = c_data["9th-level-spell-slots"]
+
+            c.save()
+
+            cantrips = retrieve_spells(c_data, "cantrips")
+            l1_spells = retrieve_spells(c_data, "1st-level-spells")
+            l2_spells = retrieve_spells(c_data, "2nd-level-spells")
+            l3_spells = retrieve_spells(c_data, "3rd-level-spells")
+            l4_spells = retrieve_spells(c_data, "4th-level-spells")
+            l5_spells = retrieve_spells(c_data, "5th-level-spells")
+            l6_spells = retrieve_spells(c_data, "6th-level-spells")
+            l7_spells = retrieve_spells(c_data, "7th-level-spells")
+            l8_spells = retrieve_spells(c_data, "8th-level-spells")
+            l9_spells = retrieve_spells(c_data, "9th-level-spells")
 
             add_spells_to_char(c, cantrips, 0)
             add_spells_to_char(c, l1_spells, 1)
@@ -432,6 +469,8 @@ def create_character(request):
             add_spells_to_char(c, l9_spells, 9)
 
             c.save()
+
+            return redirect('/characters/mycharacters')
 
     context["messages"] = reverse_list(context["messages"])
     return render(request, 'create.html', context=context)
@@ -685,7 +724,6 @@ def character_detail(request, character_id):
     }
 
     context["character"] = character_dict
-
 
     return render(request, 'character.html', context)
 

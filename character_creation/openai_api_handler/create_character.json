@@ -286,6 +286,42 @@
         "type": "integer",
         "description": "Equal to spellcasting ability + proficiency modifier. Default to 0 if you do not have enough information."
       },
+      "1st-level-spell-slots": {
+        "type": "integer",
+        "description": "The number of 1st-level spell slots this character has access to, based on their class and level."
+      },
+      "2nd-level-spell-slots": {
+        "type": "integer",
+        "description": "The number of 2nd-level spell slots this character has access to, based on their class and level."
+      },
+      "3rd-level-spell-slots": {
+        "type": "integer",
+        "description": "The number of 3rd-level spell slots this character has access to, based on their class and level."
+      },
+      "4th-level-spell-slots": {
+        "type": "integer",
+        "description": "The number of 4th-level spell slots this character has access to, based on their class and level."
+      },
+      "5th-level-spell-slots": {
+        "type": "integer",
+        "description": "The number of 5th-level spell slots this character has access to, based on their class and level."
+      },
+      "6th-level-spell-slots": {
+        "type": "integer",
+        "description": "The number of 6th-level spell slots this character has access to, based on their class and level."
+      },
+      "7th-level-spell-slots": {
+        "type": "integer",
+        "description": "The number of 7th-level spell slots this character has access to, based on their class and level."
+      },
+      "8th-level-spell-slots": {
+        "type": "integer",
+        "description": "The number of 8th-level spell slots this character has access to, based on their class and level."
+      },
+      "9th-level-spell-slots": {
+        "type": "integer",
+        "description": "The number of 9th-level spell slots this character has access to, based on their class and level."
+      },
       "cantrips": {
         "type": "array",
         "description": "The names of the cantrips that the user has selected. Leave empty if unsure.",
@@ -397,6 +433,15 @@
       "spellcasting-ability",
       "spell-save-dc",
       "spell-attack-bonus",
+      "1st-level-spell-slots",
+      "2nd-level-spell-slots",
+      "3rd-level-spell-slots",
+      "4th-level-spell-slots",
+      "5th-level-spell-slots",
+      "6th-level-spell-slots",
+      "7th-level-spell-slots",
+      "8th-level-spell-slots",
+      "9th-level-spell-slots",
       "cantrips",
       "1st-level-spells",
       "2nd-level-spells",

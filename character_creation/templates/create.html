@@ -29,7 +29,7 @@
             height: 100%;
         }
         .container {
-            width: 40%;
+            width: 50%;
             height: auto;
             min-height: 10%;
             max-height: 80%;
@@ -46,7 +46,7 @@
             height: 100px; /* Set the height of the form explicitly */
         }
         .message-thread {
-            max-height: 400px;
+            max-height: 500px;
             overflow-y: auto;
             margin-bottom: 10px;
             border: 1px solid #ddd;
@@ -71,8 +71,9 @@
             width: 100%;
             resize: none;
             overflow: hidden;
-            min-height: 2em;
+            min-height: 52px;
             max-height: 10em;
+            font-size: 16px;
             flex: 1
         }
         button.start {
@@ -91,6 +92,12 @@
 {% endblock %}
 
 {% block content %}
+    <script>
+        window.onload = function() {
+            var chat = document.getElementById("message-thread");
+            chat.scrollTop = chat.scrollHeight;
+        };
+    </script>
     <div class="container centre">
         {% if show_prompt %}
         <form method="post" class="fill start">
@@ -110,7 +117,7 @@
                         {% if message.author == 'user' %}
                             <strong>You: </strong><p>{{ message.content|linebreaks }}</p>
                         {% else %}
-                            <strong>HeroArchitect: </strong><p>{{ message.content|linebreaks }}</p>
+                            <strong>HeroArchitect: </strong><p>{{ message.content|cut:"*"|cut:"#"|linebreaks }}</p>
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -139,8 +146,13 @@
 
     <script>
         function auto_grow(element) {
-            element.style.height = "5px";
-            element.style.height = (element.scrollHeight) + "px";
+            if ((element.scrollHeight)*0.0625 >= 2) {
+                element.style.height = "48px";
+                element.style.height = (element.scrollHeight)*0.0625 + "em";
+            }
+            else {
+                element.style.height = "48px";
+            }
         }
     </script>
 {% endblock %}
