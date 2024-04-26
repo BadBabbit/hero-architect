@@ -8,27 +8,96 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 {% endblock %}
 
+{% block styletag %}
+    <style>
+        .scrollabe {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            text-align: center;
+            padding: 20px;
+        }
+        strong.subtitle {
+            font-size: 18px;
+            color: white
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-    <div class="w3-margin-top" style="width: 100%; text-align: center">
-        <strong style="font-size: 30px;">Welcome to HeroArchitect!</strong>
-    </div>
-    <div class="page w3-container w3-content w3-margin-top">
-        <div class="w3-col w3-round m12 l6">
-            <div class="w3-card w3-margin w3-round w3-animate-opacity w3-padding">
-                hey there
+    <div class="scollable">
+        <div style="width: 100%; text-align: center; padding-top: 10px; padding-bottom: 30px; background-color: saddlebrown">
+            <strong style="font-size: 35px; color: white">Welcome to HeroArchitect!</strong>
+        </div>
+        <div style="width: 100%; text-align: center; padding-bottom: 20px; background-color: saddlebrown; margin-bottom: 50px">
+            <strong style="font-size: 25px; color: white">Speak, and your Hero shall rise.</strong>
+        </div>
+        <div class="page w3-container w3-content w3-margin-top m12" style="max-width: 90%; width: 90%">
+            <div class="w3-col w3-round l6">
+                <div class="w3-card w3-margin w3-round w3-animate-opacity" style="margin-bottom: 800px">
+                    <div class="w3-round" style="width: 100%; padding: 10px; background-color: saddlebrown">
+                        <strong class="subtitle">Create a D&D5e Character, using only your words!</strong>
+                    </div>
+                    <div style="padding: 10px">
+                        <p style="text-align: justify; padding-bottom: 5px">
+                            Converse with our AI, <strong>HeroArchitect</strong>, to shape your vision for your character into reality.
+                        The AI will guide you through all the necessary steps to create your character.
+                        </p>
+                        <p style="text-align: justify; padding-bottom: 5px">
+                            The AI will ask you a series of questions about your character - some of them relating to
+                            the abilities and skills of your character, and other questions relating to your character's
+                            personality, history, and appearance. <strong>HeroArchitect</strong> will walk you through all
+                            the steps required to turn your concept into a full-fledged Hero.
+                        </p>
+                        <p style="text-align: justify; padding-bottom: 5px">
+                            After your conversation is concluded, the AI will intelligently fill your character
+                            sheet details on your behalf!
+                        </p>
+                    </div>
+
+                </div>
             </div>
-            <div class="w3-card w3-margin w3-round w3-animate-opacity w3-padding">
-                wassup
+            <div class="w3-col w3-round l6">
+                <div class="w3-card w3-margin w3-round w3-animate-opacity">
+                    <div class="w3-round" style="width: 100%; padding: 10px; background-color: saddlebrown">
+                        <strong class="subtitle">No idea how to create a character? No problem!</strong>
+                    </div>
+                    <div style="padding: 10px">
+                        <p style="text-align: justify">
+                            You may have a character concept, but have no idea how to turn it into reality. That's okay!
+                            That's what <strong>HeroArchitect</strong> is for.
+                        </p>
+                        <p style="text-align: justify">
+                            If all you know about your character is that you want to play a level 1 Wizard, that's more than
+                            enough to start you off!
+                        </p>
+                        <p style="text-align: justify">
+                            Even if you simply have a concept in mind, that's okay too! For example, you may know that
+                            you want your character to lurk in the shadows and be a deceptive person of many faces.
+                            <strong>HeroArchitect</strong> will take that concept and turn it into a fully-realised character
+                            with you.
+                        </p>
+                        <p style="text-align: center">
+                            Words are your building blocks, and <strong>HeroArchitect</strong> is your... well, architect!
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-col w3-round m12 l12">
+                <div class="w3-card w3-margin w3-round w3-animate-opacity">
+                    <div class="w3-round" style="width: 100%; padding: 10px; background-color: saddlebrown; text-align: center;">
+                        <strong class="subtitle">Give as much or as little detail as you like!</strong>
+                    </div>
+                    <div style="padding: 10px">
+                        <p>
+                            hi!
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="w3-col w3-round m12 l6">
-            <div class="w3-card w3-margin w3-round w3-animate-opacity w3-padding">
-               hello
-            </div>
-            <div class="w3-card w3-margin w3-round w3-animate-opacity w3-padding">
-                hi
-            </div>
-        </div>
+
     </div>
 
 
