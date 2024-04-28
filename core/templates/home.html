@@ -22,16 +22,20 @@
             font-size: 18px;
             color: white
         }
+        li + li {
+          margin: 10px 0;
+        }
     </style>
+
 {% endblock %}
 
 {% block content %}
     <div class="scollable">
-        <div style="width: 100%; text-align: center; padding-top: 10px; padding-bottom: 30px; background-color: saddlebrown">
-            <strong style="font-size: 35px; color: white">Welcome to HeroArchitect!</strong>
+        <div style="width: 100%; text-align: center; padding-top: 10px; padding-bottom: 15px; background-color: saddlebrown">
+            <strong style="font-size: 35px; color: white">Welcome to HeroArchitect</strong>
         </div>
         <div style="width: 100%; text-align: center; padding-bottom: 20px; background-color: saddlebrown; margin-bottom: 50px">
-            <strong style="font-size: 25px; color: white">Speak, and your Hero shall rise.</strong>
+            <p style="font-size: 25px; color: white; margin-top: 0">Speak, and your Hero shall rise!</p>
         </div>
         <div class="page w3-container w3-content w3-margin-top m12" style="max-width: 90%; width: 90%">
             <div class="w3-col w3-round l6">
@@ -78,26 +82,62 @@
                             <strong>HeroArchitect</strong> will take that concept and turn it into a fully-realised character
                             with you.
                         </p>
-                        <p style="text-align: center">
+                        <p style="text-align: center; margin-top: 37px">
                             Words are your building blocks, and <strong>HeroArchitect</strong> is your... well, architect!
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="w3-col w3-round m12 l12">
-                <div class="w3-card w3-margin w3-round w3-animate-opacity">
-                    <div class="w3-round" style="width: 100%; padding: 10px; background-color: saddlebrown; text-align: center;">
-                        <strong class="subtitle">Give as much or as little detail as you like!</strong>
+            <div class="w3-col w3-round l12" style="width:100%; display: flex; justify-content: center;">
+                <div class="w3-card w3-margin w3-round w3-animate-opacity" >
+                    <div style="width: 100%; padding: 10px; background-color: saddlebrown; text-align: center; border-top-right-radius: 5px; border-top-left-radius: 5px">
+                        <strong class="subtitle">Give as much or as little detail as you like!</strong><br>
                     </div>
-                    <div style="padding: 10px">
-                        <p>
-                            hi!
-                        </p>
+                    <div style="padding: 10px; max-width: 750px">
+                        <strong>Here are some examples of how to start off the conversation:</strong>
+                        <ul>
+                            <li>"I want to create a character who uses dark magic!"</li>
+                            <li>"I'd like my character to be nimble and dexterous, dodging attacks and running along walls
+                            to get the better of their opponents."</li>
+                            <li>"Help me make the strongest, most savage, most terrifying Barbarian that the world has ever seen!
+                            But, also, incorporate that he has a soft-spot for strawberry cake..."</li>
+                        </ul>
+
                     </div>
                 </div>
             </div>
+            {% if not user.is_authenticated %}
+            <div class="w3-col w3-round l12" style="width:100%; display: flex; justify-content: center; margin-bottom: 300px">
+                <div class="w3-card w3-margin w3-round w3-animate-opacity" >
+                    <div style="width: 100%; padding: 10px; background-color: saddlebrown; text-align: center; border-top-right-radius: 5px; border-top-left-radius: 5px; max-width: 750px; width: 750px; margin-bottom: 30px">
+                        <strong class="subtitle">Ready to start making your character?</strong><br>
+                    </div>
+                    <div style="text-align: center; margin-bottom: 30px">
+                        <button class="w3-round w3-button w3-border ha-saddlebrown ha-hover-brown w3-margin" style="font-size: 20px; padding: 15px; width: 250px; margin-right: 75px!important; " onclick="window.location.href='/auth/register';">
+                            Create an Account
+                        </button>
+                        <button class="w3-round w3-button w3-border ha-saddlebrown ha-hover-brown w3-margin" style="font-size: 20px; padding: 15px; width: 250px" onclick="window.location.href='/auth/login';">
+                            Sign in
+                        </button><br>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <div class="w3-col w3-round l12" style="width:100%; display: flex; justify-content: center; margin-bottom: 300px">
+                <div class="w3-card w3-margin w3-round w3-animate-opacity" >
+                    <div style="width: 100%; padding: 10px; background-color: saddlebrown; text-align: center; border-top-right-radius: 5px; border-top-left-radius: 5px; max-width: 750px; width: 750px; margin-bottom: 30px">
+                        <strong class="subtitle">Ready to start making your character, {{username}}?</strong>
+                    </div>
+                    <div style="text-align: center; margin-bottom: 30px">
+                        <button class="w3-round w3-button w3-border ha-saddlebrown ha-hover-brown w3-margin" style="font-size: 20px; padding: 15px; width: 400px" onclick="window.location.href='/characters/create';">
+                            Start creating your character!
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
-
     </div>
 
 

@@ -244,11 +244,11 @@ def create_character(request):
         # Handles character generation
         elif generate is not None and generate == "true":
             LOGGER.info("Beginning character generation...")
-            # conversation = Conversation.objects.filter(user=user).get()
-            # t_id = conversation.thread_id
+            conversation = Conversation.objects.filter(user=user).get()
+            t_id = conversation.thread_id
 
-            base_thread = "thread_egJWitpKQMsoaPgC6heK31CP"
-            t_id = heroArchitect.duplicate_thread(base_thread)
+            # base_thread = "thread_5fyGd3whnK7LFcvZUknbyFtU"
+            # t_id = heroArchitect.duplicate_thread(base_thread)
 
             LOGGER.info("Generating character data...")
             c_data = heroArchitect.generate_character_data(t_id)

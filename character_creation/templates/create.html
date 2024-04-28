@@ -46,10 +46,9 @@
             height: 100px; /* Set the height of the form explicitly */
         }
         .message-thread {
-            max-height: 500px;
+            max-height: 350px;
             overflow-y: auto;
             margin-bottom: 10px;
-            border: 1px solid #ddd;
             padding: 10px;
         }
         .message {
@@ -88,6 +87,15 @@
             margin-left: 10px;
             padding: 5px!important;
         }
+        strong.subtitle {
+            font-size: 20px;
+            color: white
+        }
+        body, html {
+            margin: 0;
+            height: 100%;
+            overflow: hidden
+        }
     </style>
 {% endblock %}
 
@@ -98,8 +106,10 @@
             chat.scrollTop = chat.scrollHeight;
         };
     </script>
-    <div class="container centre">
+    <div class="container" style="text-align: center; margin-top: 50px; margin-bottom: 300px">
         {% if show_prompt %}
+        <strong style="color: white">Unsure of where or how to begin? Ask the AI to begin the conversation for you by clicking "Start me off".</strong><br><br>
+        <strong style="color: white">Already have a character concept in mind? Feel free to get the first word in by pressing "I have an idea!"</strong>
         <form method="post" class="fill start">
             {% csrf_token %}
             <div id="initial-prompt" class="fill" style="text-align: center;">
@@ -133,16 +143,25 @@
             </div>
         {% endif %}
     </div>
+
     {% if show_messages %}
-        <form id="generate-character" method="post">
-            {% csrf_token %}
-            <div style="text-align: center; font-size: x-large">
-                <button name="generate" value="true" class="w3-round w3-button ha-saddlebrown w3-border w3-margin w3-display-bottommiddle" style="text-align: center; margin-bottom: 50px!important">Generate Character</button>
+        <div class="w3-col w3-round l6 w3-display-bottommiddle">
+            <div class="w3-card w3-margin w3-round w3-animate-opacity" style="margin-bottom: 16px!important;">
+                <div style="width: 100%; padding: 10px; background-color: saddlebrown; text-align: center; border-top-right-radius: 5px; border-top-left-radius: 5px">
+                    <strong class="subtitle">All finished?</strong>
+                </div>
+                <form id="generate-character" method="post">
+                    {% csrf_token %}
+                    <div style="margin-inline: 20px; margin-top: 16px">
+                        <p>Click here when the conversation is complete and you're satisfied with all of your character details!</p>
+                    </div>
+                    <div style="text-align: center; font-size: x-large">
+                        <button name="generate" value="true" class="w3-round w3-button ha-saddlebrown w3-border" style="text-align: center; margin-bottom: 30px!important">Generate Character</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     {% endif %}
-
-
 
     <script>
         function auto_grow(element) {
