@@ -80,9 +80,9 @@
 {% endblock %}
 
 {% block content %}
-    <div class="list-container absolute-centre vertical-centre" style="text-align: center">
-        {% if characters %}
-            {% for character in characters %}
+    {% if characters %}
+        <div class="list-container absolute-centre vertical-centre" style="text-align: center">
+        {% for character in characters %}
             <div style="text-align: center!important;">
                 <a href="{{ character.id }}" style="text-decoration: none">
                     <div class="character">
@@ -94,19 +94,21 @@
                 </a>
             </div>
             <br>
-            {% endfor %}
-        {% else %}
+        {% endfor %}
+    {% else %}
+        <div class="w3-container">
             <div class="absolute-centre">
-                <div class="text-container">
+                <div class="text-container" style="height: 100px!important;">
                     <div class="text-centre">
                         <strong>No characters to display.</strong>
                     </div>
                     <br>
                     <div class="text-centre">
-                        <p>Head over to the <a href="/characters/create/">create</a> page to make a character!</p>
+                        <p>Head over to the <a href="/characters/create/" style="color: brown">create</a> page to make a character!</p>
                     </div>
                 </div>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
     </div>
 {% endblock %}

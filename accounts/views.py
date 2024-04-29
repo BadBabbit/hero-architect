@@ -65,7 +65,7 @@ def register_view(request):
             password1 = form.cleaned_data['password1']
             password2 = form.cleaned_data['password2']
 
-            existing_user = User.objects.filter(username=username)
+            existing_user = HA_User.objects.filter(username=username)
             if existing_user:
                 error_message = "Username is already taken. Please choose a different one."
                 form.add_error('username', error_message)
@@ -78,7 +78,7 @@ def register_view(request):
 
             if not form_has_errors:
                 # Create the account
-                user = User.objects.create_user(username=username, email=email, password=password1)
+                user = HA_User.objects.create_user(username=username, email=email, password=password1)
                 user.save()
 
                 # Log the user in

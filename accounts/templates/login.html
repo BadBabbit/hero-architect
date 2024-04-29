@@ -1,15 +1,19 @@
 {% extends "generic.html" %}
 
+{% load static %}
+
 {% block title %}
     <title>HeroArchitect | Login</title>
+    <link rel="stylesheet" href="{% static 'css/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
 {% endblock %}
 
 {% block content %}
-    <div class="form">
-        <h2>Log In</h2>
+    <div class="w3-round-xlarge w3-border ha-saddlebrown w3-padding-32" style="width: 500px; margin: 200px auto; padding-inline: 32px">
+        <strong style="font-size: 24px">Sign In</strong>
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
-            <table>
+            <table style="margin-top: 30px; margin-bottom: 20px">
                 <tr>
                     <td>{{ form.username.label_tag }}</td>
                     <td>{{ form.username }}</td>
@@ -30,7 +34,7 @@
             </div>
             {% endif %}
 
-            <input type="submit" value="login">
+            <input type="submit" class="w3-button ha-brown w3-round-large w3-border" style="font-size: 18px" value="Log in">
         </form>
     </div>
 

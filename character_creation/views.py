@@ -151,7 +151,6 @@ def create_character(request):
             raise ObjectDoesNotExist
 
         # Handles initial prompt
-
         if start is not None:
 
             t = initialise_conversation(start)
@@ -172,14 +171,16 @@ def create_character(request):
             # Prompts the AI to generate a response
             if start == "ai":
                 response = heroArchitect.retrieve_messages(t)
-                messages = response.data
+                messages = reverse_list(response.data)
                 first_msg = True
                 for m in messages:
                     content = m.content[0].text.value
                     author = m.role
+                    LOGGER.info(f"MESSAGE CONTENT: {content}")
+                    LOGGER.info(f"AUTHOR: {author}")
 
                     # Exclude thread initialiser message
-                    if content == "Hi!" and author == "user" and first_msg == True:
+                    if (content == "Hi!") and (author == "user") and (first_msg == True):
                         first_msg = False
                         continue
 
@@ -223,10 +224,15 @@ def create_character(request):
             ms = heroArchitect.retrieve_messages(thread)
 
             # Add messages to context
-            for m in ms.data:
+            first_msg = True
+            for m in reverse_list(ms.data):
                 # Author can either be "user" or "assistant"
                 author = m.role
                 content = m.content[0].text.value
+                if first_msg and (author == "user") and (content == "Hi!"):
+                    first_msg = False
+                    continue
+                first_msg = False
 
                 # Truncates message for logging purposes
                 truncated_content = (content[:27] + '...') if len(data) > 27 else content
@@ -472,7 +478,6 @@ def create_character(request):
 
             return redirect('/characters/mycharacters')
 
-    context["messages"] = reverse_list(context["messages"])
     return render(request, 'create.html', context=context)
 
 
