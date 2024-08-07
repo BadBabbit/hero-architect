@@ -533,7 +533,7 @@ def create_spells():
                 pass
             continue
 
-def add_ability_score_mods_to_races_and_subraces_for_real_this_time():
+def add_ability_score_mods():
 
     base_url = "https://www.dnd5eapi.co/api"
 
@@ -567,11 +567,13 @@ def add_ability_score_mods_to_races_and_subraces_for_real_this_time():
 
 def main():
 
-    # add_ability_score_mods_to_races_and_subraces_for_real_this_time()
-    race = Race.objects.get(name="Half-Elf")
-    asbs = race.ability_score_bonuses.all()
-    for asb in asbs:
-        print(asb.ability.name + ": +" + str(asb.bonus))
+    create_skills()
+    create_races()
+    create_subraces()
+    create_traits()
+    add_traits_to_races_and_subraces()
+    add_ability_score_mods()
+    create_spells()
 
 
 

@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from django.db import transaction, DatabaseError, IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
